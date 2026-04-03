@@ -1,0 +1,530 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>HOME | Empirical Software Engineering Lab</title>
+    <link rel="icon" type="image/png" href="assets/ese logo favicon-transparent-sm.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+<!-- Main Header -->
+<header class="header">
+    <div class="header-container">
+        <!-- DSL Lab Logo (Left) -->
+        <div class="site-logo-container">
+            <div class="logo-wrapper">
+                <img src="assets/ese logo horiz-transparent.png" alt="Empirical Software Engineering Lab" class="main-logo">
+            </div>
+        </div>
+
+        <!-- Navigation (Center) -->
+        <nav class="navigation">
+            <ul class="nav-list">
+                <li><a href="#home" class="nav-link active">HOME</a></li>
+                <li><a href="#members" class="nav-link">MEMBERS</a></li>
+                <li><a href="#research" class="nav-link">RESEARCH</a></li>
+                <li><a href="#recent-news" class="nav-link">RECENT NEWS</a></li>
+                <li><a href="#publications" class="nav-link">PUBLICATIONS</a></li>
+                <li><a href="#about" class="nav-link">ABOUT</a></li>
+                <li><a href="#contact" class="nav-link">CONTACT US</a></li>
+            </ul>
+        </nav>
+
+        <!-- KSU Branding (Right) -->
+        <div class="ksu-branding">
+            <div class="ksu-wrapper">
+                <img src="assets/ksu.png" alt="Kennesaw State University" class="ksu-icon">
+                <div class="ksu-text">Kennesaw State University</div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Hero Section with Office Background -->
+<section id="home" class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-box">
+            <h1 class="hero-title">
+                <span class="title-accent">EMPIRICAL SOFTWARE</span>
+                <span class="title-accent">ENGINEERING LAB</span>
+            </h1>
+            <div class="hero-divider"></div>
+            <span class="subtitle-highlights">Requirements Engineering • Creativity in Requirements • AI and Requirements Engineering</span></p>
+            <div class="hero-actions">
+                <a href="#research" class="hero-btn primary">Explore Research</a>
+                <a href="#publications" class="hero-btn secondary">View Publications</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="main-content">
+    <!-- Introduction Section -->
+    <section class="intro-section">
+        <div class="container full-width">
+            <div class="intro-header">
+                <h2 class="intro-title">Empirical Software Engineering Research</h2>
+                <div class="intro-subtitle">An Evidence-Based Approach</div>
+            </div>
+
+            <div class="intro-content-grid">
+                <div class="intro-main">
+                    <div class="intro-card vision-card">
+                        <div class="card-header">
+                            <h3>Our Vision</h3>
+                        </div>
+                        <p class="intro-text">
+                            A future in which software systems are built on well-understood, creative, and secure requirements that are systematically validated through tight integration with testing and empirical evidence.
+                        </p>
+                    </div>
+
+                    <div class="intro-card mission-card">
+                        <div class="card-header">
+                            <h3>Our Mission</h3>
+                        </div>
+                        <p class="intro-text">
+                            The <strong>Empirical Software Engineering Lab (ESE)</strong> at Kennesaw State University is developing empirically grounded methods and tools that support creative requirements engineering and strengthen the connections between requirements, testing, and software security.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="intro-highlights">
+                    <div class="highlight-card director-card">
+                        <div class="director-info">
+                            <div class="hexagon-avatar" style="margin-bottom: 15px;">
+                                <div class="hexagon-inner">
+                                    <img src="assets/Bhowmik_ProfilePic.jpg" alt="Dr. Tanmay Bhowmik">
+                                </div>
+                            </div>
+                            <h4>Lab Director</h4>
+                            <div class="director-name">Dr. Tanmay Bhowmik</div>
+                            <div class="director-title">Lab Director | Researcher | Requirements Engineering</div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-card focus-areas-card">
+                        <h4>Core Research Areas</h4>
+                        <div class="focus-tags">
+                            <span class="focus-tag">Software Engineering</span>
+                            <span class="focus-tag">Requirements Engineering</span>
+                            <span class="focus-tag">Creativity in Requirements</span>
+                            <span class="focus-tag">Requirements and Software Security</span>
+                            <span class="focus-tag">Requirements and Testing</span>
+                            <span class="focus-tag">AI and Requirements</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="intro-cta">
+                <a href="#about" class="cta-btn">Learn More About Our Lab</a>
+                <div class="cta-note">Discover how evidence-driven software engineering research is transforming the future of requirements engineering.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Members Section -->
+    <section id="members" class="members-section">
+        <div class="container full-width">
+            <h2 class="section-heading">Members</h2>
+
+            <!-- Member Filters -->
+            <div class="member-filters">
+                <button class="filter-btn active" data-filter="all">All Members</button>
+                <button class="filter-btn" data-filter="director">Director</button>
+                <button class="filter-btn" data-filter="collaborator">Collaborators</button>
+                <button class="filter-btn" data-filter="current">Current Students</button>
+                <button class="filter-btn" data-filter="alumni">Alumni</button>
+            </div>
+
+            <!-- Search Box -->
+            <div class="member-search">
+                <input type="text" id="memberSearch" placeholder="Search members by name or degree..." aria-label="Search members">
+            </div>
+
+            <!-- Director Section -->
+            <div class="member-section" data-category="director">
+                <h3 class="member-section-title">Director</h3>
+                <div class="member-grid director-grid">
+                    <!-- Director will be loaded dynamically from members.js -->
+                </div>
+            </div>
+
+            <!-- Lab Collaborators Section -->
+            <div class="member-section" data-category="collaborator">
+                <h3 class="member-section-title">Lab Collaborators</h3>
+                <div class="member-grid collaborator-grid">
+                    <!-- Collaborators will be loaded dynamically from members.js -->
+                </div>
+            </div>
+
+            <!-- Current Students Section -->
+            <div class="member-section" data-category="current">
+                <h3 class="member-section-title">Current PhD and MS Students</h3>
+                <div class="member-grid student-grid">
+                    <!-- Current students will be loaded dynamically from members.js -->
+                </div>
+            </div>
+
+            <!-- Alumni Section -->
+            <div class="member-section" data-category="alumni">
+                <h3 class="member-section-title">Alumni</h3>
+                <div class="member-grid alumni-grid">
+                    <!-- Alumni will be loaded dynamically from members.js -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Section -->
+    <section id="research" class="research-section">
+        <div class="container full-width">
+            <h2 class="section-heading">Research</h2>
+            <div class="research-content">
+                <p class="research-intro">
+                    Our research pushes the boundaries of how software requirements are conceived, validated, and integrated with testing and security practices.
+                </p>
+
+                <div class="research-themes">
+                    <div class="theme-card expandable">
+                        <div class="theme-header">
+                            <h3>Empirical Requirements Engineering & Validation</h3>
+                            <button class="expand-btn" aria-label="Expand research details">+</button>
+                        </div>
+                        <p class="theme-summary">
+                            Investigating how software requirements are elicited, refined, and validated in practice through empirical studies. Our work examines how requirements quality, creativity, and structure influence downstream activities such as testing, maintenance, and security assurance.
+                        </p>
+                        <div class="theme-details">
+                            <h4>Key Research Areas:</h4>
+                            <ul>
+                                <li><strong>Requirements Quality Assessment:</strong> Empirical evaluation of ambiguity, completeness, and testability in functional and non-functional requirements</li>
+                                <li><strong>Creative Requirements Practices:</strong> Studying methods that encourage innovation and creativity while maintaining rigor and traceability</li>
+                                <li><strong>Requirements Validation Techniques:</strong> Systematic approaches for validating requirements using reviews, prototypes, and executable artifacts</li>
+                                <li><strong>Empirical Study Design:</strong> Controlled experiments, case studies, and surveys to understand real-world requirements engineering practices</li>
+                            </ul>
+                            <h4>Impact & Applications:</h4>
+                            <p>
+                                This research informs evidence-based guidance for practitioners and educators, leading to more reliable requirements and improved alignment between stakeholder intent and implemented systems.
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div class="theme-card expandable">
+                        <div class="theme-header">
+                            <h3>Integration of Requirements and Software Testing</h3>
+                            <button class="expand-btn" aria-label="Expand research details">+</button>
+                        </div>
+                        <p class="theme-summary">
+                            Developing empirically grounded methods that strengthen the relationship between requirements and testing. We study how requirements artifacts can drive effective test design and how test results can be used to assess and improve requirements quality.
+                        </p>
+                        <div class="theme-details">
+                            <h4>Technical Innovations:</h4>
+                            <ul>
+                                <li><strong>Requirements-Based Test Design:</strong> Techniques for systematically deriving unit, integration, and system tests from requirements</li>
+                                <li><strong>Testability of Requirements:</strong> Empirical analysis of how requirements characteristics affect test effectiveness and fault detection</li>
+                                <li><strong>Bidirectional Traceability:</strong> Methods for maintaining and validating trace links between requirements and test artifacts</li>
+                                <li><strong>Tool Support:</strong> Lightweight tools that support automated analysis and validation of requirements–test alignment</li>
+                            </ul>
+                            <h4>Research Outcomes:</h4>
+                            <p>
+                                Our studies provide empirical evidence on how tighter requirements–testing integration improves defect detection, regression resilience, and long-term software maintainability.
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div class="theme-card expandable">
+                        <div class="theme-header">
+                            <h3>Creativity and Human Factors in Software Engineering</h3>
+                            <button class="expand-btn" aria-label="Expand research details">+</button>
+                        </div>
+                        <p class="theme-summary">
+                            Exploring the role of creativity, cognition, and human decision-making in requirements engineering and software development. We empirically study how individuals and teams generate, evaluate, and refine innovative requirements.
+                        </p>
+                        <div class="theme-details">
+                            <h4>Core Research Focus:</h4>
+                            <ul>
+                                <li><strong>Creativity Evaluation Frameworks:</strong> Empirical models and metrics for assessing creativity in requirements artifacts</li>
+                                <li><strong>Human-Centered RE Methods:</strong> Studying how stakeholders reason about, negotiate, and evolve requirements</li>
+                                <li><strong>Educational Interventions:</strong> Evaluating pedagogical techniques for teaching creative and effective requirements engineering</li>
+                                <li><strong>Decision-Making Analysis:</strong> Investigating cognitive biases and their impact on requirements and testing outcomes</li>
+                            </ul>
+                            <h4>Methodological Contributions:</h4>
+                            <p>
+                                This work advances the scientific understanding of creativity in software engineering and provides evidence-based practices for improving both industrial and educational outcomes.
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div class="theme-card expandable">
+                        <div class="theme-header">
+                            <h3>Software Security Requirements & Empirical Assurance</h3>
+                            <button class="expand-btn" aria-label="Expand research details">+</button>
+                        </div>
+                        <p class="theme-summary">
+                            Studying how security requirements are specified, validated, and tested in real-world systems. Our research emphasizes empirical evaluation of security-related requirements and their systematic integration into software testing processes.
+                        </p>
+                        <div class="theme-details">
+                            <h4>Security-Focused Research Areas:</h4>
+                            <ul>
+                                <li><strong>Security Requirements Elicitation:</strong> Empirical analysis of practices for identifying and documenting security needs</li>
+                                <li><strong>Test-Driven Security Validation:</strong> Using security-focused tests to assess the adequacy of security requirements</li>
+                                <li><strong>Requirements–Security Alignment:</strong> Studying mismatches between stated security requirements and implemented safeguards</li>
+                                <li><strong>Evidence-Based Security Assurance:</strong> Leveraging empirical data to support claims about software security</li>
+                            </ul>
+                            <h4>Industry Relevance:</h4>
+                            <p>
+                                Our findings help organizations build more secure systems by grounding security decisions in empirical evidence and systematic validation rather than ad hoc practices.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="research-impact">
+                    <h3>Research Impact</h3>
+                    <p>
+                        Our research advances the state of empirical software engineering by providing evidence-based methods that improve requirements quality, testing effectiveness, and software security. Through collaborations with academia and industry, our work informs practice, supports education, and contributes to the development of reliable, creative, and secure software systems.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent News Section -->
+    <section id="recent-news" class="recent-news-section">
+        <div class="container full-width">
+            <h2 class="section-heading">Recent News</h2>
+
+            <div class="news-intro-card">
+                <p>Stay updated with the latest developments, achievements, and announcements from the Empirical Software Engineering Lab. Discover our recent research breakthroughs, conference acceptances, and collaborative initiatives.</p>
+            </div>
+
+            <div class="recent-news-grid" id="detailedNewsGrid">
+                <!-- Detailed news items will be loaded dynamically from JSON -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications Section -->
+    <section id="publications" class="publications-section">
+        <div class="container full-width">
+            <h2 class="section-heading">Publications</h2>
+
+            <div class="publications-intro-card">
+                <div class="lab-metrics" id="labMetrics">
+                    <!-- Metrics will be loaded dynamically from JS -->
+                </div>
+                <p>Explore our comprehensive portfolio of peer-reviewed publications, conference papers, and research contributions advancing Software Engineering.</p>
+            </div>
+
+            <div class="publications-filters">
+                <button class="pub-filter-btn" data-filter="all">All Publications</button>
+                <button class="pub-filter-btn active" data-filter="2025">2025</button>
+                <button class="pub-filter-btn" data-filter="2024">2024</button>
+                <button class="pub-filter-btn" data-filter="2023">2023</button>
+                <button class="pub-filter-btn" data-filter="2021-2022">2021-2022</button>
+                <button class="pub-filter-btn" data-filter="2019-2020">2019-2020</button>
+                <button class="pub-filter-btn" data-filter="high-impact">Most Cited</button>
+            </div>
+
+            <div class="publications-grid" id="publicationsGrid">
+                <!-- Publications will be loaded dynamically from JS -->
+            </div>
+        </div>
+    </section>
+
+
+<!-- About Section -->
+<section id="about" class="about-section">
+    <div class="container full-width">
+        <h2 class="section-heading">About Us</h2>
+
+        <div class="about-intro-card">
+            <div class="about-content">
+                <p>The <strong>Empirical Software Engineering Lab (ESE)</strong> is a research lab focused on advancing knowledge and driving innovation in requirements engineering and its integration with testing and secure software development through empirical, data-driven methods.</p>
+            </div>
+        </div>
+
+        <div class="about-grid">
+            <div class="about-card mission-card">
+                <h3>Our Mission</h3>
+                <p>Is to develop empirically grounded methods and tools that support creative requirements engineering and strengthen the connections between requirements, testing, and software security.</p>
+            </div>
+
+            <div class="about-card vision-card">
+                <h3>Our Vision</h3>
+                <p>A future in which software systems are built on well-understood, creative, and secure requirements that are systematically validated through tight integration with testing and empirical evidence.</p>
+            </div>
+
+            <div class="about-card focus-card">
+                <h3>Our Focus</h3>
+                <p>Is on empirically studying and developing methods that identify, evaluate, and validate creative and secure software requirements through their systematic integration with testing activities.</p>
+            </div>
+        </div>
+
+        <div class="research-areas-grid">
+            <h3 class="areas-title">Research Areas</h3>
+            <div class="areas-grid">
+                <div class="area-tag">Software Engineering</div>
+                <div class="area-tag">Requirements Engineering</div>
+                <div class="area-tag">Creativity in Requirements</div>
+                <div class="area-tag">Requirements and Software Security</div>
+                <div class="area-tag">Requirements and Testing</div>
+                <div class="area-tag">AI and Requirements</div>
+            </div>
+        </div>
+
+        <div class="director-quote-card">
+            <div class="quote-content">
+                <div class="quote-text">
+                    "The Empirical Software Engineering Lab (ESE) provides innovative research, tools, and empirical insights to advance the practice of requirements engineering, testing, and secure software development."
+                </div>
+                <div class="quote-attribution">
+                    <div class="hexagon-avatar">
+                        <div class="hexagon-inner">
+                            <img src="assets/Bhowmik_ProfilePic.jpg" alt="Dr. Tanmay Bhowmik">
+                        </div>
+                    </div>
+                    <div class="quote-author-info">
+                        <div class="quote-author-name">Dr. Tanmay Bhowmik</div>
+                        <div class="quote-author-title">Lab Director</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact-section">
+        <div class="container full-width">
+        <h2 class="section-heading">Contact Us and Location</h2>
+
+        <div class="contact-grid">
+            <div class="contact-info-card">
+                <div class="contact-header">
+                    <h3>Visit Our Lab</h3>
+                </div>
+                <div class="contact-details">
+                    <div class="lab-info">
+                        <div class="lab-header">
+                            <img src="assets/ese logo horiz-transparent.png" alt="Empirical Software Engineering Lab" style="max-height: 90px; margin-bottom: 15px;">
+                            <h4>Empirical Software Engineering Lab (ESE)</h4>
+                        </div>
+                        <div class="address-info">
+                            <p class="university">College of Computing and Software Engineering</p>
+                            <p class="university">Kennesaw State University</p>
+                            <p class="location">680 Arntson Drive</p>
+                            <p class="location">Marietta, GA 30060, USA</p>
+                        </div>
+                    </div>
+                    <div class="contact-methods">
+                        <div class="contact-item">
+                            <div class="contact-icon-wrapper">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                                </svg>
+                            </div>
+                            <div class="contact-info">
+                                <span class="contact-label">Email:</span>
+                                <a href="#" class="contact-link email-protected" data-user="tbhowmik" data-domain="kennesaw.edu" onclick="openEmail(event, this)" style="cursor: pointer;">E-mail us</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon-wrapper">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                </svg>
+                            </div>
+                            <div class="contact-info">
+                                <span class="contact-label">Office:</span>
+                                <span class="contact-value">680 Arntson Drive, Marietta, GA 30060, USA</span>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon-wrapper">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                </svg>
+                            </div>
+                            <div class="contact-info">
+                                <span class="contact-label">Phone:</span>
+                                <a href="tel:+1-470-578-2118" class="contact-link">+1 (662) -617-3253</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="social-links-card">
+                <div class="contact-header">
+                    <h3>Connect & Collaborate</h3>
+                </div>
+                <div class="social-buttons">
+                    <a href="https://www.linkedin.com/in/tanmay-bhowmik-219b9a222/" target="_blank" class="social-btn linkedin-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                        <span>LinkedIn</span>
+                    </a>
+
+                    <a href="https://scholar.google.com/citations?user=pat4_roAAAAJ&hl=en" target="_blank" class="social-btn scholar-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/>
+                        </svg>
+                        <span>Google Scholar</span>
+                    </a>
+
+                </div>
+                <div class="collaboration-sections">
+                    <div class="collaboration-item">
+                        <h4>Research Collaboration</h4>
+                        <p>Industry partners, academic institutions, and researchers worldwide are welcome to explore joint research opportunities.</p>
+                    </div>
+                    <div class="collaboration-item">
+                        <h4>Student Opportunities</h4>
+                        <p>PhD and Master's students interested in Software Engineering, Requirements Engineering, Creativity in Requirements, Requirements and Software Security, Requirements and Testing, or AI and Requirements.</p>
+                    </div>
+                    <div class="collaboration-item">
+                        <h4>Industry Partnerships</h4>
+                        <p>Technology companies seeking expertise in Software Engineering, Requirements Engineering, Creativity in Requirements, Requirements and Software Security, Requirements and Testing, or AI and Requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <p>© 2026 Empirical Software Engineering Lab. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<!-- Scroll to Top Button -->
+<button id="scrollToTop" class="scroll-to-top" aria-label="Scroll to top">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
+</button>
+
+<script src="data/members.js"></script>
+<script src="data/publications.js?v=20260101"></script>
+<script src="script.js"></script>
+</body>
+</html>
