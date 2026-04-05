@@ -2,7 +2,7 @@
 const publicationsData = {
     profile: {
         name: "Dr. Tanmay Bhowmik",
-        title: "Director, Empirical Software Engineering Lab",
+        title: "Director, Software Engineering Research and Analysis Lab",
         affiliation: "Kennesaw State University",
         email: "tbhowmik@kennesaw.edu",
         totalCitations: 694,

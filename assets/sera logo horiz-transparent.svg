@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 90">
+
+  <!-- ===== ICON (gear+shield+check, scaled to fit 88x86 at top-left) ===== -->
+  <g transform="translate(2,2) scale(0.86)">
+
+    <!-- Blue gear body -->
+    <polygon fill="#1565C0"
+      points="78,46 66.9,56.3 67.5,71.5 52.3,70.9 42,82 31.7,70.9 16.5,71.5 17.1,56.3 6,46 17.1,35.7 16.5,20.5 31.7,21.1 42,10 52.3,21.1 67.5,20.5 66.9,35.7"/>
+
+    <!-- Circuit lines (drawn inside gear area; no clip needed at this scale) -->
+    <g stroke="rgba(255,255,255,0.6)" stroke-width="1.6" fill="none">
+      <line x1="18" y1="46" x2="64" y2="46"/>
+      <line x1="42" y1="22" x2="42" y2="70"/>
+      <line x1="26" y1="30" x2="58" y2="62"/>
+      <line x1="58" y1="30" x2="26" y2="62"/>
+    </g>
+    <g fill="rgba(255,255,255,0.85)">
+      <circle cx="18" cy="46" r="2.5"/>
+      <circle cx="64" cy="46" r="2.5"/>
+      <circle cx="42" cy="22" r="2.5"/>
+      <circle cx="42" cy="70" r="2.5"/>
+      <circle cx="26" cy="30" r="2"/>
+      <circle cx="58" cy="30" r="2"/>
+      <circle cx="26" cy="62" r="2"/>
+      <circle cx="58" cy="62" r="2"/>
+    </g>
+
+    <!-- Gear hub -->
+    <circle cx="42" cy="46" r="12" fill="#0D47A1"/>
+    <circle cx="42" cy="46" r="5"  fill="#1976D2"/>
+
+    <!-- Orange shield -->
+    <path d="M 62,14 L 88,24 L 88,56 Q 87,78 75,89 Q 63,78 62,56 Z" fill="#E65100"/>
+    <path d="M 66,21 L 84,29 L 84,55 Q 83,72 75,82"
+          stroke="rgba(255,255,255,0.22)" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+    <!-- Green checkmark circle -->
+    <circle cx="80" cy="80" r="19" fill="#2E7D32"/>
+    <polyline points="70,80 76.5,89 92,67"
+              stroke="white" stroke-width="3.5" fill="none"
+              stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- ===== TEXT BLOCK ===== -->
+  <g font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" fill="#1A2744">
+
+    <!-- Main title -->
+    <text x="98" y="33" font-size="20" font-weight="800" letter-spacing="0.5">SOFTWARE ENGINEERING</text>
+
+    <!-- Middle subtitle -->
+    <text x="98" y="49" font-size="11" font-weight="500" letter-spacing="1.8" fill="#555">RESEARCH AND ANALYSIS LAB</text>
+
+    <!-- Acronym in orange -->
+    <text x="98" y="70" font-size="16" font-weight="700" fill="#E65100" letter-spacing="0.5">(SERA)</text>
+
+  </g>
+</svg>

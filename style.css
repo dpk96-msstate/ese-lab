@@ -21,21 +21,21 @@ body {
 
 /* Bold styling for Decentralized Science Lab text */
 .hero-title,
-strong:contains("Empirical Software Engineering Lab"),
-h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
+strong:contains("Software Engineering Research and Analysis Lab"),
+h1:contains("SOFTWARE ENGINEERING RESEARCH AND ANALYSIS LAB") {
     font-weight: bold !important;
 }
 
 /* Main Header - Enhanced */
 .header {
-    background: #7BC8A4;
+    background: #FDBB30;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 999;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    border-top: 4px solid #004A61;
+    border-top: 4px solid #1A2744;
     transition: all 0.3s ease;
 }
 
@@ -81,7 +81,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .logo-tagline {
-    color: #004A61;
+    color: #1A2744;
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
@@ -108,7 +108,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .nav-link {
-    color: #004A61;
+    color: #1A2744;
     text-decoration: none;
     font-weight: 600;
     font-size: 12px;
@@ -125,17 +125,17 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 
 .nav-link:hover {
     background: #ffffff;
-    color: #004A61;
+    color: #1A2744;
     transform: translateY(-2px);
-    border-color: #7BC8A4;
-    box-shadow: 0 6px 20px rgba(0, 74, 97, 0.1);
+    border-color: #FDBB30;
+    box-shadow: 0 6px 20px rgba(26, 39, 68, 0.1);
 }
 
 .nav-link.active {
-    background: #004A61;
+    background: #1A2744;
     color: white;
-    border-color: #004A61;
-    box-shadow: 0 4px 15px rgba(0, 74, 97, 0.3);
+    border-color: #1A2744;
+    box-shadow: 0 4px 15px rgba(26, 39, 68, 0.3);
 }
 
 
@@ -162,7 +162,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .ksu-text {
-    color: #004A61;
+    color: #1A2744;
     font-size: 11px;
     font-weight: 600;
     line-height: 1.1;
@@ -224,7 +224,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-top: 8px solid #004A61;
+    border-top: 8px solid #1A2744;
     overflow: hidden;
 }
 
@@ -234,7 +234,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,74,97,0.3) 100%);
+    background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(26,39,68,0.3) 100%);
 }
 
 .hero-content {
@@ -247,7 +247,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 
 .hero-badge {
     background: rgba(255,255,255,0.95);
-    color: #004A61;
+    color: #1A2744;
     padding: 12px 25px;
     border-radius: 25px;
     display: inline-block;
@@ -266,23 +266,23 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     margin-top: 5px;
     font-size: 12px;
     font-weight: 600;
-    color: #7BC8A4;
+    color: #FDBB30;
 }
 
 .separator {
     margin: 0 8px;
-    color: #004A61;
+    color: #1A2744;
 }
 
 
    .hero-box {
-       background: linear-gradient(145deg, rgba(0, 74, 97, 0.98) 0%, rgba(0, 74, 97, 0.95) 100%);
+       background: linear-gradient(145deg, rgba(26, 39, 68, 0.98) 0%, rgba(26, 39, 68, 0.95) 100%);
        padding: 40px 60px;
        text-align: center;
        position: relative;
        border-radius: 20px;
        box-shadow:
-               0 25px 70px rgba(0, 74, 97, 0.25),
+               0 25px 70px rgba(26, 39, 68, 0.25),
                0 10px 30px rgba(0, 0, 0, 0.15);
        border: 1px solid rgba(255,255,255,0.15);
        backdrop-filter: blur(10px);
@@ -302,7 +302,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 .hero-box:hover {
     transform: translateY(-5px);
     box-shadow:
-            0 30px 80px rgba(0, 74, 97, 0.3),
+            0 30px 80px rgba(26, 39, 68, 0.3),
             0 15px 40px rgba(0, 0, 0, 0.2);
 }
 
@@ -332,7 +332,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 .hero-divider {
     width: 120px;
     height: 2px;
-    background: #7BC8A4;
+    background: #FDBB30;
     margin: 25px auto;
     border-radius: 1px;
 }
@@ -349,7 +349,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 .subtitle-highlights {
     display: block;
     font-size: 14px;
-    color: #7BC8A4;
+    color: #FDBB30;
     font-weight: 500;
     margin-top: 10px;
 }
@@ -377,7 +377,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .hero-btn.primary {
-    background: linear-gradient(135deg, #7BC8A4, #7BC8A4);
+    background: linear-gradient(135deg, #FDBB30, #FDBB30);
     color: #ffffff;
     box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
 }
@@ -419,13 +419,13 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 .stat-number {
     font-size: 24px;
     font-weight: 700;
-    color: #004A61;
+    color: #1A2744;
     line-height: 1;
 }
 
 .stat-label {
     font-size: 12px;
-    color: #7BC8A4;
+    color: #FDBB30;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -460,11 +460,11 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .intro-title {
-    color: #004A61;
+    color: #1A2744;
     font-size: 42px;
     font-weight: 700;
     margin-bottom: 15px;
-    background: linear-gradient(45deg, #004A61, #7BC8A4);
+    background: linear-gradient(45deg, #1A2744, #FDBB30);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -494,8 +494,8 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     background: white;
     border-radius: 20px;
     padding: 40px;
-    box-shadow: 0 8px 25px rgba(0, 74, 97, 0.08);
-    border: 1px solid rgba(0, 74, 97, 0.05);
+    box-shadow: 0 8px 25px rgba(26, 39, 68, 0.08);
+    border: 1px solid rgba(26, 39, 68, 0.05);
     position: relative;
     overflow: hidden;
 }
@@ -510,15 +510,15 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .vision-card::before {
-    background: linear-gradient(90deg, #7BC8A4, #a8e6cf);
+    background: linear-gradient(90deg, #FDBB30, #FED272);
 }
 
 .mission-card::before {
-    background: linear-gradient(90deg, #004A61, #0066cc);
+    background: linear-gradient(90deg, #1A2744, #0066cc);
 }
 
 .card-header h3 {
-    color: #004A61;
+    color: #1A2744;
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -542,21 +542,21 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     background: white;
     border-radius: 15px;
     padding: 30px;
-    box-shadow: 0 6px 20px rgba(0, 74, 97, 0.08);
-    border: 1px solid rgba(0, 74, 97, 0.05);
+    box-shadow: 0 6px 20px rgba(26, 39, 68, 0.08);
+    border: 1px solid rgba(26, 39, 68, 0.05);
 }
 
 .director-card {
-    background: linear-gradient(145deg, #004A61 0%, #0066cc 100%);
+    background: linear-gradient(145deg, #1A2744 0%, #0066cc 100%);
     color: white;
     text-align: center;
     position: relative;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 
-        0 15px 35px rgba(0, 74, 97, 0.2),
+        0 15px 35px rgba(26, 39, 68, 0.2),
         0 5px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(123, 200, 164, 0.2);
+    border: 1px solid rgba(253, 187, 48, 0.2);
 }
 
 .director-card::after {
@@ -575,9 +575,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 .director-card:hover {
     transform: translateY(-8px) scale(1.02);
     box-shadow: 
-        0 25px 50px rgba(0, 74, 97, 0.3),
+        0 25px 50px rgba(26, 39, 68, 0.3),
         0 15px 30px rgba(0, 0, 0, 0.15);
-    border-color: rgba(123, 200, 164, 0.4);
+    border-color: rgba(253, 187, 48, 0.4);
 }
 
 .director-card:hover::after {
@@ -605,7 +605,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     transform: translateX(-50%);
     width: 40px;
     height: 2px;
-    background: linear-gradient(90deg, #7BC8A4, #ffffff);
+    background: linear-gradient(90deg, #FDBB30, #ffffff);
     border-radius: 1px;
 }
 
@@ -646,7 +646,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .focus-areas-card h4 {
-    color: #004A61;
+    color: #1A2744;
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 25px;
@@ -662,7 +662,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: linear-gradient(90deg, #7BC8A4, #004A61);
+    background: linear-gradient(90deg, #FDBB30, #1A2744);
     border-radius: 2px;
 }
 
@@ -749,7 +749,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 .intro-cta {
     text-align: center;
     padding: 40px;
-    background: linear-gradient(135deg, #7BC8A4 0%, #a8e6cf 100%);
+    background: linear-gradient(135deg, #FDBB30 0%, #FED272 100%);
     border-radius: 20px;
     color: white;
 }
@@ -757,7 +757,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 .cta-btn {
     display: inline-block;
     background: white;
-    color: #004A61;
+    color: #1A2744;
     padding: 15px 40px;
     border-radius: 25px;
     text-decoration: none;
@@ -784,7 +784,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .read-more-btn {
-    background: #004A61;
+    background: #1A2744;
     color: #fff;
     border: none;
     padding: 12px 35px;
@@ -795,14 +795,14 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .read-more-btn:hover {
-    background: #003A4C;
+    background: #0F1B36;
 }
 
 /* Section Headings */
 .section-heading {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 36px;
-    color: #004A61;
+    color: #1A2744;
     font-weight: 300;
     margin-bottom: 50px;
     text-align: left;
@@ -817,7 +817,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     width: 80px;
     height: 2px;
-    background: #7BC8A4;
+    background: #FDBB30;
 }
 
 /* News Section */
@@ -839,9 +839,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     gap: 30px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-            0 10px 30px rgba(0, 74, 97, 0.1),
+            0 10px 30px rgba(26, 39, 68, 0.1),
             0 4px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(123, 200, 164, 0.1);
+    border: 1px solid rgba(253, 187, 48, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -853,16 +853,16 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     top: 0;
     bottom: 0;
     width: 6px;
-    background: linear-gradient(135deg, #7BC8A4, #004A61);
+    background: linear-gradient(135deg, #FDBB30, #1A2744);
     border-radius: 0 3px 3px 0;
 }
 
 .news-card:hover {
     transform: translateY(-8px) scale(1.02);
     box-shadow:
-            0 20px 50px rgba(0, 74, 97, 0.15),
+            0 20px 50px rgba(26, 39, 68, 0.15),
             0 8px 25px rgba(0, 0, 0, 0.1);
-    border-color: rgba(123, 200, 164, 0.3);
+    border-color: rgba(253, 187, 48, 0.3);
 }
 
 .news-meta {
@@ -876,11 +876,11 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     color: white;
     font-weight: 600;
     font-size: 14px;
-    background: linear-gradient(135deg, #004A61, #005a73);
+    background: linear-gradient(135deg, #1A2744, #243660);
     padding: 12px 20px;
     border-radius: 15px;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 74, 97, 0.3);
+    box-shadow: 0 4px 12px rgba(26, 39, 68, 0.3);
     min-width: 100px;
 }
 
@@ -892,7 +892,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .news-title {
-    color: #004A61;
+    color: #1A2744;
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 12px;
@@ -906,9 +906,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     font-style: italic;
     line-height: 1.6;
     padding: 8px 15px;
-    background: rgba(123, 200, 164, 0.1);
+    background: rgba(253, 187, 48, 0.1);
     border-radius: 10px;
-    border-left: 3px solid #7BC8A4;
+    border-left: 3px solid #FDBB30;
 }
 
 /* Partners Section */
@@ -930,9 +930,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     text-align: center;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-            0 10px 30px rgba(0, 74, 97, 0.1),
+            0 10px 30px rgba(26, 39, 68, 0.1),
             0 4px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(123, 200, 164, 0.1);
+    border: 1px solid rgba(253, 187, 48, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -944,20 +944,20 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #7BC8A4, #004A61);
+    background: linear-gradient(90deg, #FDBB30, #1A2744);
     border-radius: 20px 20px 0 0;
 }
 
 .partner-card:hover {
     transform: translateY(-8px) scale(1.05);
     box-shadow:
-            0 20px 50px rgba(0, 74, 97, 0.15),
+            0 20px 50px rgba(26, 39, 68, 0.15),
             0 8px 25px rgba(0, 0, 0, 0.1);
-    border-color: rgba(123, 200, 164, 0.3);
+    border-color: rgba(253, 187, 48, 0.3);
 }
 
 .partner-logo {
-    background: linear-gradient(135deg, #004A61, #005a73);
+    background: linear-gradient(135deg, #1A2744, #243660);
     color: white;
     padding: 40px 20px;
     border-radius: 15px;
@@ -968,13 +968,13 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 25px rgba(0, 74, 97, 0.2);
+    box-shadow: 0 8px 25px rgba(26, 39, 68, 0.2);
     transition: all 0.3s ease;
 }
 
 .partner-card:hover .partner-logo {
     transform: scale(1.05);
-    box-shadow: 0 12px 35px rgba(0, 74, 97, 0.3);
+    box-shadow: 0 12px 35px rgba(26, 39, 68, 0.3);
 }
 
 .partner-desc {
@@ -982,9 +982,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     color: #666;
     line-height: 1.7;
     padding: 15px;
-    background: rgba(123, 200, 164, 0.05);
+    background: rgba(253, 187, 48, 0.05);
     border-radius: 10px;
-    border-left: 3px solid #7BC8A4;
+    border-left: 3px solid #FDBB30;
 }
 
 /* Contact Section */
@@ -1005,8 +1005,8 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     background: white;
     border-radius: 20px;
     padding: 40px;
-    box-shadow: 0 10px 30px rgba(0, 74, 97, 0.1);
-    border: 1px solid rgba(0, 74, 97, 0.05);
+    box-shadow: 0 10px 30px rgba(26, 39, 68, 0.1);
+    border: 1px solid rgba(26, 39, 68, 0.05);
     position: relative;
     overflow: hidden;
 }
@@ -1019,18 +1019,18 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #004a61, #7BC8A4, #004a61);
+    background: linear-gradient(90deg, #1a2744, #FDBB30, #1a2744);
 }
 
 .contact-header h3 {
-    color: #004a61;
+    color: #1a2744;
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 30px;
 }
 
 .lab-info h4 {
-    color: #004a61;
+    color: #1a2744;
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -1041,7 +1041,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     padding: 20px;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     border-radius: 15px;
-    border-left: 4px solid #7BC8A4;
+    border-left: 4px solid #FDBB30;
 }
 
 .address-info p {
@@ -1052,7 +1052,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 .university {
     font-weight: 600;
     font-size: 16px;
-    color: #004a61;
+    color: #1a2744;
 }
 
 .campus {
@@ -1076,18 +1076,18 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     align-items: center;
     gap: 15px;
     padding: 15px;
-    background: rgba(0, 74, 97, 0.02);
+    background: rgba(26, 39, 68, 0.02);
     border-radius: 12px;
     transition: all 0.3s ease;
 }
 
 .contact-item:hover {
-    background: rgba(0, 74, 97, 0.05);
+    background: rgba(26, 39, 68, 0.05);
     transform: translateX(5px);
 }
 
 .contact-icon-wrapper {
-    background: linear-gradient(135deg, #004a61, #0066cc);
+    background: linear-gradient(135deg, #1a2744, #0066cc);
     color: white;
     padding: 12px;
     border-radius: 50%;
@@ -1111,7 +1111,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 
 .contact-link,
 .contact-value {
-    color: #004a61;
+    color: #1a2744;
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
@@ -1180,11 +1180,11 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     padding: 20px;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     border-radius: 12px;
-    border-left: 4px solid #7BC8A4;
+    border-left: 4px solid #FDBB30;
 }
 
 .collaboration-item h4 {
-    color: #004a61;
+    color: #1a2744;
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 8px;
@@ -1203,7 +1203,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .map-title {
-    color: #004a61;
+    color: #1a2744;
     font-size: 28px;
     font-weight: 700;
     text-align: center;
@@ -1217,12 +1217,12 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     background: white;
     border-radius: 20px;
     padding: 40px;
-    box-shadow: 0 10px 30px rgba(0, 74, 97, 0.1);
-    border: 1px solid rgba(0, 74, 97, 0.05);
+    box-shadow: 0 10px 30px rgba(26, 39, 68, 0.1);
+    border: 1px solid rgba(26, 39, 68, 0.05);
 }
 
 .map-details h4 {
-    color: #004a61;
+    color: #1a2744;
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -1235,16 +1235,16 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 .direction-item {
     margin-bottom: 15px;
     padding: 15px;
-    background: rgba(123, 200, 164, 0.05);
+    background: rgba(253, 187, 48, 0.05);
     border-radius: 10px;
-    border-left: 3px solid #7BC8A4;
+    border-left: 3px solid #FDBB30;
     color: #374151;
     font-size: 14px;
     line-height: 1.5;
 }
 
 .direction-item strong {
-    color: #004a61;
+    color: #1a2744;
 }
 
 .campus-info {
@@ -1255,7 +1255,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .campus-info h5 {
-    color: #004a61;
+    color: #1a2744;
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 10px;
@@ -1271,7 +1271,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 .map-container {
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0, 74, 97, 0.1);
+    box-shadow: 0 8px 25px rgba(26, 39, 68, 0.1);
 }
 
 /* Mobile responsiveness for contact */
@@ -1527,7 +1527,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 
 /* Footer */
 .footer {
-    background: #7BC8A4;
+    background: #FDBB30;
     padding: 40px 0;
     text-align: center;
 }
@@ -1554,28 +1554,28 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 
 .filter-btn {
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    color: #004A61;
-    border: 2px solid rgba(123, 200, 164, 0.3);
+    color: #1A2744;
+    border: 2px solid rgba(253, 187, 48, 0.3);
     padding: 12px 24px;
     border-radius: 25px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(0, 74, 97, 0.1);
+    box-shadow: 0 4px 12px rgba(26, 39, 68, 0.1);
 }
 
 .filter-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 74, 97, 0.15);
-    border-color: rgba(123, 200, 164, 0.5);
+    box-shadow: 0 8px 20px rgba(26, 39, 68, 0.15);
+    border-color: rgba(253, 187, 48, 0.5);
 }
 
 .filter-btn.active {
-    background: linear-gradient(135deg, #7BC8A4 0%, #5a9b7e 100%);
+    background: linear-gradient(135deg, #FDBB30 0%, #D99B1E 100%);
     color: white;
-    border-color: #7BC8A4;
-    box-shadow: 0 6px 20px rgba(123, 200, 164, 0.3);
+    border-color: #FDBB30;
+    box-shadow: 0 6px 20px rgba(253, 187, 48, 0.3);
 }
 
 /* Member Search */
@@ -1589,18 +1589,18 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     width: 100%;
     max-width: 400px;
     padding: 15px 20px;
-    border: 2px solid rgba(123, 200, 164, 0.3);
+    border: 2px solid rgba(253, 187, 48, 0.3);
     border-radius: 25px;
     font-size: 16px;
     background: white;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 74, 97, 0.1);
+    box-shadow: 0 4px 12px rgba(26, 39, 68, 0.1);
 }
 
 #memberSearch:focus {
     outline: none;
-    border-color: #7BC8A4;
-    box-shadow: 0 6px 20px rgba(123, 200, 164, 0.2);
+    border-color: #FDBB30;
+    box-shadow: 0 6px 20px rgba(253, 187, 48, 0.2);
 }
 
 #memberSearch::placeholder {
@@ -1613,7 +1613,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .member-section-title {
-    color: #004A61;
+    color: #1A2744;
     font-size: 28px;
     font-weight: 600;
     margin-bottom: 30px;
@@ -1630,7 +1630,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: linear-gradient(90deg, #7BC8A4, #004A61);
+    background: linear-gradient(90deg, #FDBB30, #1A2744);
     border-radius: 2px;
 }
 
@@ -1669,9 +1669,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     gap: 20px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-            0 8px 25px rgba(0, 74, 97, 0.1),
+            0 8px 25px rgba(26, 39, 68, 0.1),
             0 3px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(123, 200, 164, 0.1);
+    border: 1px solid rgba(253, 187, 48, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -1683,21 +1683,21 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     bottom: 0;
     width: 4px;
-    background: linear-gradient(135deg, #7BC8A4, #004A61);
+    background: linear-gradient(135deg, #FDBB30, #1A2744);
     border-radius: 0 2px 2px 0;
 }
 
 .member-card:hover {
     transform: translateY(-6px) scale(1.02);
     box-shadow:
-            0 15px 40px rgba(0, 74, 97, 0.15),
+            0 15px 40px rgba(26, 39, 68, 0.15),
             0 6px 20px rgba(0, 0, 0, 0.1);
-    border-color: rgba(123, 200, 164, 0.3);
+    border-color: rgba(253, 187, 48, 0.3);
 }
 
 /* Director Card Special Styling */
 .director-card {
-    background: linear-gradient(145deg, #004A61 0%, #005a73 100%);
+    background: linear-gradient(145deg, #1A2744 0%, #243660 100%);
     color: white;
     text-align: center;
     flex-direction: column;
@@ -1705,11 +1705,11 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .director-card::before {
-    background: linear-gradient(135deg, #7BC8A4, #ffffff);
+    background: linear-gradient(135deg, #FDBB30, #ffffff);
 }
 
 .director-card .member-avatar {
-    background: linear-gradient(135deg, #7BC8A4, #5a9b7e) !important;
+    background: linear-gradient(135deg, #FDBB30, #D99B1E) !important;
     color: white !important;
     width: 80px !important;
     height: 80px !important;
@@ -1734,7 +1734,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #004A61, #005a73);
+    background: linear-gradient(135deg, #1A2744, #243660);
     color: white;
     display: flex;
     align-items: center;
@@ -1742,13 +1742,13 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     font-size: 18px;
     font-weight: 700;
     flex-shrink: 0;
-    box-shadow: 0 4px 15px rgba(0, 74, 97, 0.2);
+    box-shadow: 0 4px 15px rgba(26, 39, 68, 0.2);
     transition: all 0.3s ease;
 }
 
 .member-card:hover .member-avatar {
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(0, 74, 97, 0.3);
+    box-shadow: 0 6px 20px rgba(26, 39, 68, 0.3);
 }
 
 /* Member Info */
@@ -1758,7 +1758,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .member-name {
-    color: #004A61;
+    color: #1A2744;
     font-size: 18px;
     font-weight: 600;
     margin: 0 0 5px 0;
@@ -1785,7 +1785,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .member-badge.director {
-    background: linear-gradient(135deg, #7BC8A4, #5a9b7e);
+    background: linear-gradient(135deg, #FDBB30, #D99B1E);
     color: white;
 }
 
@@ -1834,9 +1834,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .research-filter-btn {
-    background: rgba(0, 74, 97, 0.1);
-    color: #004A61;
-    border: 2px solid rgba(0, 74, 97, 0.2);
+    background: rgba(26, 39, 68, 0.1);
+    color: #1A2744;
+    border: 2px solid rgba(26, 39, 68, 0.2);
     padding: 12px 24px;
     border-radius: 25px;
     font-size: 14px;
@@ -1848,16 +1848,16 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .research-filter-btn:hover {
-    background: rgba(0, 74, 97, 0.15);
-    border-color: #7BC8A4;
+    background: rgba(26, 39, 68, 0.15);
+    border-color: #FDBB30;
     transform: translateY(-2px);
 }
 
 .research-filter-btn.active {
-    background: #004A61;
+    background: #1A2744;
     color: white;
-    border-color: #004A61;
-    box-shadow: 0 4px 15px rgba(0, 74, 97, 0.3);
+    border-color: #1A2744;
+    box-shadow: 0 4px 15px rgba(26, 39, 68, 0.3);
 }
 
 .research-intro {
@@ -1883,12 +1883,12 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     border-radius: 20px;
     padding: 30px;
     box-shadow:
-            0 10px 30px rgba(0, 74, 97, 0.1),
+            0 10px 30px rgba(26, 39, 68, 0.1),
             0 4px 15px rgba(0, 0, 0, 0.05);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(123, 200, 164, 0.1);
+    border: 1px solid rgba(253, 187, 48, 0.1);
 }
 
 .theme-card::before {
@@ -1898,16 +1898,16 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #7BC8A4, #004A61);
+    background: linear-gradient(90deg, #FDBB30, #1A2744);
     border-radius: 20px 20px 0 0;
 }
 
 .theme-card:hover {
     transform: translateY(-8px) scale(1.02);
     box-shadow:
-            0 20px 50px rgba(0, 74, 97, 0.15),
+            0 20px 50px rgba(26, 39, 68, 0.15),
             0 8px 25px rgba(0, 0, 0, 0.1);
-    border-color: rgba(123, 200, 164, 0.3);
+    border-color: rgba(253, 187, 48, 0.3);
 }
 
 .theme-header {
@@ -1918,7 +1918,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .theme-card h3 {
-    color: #004A61;
+    color: #1A2744;
     font-size: 22px;
     font-weight: 600;
     margin: 0;
@@ -1928,7 +1928,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .expand-btn {
-    background: linear-gradient(135deg, #7BC8A4, #5a9b7e);
+    background: linear-gradient(135deg, #FDBB30, #D99B1E);
     color: white;
     border: none;
     width: 36px;
@@ -1941,13 +1941,13 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(123, 200, 164, 0.3);
+    box-shadow: 0 4px 12px rgba(253, 187, 48, 0.3);
 }
 
 .expand-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(123, 200, 164, 0.4);
-    background: linear-gradient(135deg, #5a9b7e, #7BC8A4);
+    box-shadow: 0 6px 20px rgba(253, 187, 48, 0.4);
+    background: linear-gradient(135deg, #D99B1E, #FDBB30);
 }
 
 .theme-summary {
@@ -1964,7 +1964,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     margin-top: 25px;
     padding-top: 25px;
-    border-top: 1px solid rgba(123, 200, 164, 0.2);
+    border-top: 1px solid rgba(253, 187, 48, 0.2);
 }
 
 .theme-card.expanded .theme-details {
@@ -1972,7 +1972,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .theme-details h4 {
-    color: #004A61;
+    color: #1A2744;
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 15px;
@@ -2002,23 +2002,23 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     content: '▸';
     position: absolute;
     left: 0;
-    color: #7BC8A4;
+    color: #FDBB30;
     font-weight: bold;
 }
 
 .theme-details strong {
-    color: #004A61;
+    color: #1A2744;
     font-weight: 600;
 }
 
 .research-impact {
-    background: linear-gradient(135deg, #004A61 0%, #005a73 100%);
+    background: linear-gradient(135deg, #1A2744 0%, #243660 100%);
     color: white;
     padding: 40px;
     border-radius: 20px;
     margin-top: 50px;
     text-align: center;
-    box-shadow: 0 15px 35px rgba(0, 74, 97, 0.2);
+    box-shadow: 0 15px 35px rgba(26, 39, 68, 0.2);
 }
 
 .research-impact h3 {
@@ -2077,7 +2077,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .card-defi {
-    background: #7BC8A4;
+    background: #FDBB30;
 }
 
 /* About Section */
@@ -2092,9 +2092,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     padding: 40px;
     margin-bottom: 50px;
     box-shadow:
-            0 10px 30px rgba(0, 74, 97, 0.1),
+            0 10px 30px rgba(26, 39, 68, 0.1),
             0 4px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(123, 200, 164, 0.1);
+    border: 1px solid rgba(253, 187, 48, 0.1);
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -2107,7 +2107,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #7BC8A4, #004A61);
+    background: linear-gradient(90deg, #FDBB30, #1A2744);
     border-radius: 20px 20px 0 0;
 }
 
@@ -2135,9 +2135,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     text-align: center;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-            0 8px 25px rgba(0, 74, 97, 0.1),
+            0 8px 25px rgba(26, 39, 68, 0.1),
             0 3px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(123, 200, 164, 0.1);
+    border: 1px solid rgba(253, 187, 48, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -2149,16 +2149,16 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     bottom: 0;
     width: 4px;
-    background: linear-gradient(135deg, #7BC8A4, #004A61);
+    background: linear-gradient(135deg, #FDBB30, #1A2744);
     border-radius: 0 2px 2px 0;
 }
 
 .about-card:hover {
     transform: translateY(-8px) scale(1.02);
     box-shadow:
-            0 15px 40px rgba(0, 74, 97, 0.15),
+            0 15px 40px rgba(26, 39, 68, 0.15),
             0 6px 20px rgba(0, 0, 0, 0.1);
-    border-color: rgba(123, 200, 164, 0.3);
+    border-color: rgba(253, 187, 48, 0.3);
 }
 
 .card-icon {
@@ -2168,7 +2168,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .about-card h3 {
-    color: #004A61;
+    color: #1A2744;
     font-size: 22px;
     font-weight: 600;
     margin-bottom: 15px;
@@ -2187,7 +2187,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .areas-title {
-    color: #004A61;
+    color: #1A2744;
     font-size: 28px;
     font-weight: 600;
     text-align: center;
@@ -2204,7 +2204,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: linear-gradient(90deg, #7BC8A4, #004A61);
+    background: linear-gradient(90deg, #FDBB30, #1A2744);
     border-radius: 2px;
 }
 
@@ -2222,7 +2222,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     text-align: center;
     font-size: 15px;
     font-weight: 600;
-    color: #004A61;
+    color: #1A2744;
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     position: relative;
@@ -2236,16 +2236,16 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #7BC8A4 0%, #004A61 100%);
+    background: linear-gradient(90deg, #FDBB30 0%, #1A2744 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
 .area-tag:hover {
     background: white;
-    border-color: #7BC8A4;
+    border-color: #FDBB30;
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(123, 200, 164, 0.2);
+    box-shadow: 0 8px 24px rgba(253, 187, 48, 0.2);
 }
 
 .area-tag:hover::before {
@@ -2254,11 +2254,11 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 
 /* Director Quote Card */
 .director-quote-card {
-    background: linear-gradient(145deg, #004A61 0%, #005a73 100%);
+    background: linear-gradient(145deg, #1A2744 0%, #243660 100%);
     border-radius: 20px;
     padding: 40px;
     color: white;
-    box-shadow: 0 15px 35px rgba(0, 74, 97, 0.2);
+    box-shadow: 0 15px 35px rgba(26, 39, 68, 0.2);
     position: relative;
     overflow: hidden;
 }
@@ -2270,7 +2270,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #7BC8A4, #ffffff);
+    background: linear-gradient(90deg, #FDBB30, #ffffff);
     border-radius: 20px 20px 0 0;
 }
 
@@ -2293,14 +2293,14 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #7BC8A4, #5a9b7e);
+    background: linear-gradient(135deg, #FDBB30, #D99B1E);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 18px;
     font-weight: 700;
-    box-shadow: 0 4px 15px rgba(123, 200, 164, 0.3);
+    box-shadow: 0 4px 15px rgba(253, 187, 48, 0.3);
 }
 
 .quote-author-info {
@@ -2338,9 +2338,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     margin-bottom: 50px;
     text-align: center;
     box-shadow:
-            0 10px 30px rgba(0, 74, 97, 0.1),
+            0 10px 30px rgba(26, 39, 68, 0.1),
             0 4px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(123, 200, 164, 0.1);
+    border: 1px solid rgba(253, 187, 48, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -2352,7 +2352,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #7BC8A4, #004A61);
+    background: linear-gradient(90deg, #FDBB30, #1A2744);
     border-radius: 20px 20px 0 0;
 }
 
@@ -2377,9 +2377,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     padding: 30px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-            0 8px 25px rgba(0, 74, 97, 0.1),
+            0 8px 25px rgba(26, 39, 68, 0.1),
             0 3px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(123, 200, 164, 0.1);
+    border: 1px solid rgba(253, 187, 48, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -2391,16 +2391,16 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     bottom: 0;
     width: 4px;
-    background: linear-gradient(135deg, #7BC8A4, #004A61);
+    background: linear-gradient(135deg, #FDBB30, #1A2744);
     border-radius: 0 2px 2px 0;
 }
 
 .paper-card:hover {
     transform: translateY(-8px) scale(1.02);
     box-shadow:
-            0 15px 40px rgba(0, 74, 97, 0.15),
+            0 15px 40px rgba(26, 39, 68, 0.15),
             0 6px 20px rgba(0, 0, 0, 0.1);
-    border-color: rgba(123, 200, 164, 0.3);
+    border-color: rgba(253, 187, 48, 0.3);
 }
 
 .active-paper::before {
@@ -2444,7 +2444,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .paper-content h4 {
-    color: #004A61;
+    color: #1A2744;
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 15px;
@@ -2468,7 +2468,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .paper-deadline {
-    color: #004A61;
+    color: #1A2744;
     font-weight: 600;
 }
 
@@ -2478,7 +2478,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .paper-link-btn {
-    background: linear-gradient(135deg, #7BC8A4, #5a9b7e);
+    background: linear-gradient(135deg, #FDBB30, #D99B1E);
     color: white;
     padding: 10px 20px;
     border-radius: 20px;
@@ -2486,13 +2486,13 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     font-size: 14px;
     font-weight: 500;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(123, 200, 164, 0.3);
+    box-shadow: 0 4px 12px rgba(253, 187, 48, 0.3);
 }
 
 .paper-link-btn:hover {
-    background: linear-gradient(135deg, #5a9b7e, #7BC8A4);
+    background: linear-gradient(135deg, #D99B1E, #FDBB30);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(123, 200, 164, 0.4);
+    box-shadow: 0 6px 20px rgba(253, 187, 48, 0.4);
 }
 
 /* Special Interest Group Section */
@@ -2520,7 +2520,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #7BC8A4, #ffffff);
+    background: linear-gradient(90deg, #FDBB30, #ffffff);
     border-radius: 20px 20px 0 0;
 }
 
@@ -2537,7 +2537,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .focus-title {
-    color: #004A61;
+    color: #1A2744;
     font-size: 28px;
     font-weight: 600;
     text-align: center;
@@ -2554,7 +2554,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: linear-gradient(90deg, #7BC8A4, #004A61);
+    background: linear-gradient(90deg, #FDBB30, #1A2744);
     border-radius: 2px;
 }
 
@@ -2571,9 +2571,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     text-align: center;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-            0 8px 25px rgba(0, 74, 97, 0.1),
+            0 8px 25px rgba(26, 39, 68, 0.1),
             0 3px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(123, 200, 164, 0.1);
+    border: 1px solid rgba(253, 187, 48, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -2585,16 +2585,16 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     bottom: 0;
     width: 4px;
-    background: linear-gradient(135deg, #7BC8A4, #004A61);
+    background: linear-gradient(135deg, #FDBB30, #1A2744);
     border-radius: 0 2px 2px 0;
 }
 
 .focus-card:hover {
     transform: translateY(-8px) scale(1.02);
     box-shadow:
-            0 15px 40px rgba(0, 74, 97, 0.15),
+            0 15px 40px rgba(26, 39, 68, 0.15),
             0 6px 20px rgba(0, 0, 0, 0.1);
-    border-color: rgba(123, 200, 164, 0.3);
+    border-color: rgba(253, 187, 48, 0.3);
 }
 
 .focus-icon {
@@ -2604,7 +2604,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .focus-card h4 {
-    color: #004A61;
+    color: #1A2744;
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 15px;
@@ -2623,7 +2623,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .people-title {
-    color: #004A61;
+    color: #1A2744;
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 25px;
@@ -2640,7 +2640,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     transform: translateX(-50%);
     width: 40px;
     height: 2px;
-    background: linear-gradient(90deg, #7BC8A4, #004A61);
+    background: linear-gradient(90deg, #FDBB30, #1A2744);
     border-radius: 1px;
 }
 
@@ -2663,9 +2663,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     gap: 20px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-            0 8px 25px rgba(0, 74, 97, 0.1),
+            0 8px 25px rgba(26, 39, 68, 0.1),
             0 3px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(123, 200, 164, 0.1);
+    border: 1px solid rgba(253, 187, 48, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -2677,32 +2677,32 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     bottom: 0;
     width: 4px;
-    background: linear-gradient(135deg, #7BC8A4, #004A61);
+    background: linear-gradient(135deg, #FDBB30, #1A2744);
     border-radius: 0 2px 2px 0;
 }
 
 .coordinator-card:hover {
     transform: translateY(-6px) scale(1.02);
     box-shadow:
-            0 15px 40px rgba(0, 74, 97, 0.15),
+            0 15px 40px rgba(26, 39, 68, 0.15),
             0 6px 20px rgba(0, 0, 0, 0.1);
-    border-color: rgba(123, 200, 164, 0.3);
+    border-color: rgba(253, 187, 48, 0.3);
 }
 
 .chair-card {
-    background: linear-gradient(145deg, #004A61 0%, #005a73 100%);
+    background: linear-gradient(145deg, #1A2744 0%, #243660 100%);
     color: white;
 }
 
 .chair-card::before {
-    background: linear-gradient(135deg, #7BC8A4, #ffffff);
+    background: linear-gradient(135deg, #FDBB30, #ffffff);
 }
 
 .coordinator-avatar {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #004A61, #005a73);
+    background: linear-gradient(135deg, #1A2744, #243660);
     color: white;
     display: flex;
     align-items: center;
@@ -2710,11 +2710,11 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     font-size: 18px;
     font-weight: 700;
     flex-shrink: 0;
-    box-shadow: 0 4px 15px rgba(0, 74, 97, 0.2);
+    box-shadow: 0 4px 15px rgba(26, 39, 68, 0.2);
 }
 
 .chair-card .coordinator-avatar {
-    background: linear-gradient(135deg, #7BC8A4, #5a9b7e);
+    background: linear-gradient(135deg, #FDBB30, #D99B1E);
 }
 
 .coordinator-info {
@@ -2722,7 +2722,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .coordinator-name {
-    color: #004A61;
+    color: #1A2744;
     font-size: 18px;
     font-weight: 600;
     margin: 0 0 5px 0;
@@ -2753,7 +2753,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .coordinator-badge.chair {
-    background: linear-gradient(135deg, #7BC8A4, #5a9b7e);
+    background: linear-gradient(135deg, #FDBB30, #D99B1E);
     color: white;
 }
 
@@ -2778,9 +2778,9 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     gap: 20px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-            0 8px 25px rgba(0, 74, 97, 0.1),
+            0 8px 25px rgba(26, 39, 68, 0.1),
             0 3px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(123, 200, 164, 0.1);
+    border: 1px solid rgba(253, 187, 48, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -2792,16 +2792,16 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     bottom: 0;
     width: 4px;
-    background: linear-gradient(135deg, #7BC8A4, #004A61);
+    background: linear-gradient(135deg, #FDBB30, #1A2744);
     border-radius: 0 2px 2px 0;
 }
 
 .sig-member-card:hover {
     transform: translateY(-6px) scale(1.02);
     box-shadow:
-            0 15px 40px rgba(0, 74, 97, 0.15),
+            0 15px 40px rgba(26, 39, 68, 0.15),
             0 6px 20px rgba(0, 0, 0, 0.1);
-    border-color: rgba(123, 200, 164, 0.3);
+    border-color: rgba(253, 187, 48, 0.3);
 }
 
 .member-badge.member {
@@ -2811,12 +2811,12 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 
 /* Join Card */
 .sig-join-card {
-    background: linear-gradient(145deg, #7BC8A4 0%, #5a9b7e 100%);
+    background: linear-gradient(145deg, #FDBB30 0%, #D99B1E 100%);
     border-radius: 20px;
     padding: 40px;
     text-align: center;
     color: white;
-    box-shadow: 0 15px 35px rgba(123, 200, 164, 0.3);
+    box-shadow: 0 15px 35px rgba(253, 187, 48, 0.3);
     position: relative;
     overflow: hidden;
 }
@@ -2828,7 +2828,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #ffffff, #004A61);
+    background: linear-gradient(90deg, #ffffff, #1A2744);
     border-radius: 20px 20px 0 0;
 }
 
@@ -3110,8 +3110,8 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     border-radius: 20px;
     padding: 40px;
     margin-bottom: 40px;
-    box-shadow: 0 10px 30px rgba(0, 74, 97, 0.1);
-    border: 1px solid rgba(0, 74, 97, 0.05);
+    box-shadow: 0 10px 30px rgba(26, 39, 68, 0.1);
+    border: 1px solid rgba(26, 39, 68, 0.05);
 }
 
 .lab-metrics {
@@ -3120,16 +3120,16 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     gap: 30px;
     margin-bottom: 30px;
     padding: 30px 0;
-    border-bottom: 2px solid rgba(0, 74, 97, 0.1);
+    border-bottom: 2px solid rgba(26, 39, 68, 0.1);
 }
 
 .metric-item {
     text-align: center;
     padding: 20px;
-    background: linear-gradient(135deg, #004a61 0%, #0066cc 100%);
+    background: linear-gradient(135deg, #1a2744 0%, #0066cc 100%);
     border-radius: 15px;
     color: white;
-    box-shadow: 0 5px 15px rgba(0, 74, 97, 0.2);
+    box-shadow: 0 5px 15px rgba(26, 39, 68, 0.2);
     transition: transform 0.3s ease;
 }
 
@@ -3160,8 +3160,8 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 
 .pub-filter-btn {
     background: white;
-    color: #004a61;
-    border: 2px solid #004a61;
+    color: #1a2744;
+    border: 2px solid #1a2744;
     padding: 12px 24px;
     border-radius: 25px;
     font-weight: 600;
@@ -3172,10 +3172,10 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 
 .pub-filter-btn:hover,
 .pub-filter-btn.active {
-    background: #004a61;
+    background: #1a2744;
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 74, 97, 0.3);
+    box-shadow: 0 5px 15px rgba(26, 39, 68, 0.3);
 }
 
 .publications-grid {
@@ -3188,8 +3188,8 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     background: white;
     border-radius: 20px;
     padding: 30px;
-    border: 1px solid rgba(0, 74, 97, 0.1);
-    box-shadow: 0 8px 25px rgba(0, 74, 97, 0.08);
+    border: 1px solid rgba(26, 39, 68, 0.1);
+    box-shadow: 0 8px 25px rgba(26, 39, 68, 0.08);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -3202,12 +3202,12 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #004a61, #0066cc, #004a61);
+    background: linear-gradient(90deg, #1a2744, #0066cc, #1a2744);
 }
 
 .publication-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0, 74, 97, 0.15);
+    box-shadow: 0 15px 40px rgba(26, 39, 68, 0.15);
 }
 
 .pub-type-badge {
@@ -3250,7 +3250,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .pub-content h3 {
-    color: #004a61;
+    color: #1a2744;
     font-size: 20px;
     font-weight: 700;
     line-height: 1.3;
@@ -3266,7 +3266,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .pub-venue {
-    color: #004a61;
+    color: #1a2744;
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 15px;
@@ -3321,24 +3321,24 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .pub-link-btn {
-    background: linear-gradient(135deg, #004a61, #0066cc);
+    background: linear-gradient(135deg, #1a2744, #0066cc);
     color: white;
 }
 
 .pub-link-btn:hover {
-    background: linear-gradient(135deg, #0066cc, #004a61);
+    background: linear-gradient(135deg, #0066cc, #1a2744);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 74, 97, 0.3);
+    box-shadow: 0 5px 15px rgba(26, 39, 68, 0.3);
 }
 
 .pub-cite-btn {
     background: white;
-    color: #004a61;
-    border: 2px solid #004a61;
+    color: #1a2744;
+    border: 2px solid #1a2744;
 }
 
 .pub-cite-btn:hover {
-    background: #004a61;
+    background: #1a2744;
     color: white;
     transform: translateY(-2px);
 }
@@ -3401,8 +3401,8 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     border-radius: 20px;
     padding: 40px;
     margin-bottom: 40px;
-    box-shadow: 0 10px 30px rgba(0, 74, 97, 0.1);
-    border: 1px solid rgba(0, 74, 97, 0.05);
+    box-shadow: 0 10px 30px rgba(26, 39, 68, 0.1);
+    border: 1px solid rgba(26, 39, 68, 0.05);
     text-align: center;
 }
 
@@ -3421,7 +3421,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     overflow-y: auto;
     padding-right: 10px;
     scrollbar-width: thin;
-    scrollbar-color: #7BC8A4 #f1f5f9;
+    scrollbar-color: #FDBB30 #f1f5f9;
 }
 
 .recent-news-grid::-webkit-scrollbar {
@@ -3434,21 +3434,21 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .recent-news-grid::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #7BC8A4, #004A61);
+    background: linear-gradient(135deg, #FDBB30, #1A2744);
     border-radius: 10px;
     transition: all 0.3s ease;
 }
 
 .recent-news-grid::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #004A61, #7BC8A4);
+    background: linear-gradient(135deg, #1A2744, #FDBB30);
 }
 
 .news-item {
     background: white;
     border-radius: 20px;
     padding: 30px;
-    border: 1px solid rgba(0, 74, 97, 0.1);
-    box-shadow: 0 8px 25px rgba(0, 74, 97, 0.08);
+    border: 1px solid rgba(26, 39, 68, 0.1);
+    box-shadow: 0 8px 25px rgba(26, 39, 68, 0.08);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -3461,12 +3461,12 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #7BC8A4, #004a61, #7BC8A4);
+    background: linear-gradient(90deg, #FDBB30, #1a2744, #FDBB30);
 }
 
 .news-item:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0, 74, 97, 0.15);
+    box-shadow: 0 15px 40px rgba(26, 39, 68, 0.15);
 }
 
 .featured-news {
@@ -3497,12 +3497,12 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 
 .news-date-badge {
     display: inline-block;
-    background: linear-gradient(135deg, #004a61, #0066cc);
+    background: linear-gradient(135deg, #1a2744, #0066cc);
     color: white;
     padding: 12px 18px;
     border-radius: 15px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 12px rgba(0, 74, 97, 0.3);
+    box-shadow: 0 4px 12px rgba(26, 39, 68, 0.3);
     text-align: center;
     min-width: 80px;
 }
@@ -3523,7 +3523,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 }
 
 .news-content h3 {
-    color: #004a61;
+    color: #1a2744;
     font-size: 20px;
     font-weight: 700;
     line-height: 1.3;
@@ -3698,7 +3698,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     right: 30px;
     width: 50px;
     height: 50px;
-    background: linear-gradient(135deg, #7BC8A4 0%, #004A61 100%);
+    background: linear-gradient(135deg, #FDBB30 0%, #1A2744 100%);
     color: white;
     border: none;
     border-radius: 50%;
@@ -3706,7 +3706,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0, 74, 97, 0.3);
+    box-shadow: 0 4px 15px rgba(26, 39, 68, 0.3);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1000;
     opacity: 0;
@@ -3722,7 +3722,7 @@ h1:contains("EMPIRICAL SOFTWARE ENGINEERING LAB") {
 
 .scroll-to-top:hover {
     transform: translateY(-5px) scale(1.1);
-    box-shadow: 0 8px 25px rgba(123, 200, 164, 0.4);
+    box-shadow: 0 8px 25px rgba(253, 187, 48, 0.4);
 }
 
 .scroll-to-top:active {

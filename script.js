@@ -406,7 +406,7 @@ function initMemberFiltering() {
                 border-radius: 20px;
                 margin: 40px auto;
                 max-width: 400px;
-                box-shadow: 0 8px 25px rgba(0, 74, 97, 0.1);
+                box-shadow: 0 8px 25px rgba(26, 39, 68, 0.1);
             `;
             
             const membersContainer = document.querySelector('#members .container');
@@ -928,8 +928,8 @@ function showBibtex(publicationId) {
         modal.innerHTML = `
             <div style="background: white; padding: 30px; border-radius: 15px; max-width: 700px; max-height: 80vh; overflow-y: auto; margin: 20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="margin: 0; color: #004A61;">Citation</h3>
-                    <button onclick="copyBibtex('${publication.id}')" style="background: #7BC8A4; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 12px;" title="Copy to clipboard">
+                    <h3 style="margin: 0; color: #1A2744;">Citation</h3>
+                    <button onclick="copyBibtex('${publication.id}')" style="background: #FDBB30; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 12px;" title="Copy to clipboard">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
                         </svg>
@@ -938,7 +938,7 @@ function showBibtex(publicationId) {
                 </div>
                 <pre id="bibtex-content-${publication.id}" style="background: #f5f5f5; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 12px; line-height: 1.4;">${publication.bibtex}</pre>
                 <div style="text-align: right; margin-top: 20px;">
-                    <button onclick="this.closest('.bibtex-modal').remove()" style="background: #004A61; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+                    <button onclick="this.closest('.bibtex-modal').remove()" style="background: #1A2744; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
                 </div>
             </div>
         `;
@@ -1063,7 +1063,7 @@ function showCopyFeedback() {
 
         setTimeout(() => {
             copyButton.innerHTML = originalHTML;
-            copyButton.style.background = '#7BC8A4';
+            copyButton.style.background = '#FDBB30';
         }, 2000);
     }
 }
