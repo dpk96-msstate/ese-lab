@@ -19,6 +19,7 @@ create table public.members (
   affiliation text null,
   role_category text not null,
   image_url text null,
+  website_url text null,
   linkedin_url text null,
   created_at timestamp with time zone not null default timezone ('utc'::text, now()),
   google_scholar_url text null,
@@ -50,7 +51,6 @@ create table public.publications (
   created_at timestamp with time zone not null default timezone ('utc'::text, now()),
   constraint publications_pkey primary key (id)
 ) TABLESPACE pg_default;
-
 
 create table public.member_directors (
     member_id uuid not null,

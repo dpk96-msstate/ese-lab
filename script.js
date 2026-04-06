@@ -14,6 +14,8 @@ let quillEditor = null;
 let loadedBlogs = [];
 let allPublications = [];
 let allNewsItems = [];
+let allJobs = [];
+let loadedMembers = [];
 const TAG_COLORS = ['#eff6ff', '#f0fdf4', '#fef9c3', '#fdf2f8', '#fff7ed'];
 const TAG_TEXT = ['#1d4ed8', '#15803d', '#854d0e', '#9d174d', '#c2410c'];
 
@@ -24,10 +26,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     initSmoothScroll();
     initHeaderEffects();
 
-    fetchMembersPublic();
+    await fetchMembersPublic();
+    fetchJobsPublic();
     fetchBlogsPublic();
     fetchNewsPublic();
-    // People filter buttons — filter all .member-card elements across all groups
+    fetchPublicationsPublic();
+
+    // People filter buttons — filter all .member-card-v elements
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -36,36 +41,40 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const dirWrapper = document.getElementById('directors-wrapper');
             const colWrapper = document.getElementById('collaborators-wrapper');
+            const stuWrapper = document.getElementById('students-wrapper');
 
-            // Show/hide director and collaborator sections
+            // Show/hide wrappers based on broad category
             if (filter === 'all') {
                 if (dirWrapper) dirWrapper.style.display = '';
                 if (colWrapper) colWrapper.style.display = '';
+                if (stuWrapper) stuWrapper.style.display = '';
             } else if (filter === 'director') {
                 if (dirWrapper) dirWrapper.style.display = '';
                 if (colWrapper) colWrapper.style.display = 'none';
+                if (stuWrapper) stuWrapper.style.display = 'none';
             } else if (filter === 'collaborator') {
                 if (dirWrapper) dirWrapper.style.display = 'none';
                 if (colWrapper) colWrapper.style.display = '';
+                if (stuWrapper) stuWrapper.style.display = 'none';
             } else {
                 if (dirWrapper) dirWrapper.style.display = 'none';
                 if (colWrapper) colWrapper.style.display = 'none';
+                if (stuWrapper) stuWrapper.style.display = '';
             }
 
-            // Show/hide each director group + individual cards
-            document.querySelectorAll('.director-group').forEach(group => {
-                const cards = group.querySelectorAll('.member-card');
-                const visible = Array.from(cards).filter(c => filter === 'all' || c.dataset.role === filter);
-                cards.forEach(c => c.style.display = (filter === 'all' || c.dataset.role === filter) ? '' : 'none');
-                group.style.display = visible.length ? '' : 'none';
-            });
-
-            const ungrouped = document.getElementById('people-ungrouped');
-            if (ungrouped) {
-                const cards = ungrouped.querySelectorAll('.member-card');
-                const visible = Array.from(cards).filter(c => filter === 'all' || c.dataset.role === filter);
-                cards.forEach(c => c.style.display = (filter === 'all' || c.dataset.role === filter) ? '' : 'none');
-                ungrouped.style.display = visible.length ? '' : 'none';
+            // Show/hide individual student cards
+            if (stuWrapper) {
+                const cards = stuWrapper.querySelectorAll('.member-card-v');
+                let anyVisible = false;
+                cards.forEach(c => {
+                    if (filter === 'all' || c.dataset.role === filter) {
+                        c.style.display = '';
+                        anyVisible = true;
+                    } else {
+                        c.style.display = 'none';
+                    }
+                });
+                stuWrapper.style.display = anyVisible ? '' : 'none';
             }
         });
     });
@@ -100,6 +109,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ['bold', 'italic', 'underline', 'blockquote'],
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
                 ['link', 'image'],
+                ['clean']
+            ]
+        }
+    });
+
+    window.jobQuillEditor = new Quill('#quill-job-editor', {
+        theme: 'snow',
+        placeholder: 'Describe the job requirements, responsibilities, and how to apply...',
+        modules: {
+            toolbar: [
+                [{ 'header': [2, 3, false] }],
+                ['bold', 'italic', 'underline', 'blockquote'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['link'],
                 ['clean']
             ]
         }
@@ -239,7 +262,7 @@ function renderNewsCard(n) {
     const imagePart = n.image_url ? `<div class="news-card-image"><img src="${n.image_url}" alt="" loading="lazy"></div>` : `<div class="news-card-image"><div class="news-card-image-placeholder"><i class="fa-regular fa-newspaper"></i></div></div>`;
 
     return `
-    <div class="news-card${n.is_featured ? ' featured-card' : ''}" onclick="window.openNewsModal('${n.id}')">
+    <div class="news-card${n.is_featured ? ' featured-card' : ''}" onclick="window.openModal('news', '${n.id}')">
         ${featuredBadge}
         ${imagePart}
         <div class="news-card-body">
@@ -248,7 +271,7 @@ function renderNewsCard(n) {
             ${excerpt ? `<div class="news-card-excerpt">${excerpt}</div>` : ''}
             <div class="news-card-footer">
                 <div style="display:flex;flex-wrap:wrap;gap:0.35rem;">${renderTagsHtml(n.tags)}</div>
-                <button class="news-read-btn" onclick="event.stopPropagation();window.openNewsModal('${n.id}')">
+                <button class="news-read-btn" onclick="event.stopPropagation();window.openModal('news', '${n.id}')">
                     Read Story <i class="fa-solid fa-arrow-right" style="font-size:0.75rem;"></i>
                 </button>
             </div>
@@ -284,29 +307,95 @@ function renderAllNews() {
     if (grid) grid.innerHTML = allNewsItems.map(renderNewsCard).join('');
 }
 
-window.openNewsModal = function (id) {
-    const n = allNewsItems.find(x => x.id === id);
-    if (!n) return;
-    document.getElementById('news-modal-title').innerText = n.title;
-    document.getElementById('news-modal-date-text').innerText = [n.month, n.year].filter(Boolean).join(' ') || '';
-    document.getElementById('news-modal-tags').innerHTML = renderTagsHtml(n.tags);
+// Universal modal for News and Jobs
+window.openModal = function (type, id) {
+    const metaIcon = document.querySelector('#modal-meta i');
+    const metaText = document.getElementById('modal-meta-text');
+    const titleEl = document.getElementById('modal-title');
+    const tagsEl = document.getElementById('modal-tags');
+    const descEl = document.getElementById('modal-description');
+    const imgEl = document.getElementById('modal-img');
 
-    const descEl = document.getElementById('news-modal-description');
-    if (n.description) descEl.innerHTML = n.description.trim().startsWith('<') ? n.description : `<p>${n.description}</p>`;
-    else descEl.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">No further details available.</p>';
+    if (type === 'news') {
+        const n = allNewsItems.find(x => x.id === id);
+        if (!n) return;
+        metaIcon.className = 'fa-regular fa-calendar';
+        metaText.innerText = [n.month, n.year].filter(Boolean).join(' ') || '';
+        titleEl.innerText = n.title;
+        tagsEl.innerHTML = renderTagsHtml(n.tags);
 
-    const imgEl = document.getElementById('news-modal-img');
-    if (n.image_url) { imgEl.src = n.image_url; imgEl.classList.remove('hidden'); }
-    else imgEl.classList.add('hidden');
+        if (n.description) descEl.innerHTML = n.description.trim().startsWith('<') ? n.description : `<p>${n.description}</p>`;
+        else descEl.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">No further details available.</p>';
 
-    document.getElementById('news-modal-overlay').classList.remove('hidden');
+        if (n.image_url) { imgEl.src = n.image_url; imgEl.classList.remove('hidden'); }
+        else imgEl.classList.add('hidden');
+    } else if (type === 'job') {
+        const job = allJobs.find(x => x.id === id);
+        if (!job) return;
+        const advisor = loadedMembers.find(m => m.id === job.advisor_id);
+
+        metaIcon.className = 'fa-regular fa-clock';
+        metaText.innerText = `Posted ${new Date(job.created_at).toLocaleDateString()}`;
+        titleEl.innerText = job.title;
+
+        tagsEl.innerHTML = `<span class="news-tag" style="background:#eff6ff;color:#1d4ed8;">Open Position</span>`;
+        if (advisor) {
+            tagsEl.innerHTML += `<span class="news-tag" style="background:#f3e8ff;color:#7e22ce;"><i class="fa-solid fa-user-tie" style="margin-right:4px;"></i>${advisor.name}</span>`;
+        }
+
+        descEl.innerHTML = job.description || '<p>No description provided.</p>';
+        imgEl.classList.add('hidden'); // Jobs generally don't have images in this schema
+    }
+
+    document.getElementById('modal-overlay').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 };
 
-window.closeNewsModal = function () {
-    document.getElementById('news-modal-overlay').classList.add('hidden');
+window.closeModal = function () {
+    document.getElementById('modal-overlay').classList.add('hidden');
     document.body.style.overflow = '';
 };
+
+
+async function fetchJobsPublic() {
+    try {
+        const { data, error } = await supabase.from('job_openings').select('*').eq('is_active', true).order('created_at', { ascending: false });
+        if (error) throw error;
+        allJobs = data || [];
+
+        const grid = document.getElementById('public-jobs-grid');
+        if (allJobs.length === 0) {
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem; border: 1px dashed var(--border); border-radius: var(--radius-md);">No open positions currently available. Please check back later.</div>';
+            return;
+        }
+
+        grid.innerHTML = allJobs.map(job => {
+            const excerpt = job.description ? job.description.replace(/<[^>]+>/g, '').substring(0, 160) + '...' : '';
+            const advisor = loadedMembers.find(m => m.id === job.advisor_id);
+            const advisorName = advisor ? advisor.name : 'SERA Lab';
+
+            return `
+            <div class="job-card" onclick="window.openModal('job', '${job.id}')">
+                <div class="job-card-header">
+                    <div class="job-card-meta">
+                        <i class="fa-solid fa-user-tie"></i> Hiring Advisor: ${advisorName}
+                    </div>
+                    <h3 class="job-card-title">${job.title}</h3>
+                </div>
+                <div class="job-card-body">
+                    <div class="job-card-excerpt">${excerpt}</div>
+                    <button class="job-read-btn" onclick="event.stopPropagation(); window.openModal('job', '${job.id}')">
+                        View Details & Apply <i class="fa-solid fa-arrow-right" style="font-size:0.75rem;"></i>
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
+
+    } catch (e) {
+        document.getElementById('public-jobs-grid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Error loading jobs.</div>';
+    }
+}
+
 
 async function fetchMembersPublic() {
     const [{ data: members, error: mErr }, { data: relations }] = await Promise.all([
@@ -315,96 +404,87 @@ async function fetchMembersPublic() {
     ]);
     if (mErr || !members) return;
 
+    loadedMembers = members; // Store for jobs to access
+
     const roleLabel = { director: 'Co-Director', collaborator: 'External Collaborator', phd: 'PhD Student', ms: 'MS Student', alumni: 'Alumni' };
     const roleCss = { director: 'role-director', collaborator: 'role-collaborator', phd: 'role-phd', ms: 'role-ms', alumni: 'role-alumni' };
 
     const avatarSrc = (m) => m.image_url
         || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true`;
 
-    const socialLinks = (m, centered = false) => {
+    const socialLinks = (m) => {
         const links = [];
+        if (m.website_url) links.push(`<a href="${m.website_url}" target="_blank" rel="noopener" title="Personal Website" class="member-social-link" style="--icon-color:#0ea5e9;"><i class="fa-solid fa-globe"></i></a>`);
         if (m.linkedin_url) links.push(`<a href="${m.linkedin_url}" target="_blank" rel="noopener" title="LinkedIn" class="member-social-link" style="--icon-color:#0077b5;"><i class="fa-brands fa-linkedin-in"></i></a>`);
         if (m.google_scholar_url) links.push(`<a href="${m.google_scholar_url}" target="_blank" rel="noopener" title="Google Scholar" class="member-social-link" style="--icon-color:#4285f4;"><i class="fa-brands fa-google"></i></a>`);
         if (m.github_url) links.push(`<a href="${m.github_url}" target="_blank" rel="noopener" title="GitHub" class="member-social-link" style="--icon-color:#24292f;"><i class="fa-brands fa-github"></i></a>`);
         if (!links.length) return '';
-        return `<div class="member-social-links" style="${centered ? 'justify-content:center;' : ''}">${links.join('')}</div>`;
+        return `<div class="member-social-links-v">${links.join('')}</div>`;
     };
 
-    // Director: large vertical portrait card
-    const renderDirectorCard = (m) => `
-    <div class="member-card--director" data-role="director">
-        <div class="member-avatar">
-            <img src="${avatarSrc(m)}" alt="${m.name}"
-                 onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true'">
-        </div>
-        <div class="member-info">
-            <span class="member-role-badge role-director">Co-Director</span>
-            <div class="member-name">${m.name}</div>
-            ${m.title ? `<div class="member-title">${m.title}</div>` : ''}
-            ${m.affiliation ? `<p class="member-affiliation"><i class="fa-solid fa-building-columns" style="font-size:0.65rem;margin-right:3px;opacity:0.6;"></i>${m.affiliation}</p>` : ''}
-            ${socialLinks(m, true)}
-        </div>
-    </div>`;
+    // Precompute a map of member_id to their advisor names
+    const dirMap = {};
+    const directors = members.filter(m => m.role_category === 'director');
+    directors.forEach(d => { dirMap[d.id] = d.name; });
 
-    // Collaborator: medium vertical card
-    const renderCollaboratorCard = (m) => `
-    <div class="member-card--collaborator" data-role="collaborator">
-        <div class="member-avatar">
-            <img src="${avatarSrc(m)}" alt="${m.name}"
-                 onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=f3e8ff&color=a21caf&bold=true'">
-        </div>
-        <div class="member-info">
-            <span class="member-role-badge role-collaborator">Collaborator</span>
-            <div class="member-name">${m.name}</div>
-            ${m.title ? `<div class="member-title">${m.title}</div>` : ''}
-            ${m.affiliation ? `<p class="member-affiliation"><i class="fa-solid fa-building-columns" style="font-size:0.65rem;margin-right:3px;opacity:0.6;"></i>${m.affiliation}</p>` : ''}
-            ${socialLinks(m, true)}
-        </div>
-    </div>`;
+    const memberDirNames = {};
+    (relations || []).forEach(r => {
+        if (!memberDirNames[r.member_id]) memberDirNames[r.member_id] = [];
+        if (dirMap[r.director_id]) memberDirNames[r.member_id].push(dirMap[r.director_id]);
+    });
 
-    // Student/Alumni: compact horizontal card
+    // Universal vertical card renderer
     const renderCard = (m) => {
-        if (m.role_category === 'director') return renderDirectorCard(m);
-        if (m.role_category === 'collaborator') return renderCollaboratorCard(m);
         const label = roleLabel[m.role_category] || m.role_category;
         const css = roleCss[m.role_category] || 'role-default';
         const displayTitle = m.title || label;
+
+        let advisorHtml = '';
+        if (m.role_category !== 'director' && m.role_category !== 'collaborator') {
+            const supervisors = memberDirNames[m.id];
+            if (supervisors && supervisors.length) {
+                advisorHtml = `<div class="member-affiliation-v"><i class="fa-solid fa-user-tie" style="font-size:0.7rem;margin-right:4px;opacity:0.6;"></i>Advised by ${supervisors.join(', ')}</div>`;
+            }
+        }
+
+        let contactHtml = '';
+        if (m.email || m.contact_number) {
+            contactHtml += `<div class="member-contact-info">`;
+            if (m.email) contactHtml += `<a href="mailto:${m.email}" class="member-contact-link"><i class="fa-solid fa-envelope" style="margin-right:4px;opacity:0.7;"></i>${m.email}</a>`;
+            if (m.contact_number) contactHtml += `<a href="tel:${m.contact_number}" class="member-contact-link"><i class="fa-solid fa-phone" style="margin-right:4px;opacity:0.7;"></i>${m.contact_number}</a>`;
+            contactHtml += `</div>`;
+        }
+
+        let borderClass = '';
+        if (m.role_category === 'director') borderClass = 'border-director';
+        if (m.role_category === 'collaborator') borderClass = 'border-collaborator';
+
         return `
-        <div class="member-card" data-role="${m.role_category || ''}">
-            <div class="member-avatar">
+        <div class="member-card-v ${borderClass}" data-role="${m.role_category || ''}">
+            <div class="member-avatar-v">
                 <img src="${avatarSrc(m)}" alt="${m.name}"
                      onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true'">
             </div>
-            <div class="member-info">
+            <div class="member-info-v">
                 <span class="member-role-badge ${css}">${label}</span>
-                <div class="member-name">${m.name}</div>
-                <div class="member-title">${displayTitle}</div>
-                ${m.affiliation ? `<p class="member-affiliation"><i class="fa-solid fa-building-columns" style="font-size:0.65rem;margin-right:3px;opacity:0.6;"></i>${m.affiliation}</p>` : ''}
+                <div class="member-name-v">${m.name}</div>
+                <div class="member-title-v">${displayTitle}</div>
+                ${m.affiliation ? `<div class="member-affiliation-v"><i class="fa-solid fa-building-columns" style="font-size:0.7rem;margin-right:4px;opacity:0.6;"></i>${m.affiliation}</div>` : ''}
+                ${advisorHtml}
+                ${contactHtml}
                 ${socialLinks(m)}
             </div>
         </div>`;
     };
 
-    const directors = members.filter(m => m.role_category === 'director');
     const collaborators = members.filter(m => m.role_category === 'collaborator');
     const students = members.filter(m => m.role_category !== 'director' && m.role_category !== 'collaborator');
-
-    // Build director → students map from junction table
-    const dirToStudents = {};
-    directors.forEach(d => { dirToStudents[d.id] = []; });
-    const assignedIds = new Set();
-    (relations || []).forEach(r => {
-        if (dirToStudents[r.director_id]) {
-            dirToStudents[r.director_id].push(r.member_id);
-            assignedIds.add(r.member_id);
-        }
-    });
 
     // Render directors row
     const dirGrid = document.getElementById('co-directors-grid');
     if (dirGrid) {
         if (directors.length) {
-            dirGrid.innerHTML = directors.map(d => renderDirectorCard(d)).join('');
+            dirGrid.innerHTML = directors.map(d => renderCard(d)).join('');
             document.getElementById('directors-wrapper').style.display = '';
         } else {
             document.getElementById('directors-wrapper').style.display = 'none';
@@ -414,46 +494,22 @@ async function fetchMembersPublic() {
     const colGrid = document.getElementById('collaborators-grid');
     if (colGrid) {
         if (collaborators.length) {
-            colGrid.innerHTML = collaborators.map(c => renderCollaboratorCard(c)).join('');
+            colGrid.innerHTML = collaborators.map(c => renderCard(c)).join('');
             document.getElementById('collaborators-wrapper').style.display = '';
         } else {
             document.getElementById('collaborators-wrapper').style.display = 'none';
         }
     }
 
-    // Render student groups under each director
-    const groupContainer = document.getElementById('people-by-director');
-    if (groupContainer) {
-        const studentGroups = directors.map(d => {
-            const group = students.filter(s => dirToStudents[d.id]?.includes(s.id));
-            if (!group.length) return '';
-            return `
-            <div class="director-group" data-director-id="${d.id}">
-                <div class="people-section-label people-section-label--sub">
-                    <div class="director-group-avatar">
-                        <img src="${avatarSrc(d)}" alt="${d.name}"
-                             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(d.name)}&size=80&background=dbeafe&color=1d4ed8&bold=true'">
-                    </div>
-                    <span>${d.name}'s Group</span>
-                </div>
-                <div class="member-grid">${group.map(s => renderCard(s)).join('')}</div>
-            </div>`;
-        }).join('');
-
-        if (studentGroups.trim()) {
-            groupContainer.innerHTML = `<div style="grid-column:1/-1;"><div class="members-tier-divider"><span><i class="fa-solid fa-user-graduate" style="margin-right:0.4rem;"></i>Research Students</span></div></div>` + studentGroups;
-            groupContainer.style.display = 'grid';
+    // Render all students and alumni together
+    const studentsGrid = document.getElementById('students-grid');
+    if (studentsGrid) {
+        if (students.length) {
+            studentsGrid.innerHTML = students.map(s => renderCard(s)).join('');
+            document.getElementById('students-wrapper').style.display = '';
         } else {
-            groupContainer.style.display = 'none';
+            document.getElementById('students-wrapper').style.display = 'none';
         }
-    }
-
-    // Render ungrouped members
-    const ungrouped = students.filter(s => !assignedIds.has(s.id));
-    const ungroupedGrid = document.getElementById('students-ungrouped-grid');
-    if (ungroupedGrid && ungrouped.length) {
-        ungroupedGrid.innerHTML = ungrouped.map(s => renderCard(s)).join('');
-        document.getElementById('people-ungrouped').classList.remove('hidden');
     }
 }
 
@@ -553,10 +609,11 @@ function updateNavbarLoginState(loggedIn) {
 window.switchAdminTab = function (tab, el) {
     document.querySelectorAll('.admin-nav-item').forEach(i => i.classList.remove('active'));
     el.classList.add('active');
-    ['blogs', 'pubs', 'members', 'news'].forEach(t => document.getElementById(`admin-tab-${t}`).classList.add('hidden'));
+    ['blogs', 'pubs', 'members', 'jobs', 'news'].forEach(t => document.getElementById(`admin-tab-${t}`).classList.add('hidden'));
     document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
     if (tab === 'pubs') fetchAdminPubs();
     if (tab === 'members') fetchAdminMembers();
+    if (tab === 'jobs') fetchAdminJobs();
     if (tab === 'news') fetchAdminNews();
 };
 
@@ -879,6 +936,9 @@ window.showMemberEditor = function () {
     document.getElementById('member-title').value = '';
     document.getElementById('member-role').value = '';
     document.getElementById('member-affiliation').value = '';
+    document.getElementById('member-email').value = '';
+    document.getElementById('member-contact').value = '';
+    document.getElementById('member-website').value = '';
     document.getElementById('member-linkedin').value = '';
     document.getElementById('member-google-scholar').value = '';
     document.getElementById('member-github').value = '';
@@ -903,6 +963,9 @@ window.editAdminMember = function (id) {
     document.getElementById('member-title').value = m.title || '';
     document.getElementById('member-role').value = m.role_category || '';
     document.getElementById('member-affiliation').value = m.affiliation || '';
+    document.getElementById('member-email').value = m.email || '';
+    document.getElementById('member-contact').value = m.contact_number || '';
+    document.getElementById('member-website').value = m.website_url || '';
     document.getElementById('member-linkedin').value = m.linkedin_url || '';
     document.getElementById('member-google-scholar').value = m.google_scholar_url || '';
     document.getElementById('member-github').value = m.github_url || '';
@@ -943,6 +1006,9 @@ window.saveMember = async function () {
         title: document.getElementById('member-title').value.trim() || null,
         role_category: role,
         affiliation: document.getElementById('member-affiliation').value.trim() || null,
+        email: document.getElementById('member-email').value.trim() || null,
+        contact_number: document.getElementById('member-contact').value.trim() || null,
+        website_url: document.getElementById('member-website').value.trim() || null,
         linkedin_url: document.getElementById('member-linkedin').value.trim() || null,
         google_scholar_url: document.getElementById('member-google-scholar').value.trim() || null,
         github_url: document.getElementById('member-github').value.trim() || null,
@@ -994,6 +1060,136 @@ window.deleteAdminMember = async function (id) {
     fetchAdminMembers();
     fetchMembersPublic();
 };
+
+
+/* --- Admin Jobs Management --- */
+window.adminJobs = [];
+
+async function fetchAdminJobs() {
+    try {
+        const { data, error } = await supabase.from('job_openings').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        window.adminJobs = data || [];
+
+        // Fix: Always ensure members are loaded BEFORE checking if adminJobs is empty, 
+        // otherwise the dropdown won't populate if you add the very first job!
+        // We also fetch '*' so that 'role_category' is included in the filtering logic.
+        if (!window.adminMembers || window.adminMembers.length === 0) {
+            const { data: memData } = await supabase.from('members').select('*');
+            window.adminMembers = memData || [];
+        }
+
+        const tbody = document.getElementById('admin-job-tbody');
+        if (!window.adminJobs.length) {
+            tbody.innerHTML = '<tr><td colspan="4" style="padding: 1rem;">No jobs found.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = window.adminJobs.map(j => {
+            const advisorName = window.adminMembers.find(m => m.id === j.advisor_id)?.name || 'General';
+            return `
+            <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 1rem; font-weight: 500; max-width: 320px;">${j.title}</td>
+                <td style="padding: 1rem; color: var(--text-secondary);">${advisorName}</td>
+                <td style="padding: 1rem;">${j.is_active ? '<span class="badge" style="background:#dcfce7;color:#166534;">Active</span>' : '<span class="badge" style="background:#f1f5f9;color:#475569;">Hidden</span>'}</td>
+                <td style="padding: 1rem; display: flex; gap: 0.5rem;">
+                    <button class="btn btn-ghost btn-sm" onclick="window.editAdminJob('${j.id}')">Edit</button>
+                    <button class="btn btn-ghost btn-sm" style="color:#ef4444;" onclick="window.deleteAdminJob('${j.id}')">Delete</button>
+                </td>
+            </tr>
+        `}).join('');
+    } catch (e) {
+        document.getElementById('admin-job-tbody').innerHTML = '<tr><td colspan="4" style="padding: 1rem;">Error loading jobs.</td></tr>';
+    }
+}
+
+function populateJobAdvisors(selectedId = '') {
+    const select = document.getElementById('job-advisor');
+    const directors = window.adminMembers.filter(m => m.role_category === 'director');
+    select.innerHTML = '<option value="">Select an advisor...</option>' +
+        directors.map(d => `<option value="${d.id}" ${d.id === selectedId ? 'selected' : ''}>${d.name}</option>`).join('');
+}
+
+window.showJobEditor = function () {
+    document.getElementById('admin-job-list').classList.add('hidden');
+    document.getElementById('admin-job-editor').classList.remove('hidden');
+    document.getElementById('edit-job-id').value = '';
+    document.getElementById('job-title').value = '';
+    document.getElementById('job-active').checked = true;
+    populateJobAdvisors();
+    if (window.jobQuillEditor) window.jobQuillEditor.root.innerHTML = '';
+    document.getElementById('job-editor-heading').innerText = 'Add Job Opening';
+    document.getElementById('job-msg').innerText = '';
+};
+
+window.hideJobEditor = function () {
+    document.getElementById('admin-job-list').classList.remove('hidden');
+    document.getElementById('admin-job-editor').classList.add('hidden');
+};
+
+window.editAdminJob = function (id) {
+    const job = window.adminJobs.find(x => x.id === id);
+    if (!job) return;
+
+    document.getElementById('admin-job-list').classList.add('hidden');
+    document.getElementById('admin-job-editor').classList.remove('hidden');
+    document.getElementById('job-editor-heading').innerText = 'Edit Job Opening';
+    document.getElementById('edit-job-id').value = job.id;
+    document.getElementById('job-title').value = job.title || '';
+    document.getElementById('job-active').checked = !!job.is_active;
+    populateJobAdvisors(job.advisor_id);
+
+    if (window.jobQuillEditor) {
+        window.jobQuillEditor.root.innerHTML = job.description || '';
+    }
+};
+
+window.saveJob = async function () {
+    const id = document.getElementById('edit-job-id').value;
+    const title = document.getElementById('job-title').value.trim();
+    const msg = document.getElementById('job-msg');
+
+    if (!title) { msg.className = 'message error'; msg.innerText = 'Title is required.'; return; }
+
+    const descriptionHtml = window.jobQuillEditor ? window.jobQuillEditor.root.innerHTML.trim() : '';
+    if (!descriptionHtml || descriptionHtml === '<p><br></p>') {
+        msg.className = 'message error'; msg.innerText = 'Description is required.'; return;
+    }
+
+    msg.className = 'message'; msg.innerText = 'Saving...';
+
+    const payload = {
+        title,
+        description: descriptionHtml,
+        advisor_id: document.getElementById('job-advisor').value || null,
+        is_active: document.getElementById('job-active').checked
+    };
+
+    try {
+        if (id) {
+            const { error } = await supabase.from('job_openings').update(payload).eq('id', id);
+            if (error) throw error;
+        } else {
+            const { error } = await supabase.from('job_openings').insert([payload]);
+            if (error) throw error;
+        }
+        msg.className = 'message success'; msg.innerText = '✅ Job saved!';
+        fetchAdminJobs();
+        fetchJobsPublic();
+        setTimeout(() => window.hideJobEditor(), 1500);
+    } catch (e) {
+        msg.className = 'message error'; msg.innerText = e.message;
+    }
+};
+
+window.deleteAdminJob = async function (id) {
+    if (!confirm('Delete this job opening? This cannot be undone.')) return;
+    const { error } = await supabase.from('job_openings').delete().eq('id', id);
+    if (error) return alert('Delete failed: ' + error.message);
+    fetchAdminJobs();
+    fetchJobsPublic();
+};
+
 
 /* --- Admin News Management --- */
 window.adminNews = [];

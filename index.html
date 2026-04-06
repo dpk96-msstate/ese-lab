@@ -44,6 +44,7 @@
                         <li><a href="#home" class="nav-link">Home</a></li>
                         <li><a href="#research" class="nav-link">Research</a></li>
                         <li><a href="#members" class="nav-link">Members</a></li>
+                        <li><a href="#hiring" class="nav-link">Join Us</a></li>
                         <li><a href="#blog" class="nav-link">Blog</a></li>
                         <li><a href="#news" class="nav-link">News</a></li>
                         <li><a href="#publications" class="nav-link">Publications</a></li>
@@ -108,7 +109,7 @@
                 </div>
             </section>
 
-            <!-- Our People (Directors + Members unified) -->
+            <!-- Our People -->
             <section id="members" style="background: var(--bg-main);">
                 <div class="container">
                     <div class="section-header">
@@ -131,7 +132,7 @@
                         <div class="people-section-label" id="directors-label">
                             <i class="fa-solid fa-chalkboard-user"></i> Co-Directors
                         </div>
-                        <div class="director-card-grid" id="co-directors-grid">
+                        <div class="universal-member-grid" id="co-directors-grid">
                             <div style="text-align:center;grid-column:1/-1;color:var(--text-muted);">
                                 <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                             </div>
@@ -142,22 +143,34 @@
                     <div id="collaborators-wrapper" style="margin-top: 3rem;">
                         <div class="members-tier-divider"><span><i class="fa-solid fa-handshake"
                                     style="margin-right:0.4rem;"></i>External Collaborators</span></div>
-                        <div class="collaborator-card-grid" id="collaborators-grid">
+                        <div class="universal-member-grid" id="collaborators-grid">
                             <!-- Injected via JS -->
                         </div>
                     </div>
 
-                    <!-- Tier 3: Students grouped by director -->
-                    <div id="people-by-director" class="macro-grid" style="margin-top: 3rem;">
-                        <!-- Injected via JS — one group per director per column -->
-                    </div>
-
-                    <!-- Ungrouped students (no director assigned) -->
-                    <div id="people-ungrouped" class="hidden" style="margin-top: 3rem;">
+                    <!-- Tier 3: Students and Alumni -->
+                    <div id="students-wrapper" style="margin-top: 3rem;">
                         <div class="members-tier-divider"><span><i class="fa-solid fa-user-graduate"
-                                    style="margin-right:0.4rem;"></i>Other Members</span></div>
-                        <div class="member-grid" id="students-ungrouped-grid" style="max-width: 900px; margin: 0 auto;">
+                                    style="margin-right:0.4rem;"></i>Research Students & Alumni</span></div>
+                        <div class="universal-member-grid" id="students-grid">
+                            <!-- Injected via JS -->
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hiring Section -->
+            <section id="hiring" style="background: var(--bg-alt);">
+                <div class="container">
+                    <div class="section-header">
+                        <div class="badge" style="margin-bottom: 1rem;">Opportunities</div>
+                        <h2>Join Our Lab</h2>
+                        <p>We are actively seeking motivated students and researchers to collaborate on cutting-edge
+                            software engineering challenges.</p>
+                    </div>
+                    <div class="jobs-grid" id="public-jobs-grid">
+                        <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);"><i
+                                class="fa-solid fa-spinner fa-spin"></i> Loading openings...</div>
                     </div>
                 </div>
             </section>
@@ -173,12 +186,11 @@
                     </div>
 
                     <div class="blog-grid" id="public-blog-grid">
-                        <!-- Dynamic Blogs Loaded Here -->
                         <div style="text-align: center; grid-column: 1/-1; color: #94a3b8;"><i
                                 class="fa-solid fa-spinner fa-spin"></i> Loading articles...</div>
                     </div>
 
-                    <div style="text-align: center; margin-top: 3rem;" id="blog-view-all-wrapper">
+                    <div style="text-align: center; margin-top: 3rem; display: none;" id="blog-view-all-wrapper">
                         <button class="view-all-btn outline" onclick="window.showView('all-blogs')">
                             <i class="fa-solid fa-pen-nib"></i> View All Articles
                         </button>
@@ -198,7 +210,7 @@
                         <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);"><i
                                 class="fa-solid fa-spinner fa-spin"></i> Loading news...</div>
                     </div>
-                    <div style="text-align: center; margin-top: 2.5rem;" id="news-view-all-wrapper">
+                    <div style="text-align: center; margin-top: 2.5rem; display: none;" id="news-view-all-wrapper">
                         <button class="view-all-btn outline" onclick="window.showView('all-news')">
                             <i class="fa-solid fa-newspaper"></i> View All News
                         </button>
@@ -207,7 +219,7 @@
             </section>
 
             <!-- Publications -->
-            <section id="publications">
+            <section id="publications" style="background: var(--bg-alt);">
                 <div class="container">
                     <div class="section-header">
                         <h2>Recent Publications</h2>
@@ -216,7 +228,7 @@
                     <div class="pub-grid" id="publicationsGrid" style="max-width: 900px; margin: 0 auto;">
                         <!-- Injected via JS -->
                     </div>
-                    <div style="text-align: center; margin-top: 2.5rem;" id="pubs-view-all-wrapper">
+                    <div style="text-align: center; margin-top: 2.5rem; display: none;" id="pubs-view-all-wrapper">
                         <button class="view-all-btn outline" onclick="window.showView('all-publications')">
                             <i class="fa-solid fa-book-open"></i> View All Publications
                         </button>
@@ -330,22 +342,20 @@
         </div>
 
         <!-- ==========================================
-             NEWS DETAIL MODAL
+             NEWS & JOBS MODAL
              ========================================== -->
-        <div id="news-modal-overlay" class="news-modal-overlay hidden"
-            onclick="if(event.target===this)window.closeNewsModal()">
-            <div class="news-modal" id="news-modal">
-                <button class="news-modal-close" onclick="window.closeNewsModal()"><i
-                        class="fa-solid fa-times"></i></button>
-                <img id="news-modal-img" src="" alt="" class="news-modal-image hidden">
-                <div class="news-modal-body">
-                    <div class="news-modal-date">
+        <div id="modal-overlay" class="modal-overlay hidden" onclick="if(event.target===this)window.closeModal()">
+            <div class="content-modal" id="content-modal">
+                <button class="modal-close" onclick="window.closeModal()"><i class="fa-solid fa-times"></i></button>
+                <img id="modal-img" src="" alt="" class="modal-image hidden">
+                <div class="modal-body">
+                    <div class="modal-meta" id="modal-meta">
                         <i class="fa-regular fa-calendar"></i>
-                        <span id="news-modal-date-text"></span>
+                        <span id="modal-meta-text"></span>
                     </div>
-                    <h2 class="news-modal-title" id="news-modal-title"></h2>
-                    <div class="news-modal-tags" id="news-modal-tags"></div>
-                    <div class="news-modal-description prose" id="news-modal-description"></div>
+                    <h2 class="modal-title" id="modal-title"></h2>
+                    <div class="modal-tags" id="modal-tags"></div>
+                    <div class="modal-description prose" id="modal-description"></div>
                 </div>
             </div>
         </div>
@@ -391,6 +401,8 @@
                         class="fa-solid fa-book"></i> &nbsp; Publications</div>
                 <div class="admin-nav-item" onclick="window.switchAdminTab('members', this)"><i
                         class="fa-solid fa-users"></i> &nbsp; Members</div>
+                <div class="admin-nav-item" onclick="window.switchAdminTab('jobs', this)"><i
+                        class="fa-solid fa-briefcase"></i> &nbsp; Job Openings</div>
                 <div class="admin-nav-item" onclick="window.switchAdminTab('news', this)"><i
                         class="fa-solid fa-newspaper"></i> &nbsp; News</div>
 
@@ -659,10 +671,34 @@
                             <p class="form-hint">Leave blank if not assigned to a specific director.</p>
                         </div>
 
+                        <div class="form-row" style="margin-top: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="member-email"><i class="fa-solid fa-envelope"
+                                        style="color:var(--text-secondary);margin-right:5px;"></i> Email Address <span
+                                        class="optional">(optional)</span></label>
+                                <input type="email" id="member-email" class="form-control"
+                                    placeholder="e.g. email@ksu.edu">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="member-contact"><i class="fa-solid fa-phone"
+                                        style="color:var(--text-secondary);margin-right:5px;"></i> Contact Number <span
+                                        class="optional">(optional)</span></label>
+                                <input type="text" id="member-contact" class="form-control"
+                                    placeholder="e.g. +1 555-1234">
+                            </div>
+                        </div>
+
                         <p
                             style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;">
-                            Social &amp; Academic Links <span
+                            Social &amp; Web Links <span
                                 style="font-weight:400;text-transform:none;letter-spacing:0;">(all optional)</span></p>
+
+                        <div class="form-group">
+                            <label class="form-label" for="member-website"><i class="fa-solid fa-globe"
+                                    style="color:#0ea5e9;margin-right:5px;"></i> Personal Website</label>
+                            <input type="url" id="member-website" class="form-control"
+                                placeholder="https://mywebsite.com">
+                        </div>
 
                         <div class="form-group">
                             <label class="form-label" for="member-linkedin"><i class="fa-brands fa-linkedin-in"
@@ -696,6 +732,85 @@
                             <button class="btn btn-primary" onclick="window.saveMember()">Save</button>
                         </div>
                         <p id="member-msg" class="message"></p>
+                    </div>
+                </div>
+
+                <!-- JOB OPENINGS TAB -->
+                <div id="admin-tab-jobs" class="hidden">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>Manage Job Openings</h2>
+                        <button class="btn btn-primary" onclick="window.showJobEditor()"><i
+                                class="fa-solid fa-plus"></i> New Opening</button>
+                    </div>
+
+                    <div id="admin-job-list">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+                                    <th style="padding: 1rem;">Title</th>
+                                    <th style="padding: 1rem;">Advisor</th>
+                                    <th style="padding: 1rem;">Status</th>
+                                    <th style="padding: 1rem;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-job-tbody">
+                                <tr>
+                                    <td colspan="4" style="padding: 1rem;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="admin-job-editor" class="card hidden" style="margin-top: 1rem; max-width: none;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 id="job-editor-heading">Add Job Opening</h3>
+                            <button class="btn btn-ghost" onclick="window.hideJobEditor()"><i
+                                    class="fa-solid fa-times"></i> Close</button>
+                        </div>
+                        <input type="hidden" id="edit-job-id">
+
+                        <div class="form-group">
+                            <label class="form-label" for="job-title">Job Title <span class="required">*</span></label>
+                            <input type="text" id="job-title" class="form-control"
+                                placeholder="e.g. Ph.D. Position in Requirements Engineering">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="job-advisor">Hiring Advisor <span
+                                    class="optional">(optional)</span></label>
+                            <select id="job-advisor" class="form-control">
+                                <option value="">Select an advisor...</option>
+                                <!-- Injected dynamically -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="job-description">Description & Requirements <span
+                                    class="required">*</span></label>
+                            <!-- Quill Job Editor -->
+                            <div style="background: white; border-radius: 8px; border: 1px solid var(--border);">
+                                <div id="quill-job-editor" style="min-height: 200px;"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label"
+                                style="display:flex;align-items:center;gap:0.5rem;text-transform:none;letter-spacing:0;font-size:0.875rem;">
+                                <input type="checkbox" id="job-active" checked
+                                    style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent);flex-shrink:0;">
+                                <span>Active Listing &mdash; <span
+                                        style="font-weight:400;color:var(--text-muted);">Uncheck to hide this opening
+                                        from the public site</span></span>
+                            </label>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                            <button class="btn btn-outline" onclick="window.hideJobEditor()">Cancel</button>
+                            <button class="btn btn-primary" onclick="window.saveJob()">Save Opening</button>
+                        </div>
+                        <p id="job-msg" class="message"></p>
                     </div>
                 </div>
 
