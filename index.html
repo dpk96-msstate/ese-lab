@@ -126,42 +126,37 @@
                         <button class="filter-btn" data-filter="alumni">Alumni</button>
                     </div>
 
-                    <!-- Top Level: Directors & Collaborators Split -->
-                    <div id="top-level-section" class="macro-grid">
-                        <!-- Left Column: Co-Directors -->
-                        <div id="directors-wrapper">
-                            <div class="people-section-label" id="directors-label">
-                                <i class="fa-solid fa-chalkboard-user"></i> Co-Directors
-                            </div>
-                            <div class="member-grid" id="co-directors-grid">
-                                <div style="text-align:center;width:100%;color:var(--text-muted);">
-                                    <i class="fa-solid fa-spinner fa-spin"></i> Loading...
-                                </div>
-                            </div>
+                    <!-- Tier 1: Co-Directors -->
+                    <div id="directors-wrapper">
+                        <div class="people-section-label" id="directors-label">
+                            <i class="fa-solid fa-chalkboard-user"></i> Co-Directors
                         </div>
-
-                        <!-- Right Column: Collaborators -->
-                        <div id="collaborators-wrapper">
-                            <div class="people-section-label" id="collaborators-label">
-                                <i class="fa-solid fa-handshake"></i> External Collaborators
-                            </div>
-                            <div class="member-grid" id="collaborators-grid">
-                                <!-- Injected via JS -->
+                        <div class="director-card-grid" id="co-directors-grid">
+                            <div style="text-align:center;grid-column:1/-1;color:var(--text-muted);">
+                                <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                             </div>
                         </div>
                     </div>
 
-                    <!-- Students grouped by director (also 2-column macro layout) -->
+                    <!-- Tier 2: Collaborators -->
+                    <div id="collaborators-wrapper" style="margin-top: 3rem;">
+                        <div class="members-tier-divider"><span><i class="fa-solid fa-handshake"
+                                    style="margin-right:0.4rem;"></i>External Collaborators</span></div>
+                        <div class="collaborator-card-grid" id="collaborators-grid">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Tier 3: Students grouped by director -->
                     <div id="people-by-director" class="macro-grid" style="margin-top: 3rem;">
                         <!-- Injected via JS — one group per director per column -->
                     </div>
 
                     <!-- Ungrouped students (no director assigned) -->
                     <div id="people-ungrouped" class="hidden" style="margin-top: 3rem;">
-                        <div class="people-section-label">
-                            <i class="fa-solid fa-user-graduate"></i> Other Members
-                        </div>
-                        <div class="member-grid" id="students-ungrouped-grid" style="max-width: 800px; margin: 0 auto;">
+                        <div class="members-tier-divider"><span><i class="fa-solid fa-user-graduate"
+                                    style="margin-right:0.4rem;"></i>Other Members</span></div>
+                        <div class="member-grid" id="students-ungrouped-grid" style="max-width: 900px; margin: 0 auto;">
                         </div>
                     </div>
                 </div>

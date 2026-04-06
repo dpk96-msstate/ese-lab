@@ -34,25 +34,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             this.classList.add('active');
             const filter = this.dataset.filter;
 
-            const topLevelSection = document.getElementById('top-level-section');
             const dirWrapper = document.getElementById('directors-wrapper');
             const colWrapper = document.getElementById('collaborators-wrapper');
 
-            // Show/hide director and collaborator row gracefully
+            // Show/hide director and collaborator sections
             if (filter === 'all') {
-                if (topLevelSection) topLevelSection.style.display = 'grid';
                 if (dirWrapper) dirWrapper.style.display = '';
                 if (colWrapper) colWrapper.style.display = '';
             } else if (filter === 'director') {
-                if (topLevelSection) topLevelSection.style.display = 'grid';
                 if (dirWrapper) dirWrapper.style.display = '';
                 if (colWrapper) colWrapper.style.display = 'none';
             } else if (filter === 'collaborator') {
-                if (topLevelSection) topLevelSection.style.display = 'grid';
                 if (dirWrapper) dirWrapper.style.display = 'none';
                 if (colWrapper) colWrapper.style.display = '';
             } else {
-                if (topLevelSection) topLevelSection.style.display = 'none';
+                if (dirWrapper) dirWrapper.style.display = 'none';
+                if (colWrapper) colWrapper.style.display = 'none';
             }
 
             // Show/hide each director group + individual cards
@@ -324,15 +321,51 @@ async function fetchMembersPublic() {
     const avatarSrc = (m) => m.image_url
         || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true`;
 
-    const socialLinks = (m) => {
+    const socialLinks = (m, centered = false) => {
         const links = [];
         if (m.linkedin_url) links.push(`<a href="${m.linkedin_url}" target="_blank" rel="noopener" title="LinkedIn" class="member-social-link" style="--icon-color:#0077b5;"><i class="fa-brands fa-linkedin-in"></i></a>`);
         if (m.google_scholar_url) links.push(`<a href="${m.google_scholar_url}" target="_blank" rel="noopener" title="Google Scholar" class="member-social-link" style="--icon-color:#4285f4;"><i class="fa-brands fa-google"></i></a>`);
         if (m.github_url) links.push(`<a href="${m.github_url}" target="_blank" rel="noopener" title="GitHub" class="member-social-link" style="--icon-color:#24292f;"><i class="fa-brands fa-github"></i></a>`);
-        return links.length ? `<div class="member-social-links">${links.join('')}</div>` : '';
+        if (!links.length) return '';
+        return `<div class="member-social-links" style="${centered ? 'justify-content:center;' : ''}">${links.join('')}</div>`;
     };
 
+    // Director: large vertical portrait card
+    const renderDirectorCard = (m) => `
+    <div class="member-card--director" data-role="director">
+        <div class="member-avatar">
+            <img src="${avatarSrc(m)}" alt="${m.name}"
+                 onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true'">
+        </div>
+        <div class="member-info">
+            <span class="member-role-badge role-director">Co-Director</span>
+            <div class="member-name">${m.name}</div>
+            ${m.title ? `<div class="member-title">${m.title}</div>` : ''}
+            ${m.affiliation ? `<p class="member-affiliation"><i class="fa-solid fa-building-columns" style="font-size:0.65rem;margin-right:3px;opacity:0.6;"></i>${m.affiliation}</p>` : ''}
+            ${socialLinks(m, true)}
+        </div>
+    </div>`;
+
+    // Collaborator: medium vertical card
+    const renderCollaboratorCard = (m) => `
+    <div class="member-card--collaborator" data-role="collaborator">
+        <div class="member-avatar">
+            <img src="${avatarSrc(m)}" alt="${m.name}"
+                 onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=f3e8ff&color=a21caf&bold=true'">
+        </div>
+        <div class="member-info">
+            <span class="member-role-badge role-collaborator">Collaborator</span>
+            <div class="member-name">${m.name}</div>
+            ${m.title ? `<div class="member-title">${m.title}</div>` : ''}
+            ${m.affiliation ? `<p class="member-affiliation"><i class="fa-solid fa-building-columns" style="font-size:0.65rem;margin-right:3px;opacity:0.6;"></i>${m.affiliation}</p>` : ''}
+            ${socialLinks(m, true)}
+        </div>
+    </div>`;
+
+    // Student/Alumni: compact horizontal card
     const renderCard = (m) => {
+        if (m.role_category === 'director') return renderDirectorCard(m);
+        if (m.role_category === 'collaborator') return renderCollaboratorCard(m);
         const label = roleLabel[m.role_category] || m.role_category;
         const css = roleCss[m.role_category] || 'role-default';
         const displayTitle = m.title || label;
@@ -346,7 +379,7 @@ async function fetchMembersPublic() {
                 <span class="member-role-badge ${css}">${label}</span>
                 <div class="member-name">${m.name}</div>
                 <div class="member-title">${displayTitle}</div>
-                ${m.affiliation ? `<p class="member-affiliation"><i class="fa-solid fa-building-columns" style="font-size:0.68rem;margin-right:3px;opacity:0.7;"></i>${m.affiliation}</p>` : ''}
+                ${m.affiliation ? `<p class="member-affiliation"><i class="fa-solid fa-building-columns" style="font-size:0.65rem;margin-right:3px;opacity:0.6;"></i>${m.affiliation}</p>` : ''}
                 ${socialLinks(m)}
             </div>
         </div>`;
@@ -367,11 +400,11 @@ async function fetchMembersPublic() {
         }
     });
 
-    // Render directors and collaborators rows
+    // Render directors row
     const dirGrid = document.getElementById('co-directors-grid');
     if (dirGrid) {
         if (directors.length) {
-            dirGrid.innerHTML = directors.map(d => renderCard(d)).join('');
+            dirGrid.innerHTML = directors.map(d => renderDirectorCard(d)).join('');
             document.getElementById('directors-wrapper').style.display = '';
         } else {
             document.getElementById('directors-wrapper').style.display = 'none';
@@ -381,22 +414,17 @@ async function fetchMembersPublic() {
     const colGrid = document.getElementById('collaborators-grid');
     if (colGrid) {
         if (collaborators.length) {
-            colGrid.innerHTML = collaborators.map(c => renderCard(c)).join('');
+            colGrid.innerHTML = collaborators.map(c => renderCollaboratorCard(c)).join('');
             document.getElementById('collaborators-wrapper').style.display = '';
         } else {
             document.getElementById('collaborators-wrapper').style.display = 'none';
         }
     }
 
-    if (!directors.length && !collaborators.length && document.getElementById('top-level-section')) {
-        document.getElementById('top-level-section').style.display = 'none';
-    }
-
     // Render student groups under each director
     const groupContainer = document.getElementById('people-by-director');
     if (groupContainer) {
-        // Macro-grid applies the 2-column layout natively here.
-        groupContainer.innerHTML = directors.map(d => {
+        const studentGroups = directors.map(d => {
             const group = students.filter(s => dirToStudents[d.id]?.includes(s.id));
             if (!group.length) return '';
             return `
@@ -411,6 +439,13 @@ async function fetchMembersPublic() {
                 <div class="member-grid">${group.map(s => renderCard(s)).join('')}</div>
             </div>`;
         }).join('');
+
+        if (studentGroups.trim()) {
+            groupContainer.innerHTML = `<div style="grid-column:1/-1;"><div class="members-tier-divider"><span><i class="fa-solid fa-user-graduate" style="margin-right:0.4rem;"></i>Research Students</span></div></div>` + studentGroups;
+            groupContainer.style.display = 'grid';
+        } else {
+            groupContainer.style.display = 'none';
+        }
     }
 
     // Render ungrouped members
