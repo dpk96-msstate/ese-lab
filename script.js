@@ -12,28 +12,30 @@ window.supabase = supabase; // Export for inline handlers
 window.currentUser = null;
 let quillEditor = null;
 let loadedBlogs = [];
+let allPublications = [];
+let allNewsItems = [];
+const TAG_COLORS = ['#eff6ff', '#f0fdf4', '#fef9c3', '#fdf2f8', '#fff7ed'];
+const TAG_TEXT = ['#1d4ed8', '#15803d', '#854d0e', '#9d174d', '#c2410c'];
 
 // ==========================================
 // INITIALIZATION
 // ==========================================
 document.addEventListener('DOMContentLoaded', async () => {
-    // Init UI
     initSmoothScroll();
     initHeaderEffects();
 
-    // Fetch Public Data
     fetchMembersPublic();
-    fetchPublicationsPublic();
     fetchBlogsPublic();
     fetchNewsPublic();
+    fetchPublicationsPublic();
 
-    // People filter buttons — filter all .member-card elements across all groups
+    // People filter buttons logic
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             const filter = this.dataset.filter;
-            // Show/hide director row
+
             const dirLabel = document.getElementById('directors-label');
             const dirGrid = document.getElementById('co-directors-grid');
             if (filter === 'all' || filter === 'director') {
@@ -43,14 +45,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (dirLabel) dirLabel.style.display = 'none';
                 if (dirGrid) dirGrid.style.display = 'none';
             }
-            // Show/hide each director group + individual cards
+
             document.querySelectorAll('.director-group').forEach(group => {
                 const cards = group.querySelectorAll('.member-card');
                 const visible = Array.from(cards).filter(c => filter === 'all' || c.dataset.role === filter);
                 cards.forEach(c => c.style.display = (filter === 'all' || c.dataset.role === filter) ? '' : 'none');
                 group.style.display = visible.length ? '' : 'none';
             });
-            // Ungrouped
+
             const ungrouped = document.getElementById('people-ungrouped');
             if (ungrouped) {
                 const cards = ungrouped.querySelectorAll('.member-card');
@@ -61,14 +63,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Check Auth Status silently
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
         window.currentUser = session.user;
         updateNavbarLoginState(true);
     }
 
-    // Init Blog Quill Editor
+    // Init Admin Editors
     quillEditor = new Quill('#quill-editor', {
         theme: 'snow',
         placeholder: 'Write your story...',
@@ -83,7 +84,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Init News Quill Editor
     window.newsQuillEditor = new Quill('#quill-news-editor', {
         theme: 'snow',
         placeholder: 'Write a detailed description of this news item…',
@@ -99,9 +99,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+
 // ==========================================
 // PUBLIC UI: NAVIGATION & VIEWS
 // ==========================================
+window.toggleMobileMenu = function () {
+    const navList = document.querySelector('.nav-list');
+    if (navList) navList.classList.toggle('active');
+};
+
 window.showView = function (view) {
     const allViews = ['home-view', 'blog-reader-view', 'all-news-view', 'all-publications-view', 'all-blogs-view'];
     allViews.forEach(v => document.getElementById(v)?.classList.add('hidden'));
@@ -127,48 +133,14 @@ window.showView = function (view) {
     }
 };
 
-window.openBlogReader = function (id) {
-    const post = loadedBlogs.find(b => b.id === id);
-    if (!post) return;
-
-    document.getElementById('reader-title').innerText = post.title;
-    document.getElementById('reader-category').innerText = post.category || 'Article';
-    document.getElementById('reader-content').innerHTML = post.content;
-
-    // Date formatting
-    const d = new Date(post.created_at);
-    document.getElementById('reader-date').innerText = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-
-    // Calculate reading time
-    const wordCount = post.content.replace(/<[^>]+>/g, '').split(/\s+/).length;
-    const readTime = Math.max(1, Math.ceil(wordCount / 200));
-    document.getElementById('reader-read-time').innerHTML = `<i class="fa-regular fa-clock"></i> ${readTime} min read`;
-
-    // Cover image
-    const coverEl = document.getElementById('reader-cover');
-    if (post.image_url) {
-        coverEl.src = post.image_url;
-        coverEl.classList.remove('hidden');
-    } else {
-        coverEl.classList.add('hidden');
-    }
-
-    // Setup mock author (In a real app, join with members table)
-    document.getElementById('reader-author-name').innerText = post.author_name || 'Lab Member';
-    document.getElementById('reader-author-img').src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(post.author_name || 'Lab') + '&background=f8fafc&color=0f172a';
-
-    window.showView('blog-reader');
-};
-
 window.copyUrl = function () {
     navigator.clipboard.writeText(window.location.href);
     alert('Link copied to clipboard!');
 };
 
 // ==========================================
-// PUBLIC DATA FETCHING
+// RENDERERS & DATA FETCHING
 // ==========================================
-
 function renderBlogCard(post) {
     const wordCount = post.content.replace(/<[^>]+>/g, '').split(/\s+/).length;
     const readTime = Math.max(1, Math.ceil(wordCount / 200));
@@ -177,7 +149,7 @@ function renderBlogCard(post) {
 
     return `
     <article class="blog-card" onclick="window.openBlogReader('${post.id}')">
-        ${post.image_url ? `<div class="blog-image"><img src="${post.image_url}" alt="Cover"></div>` : ''}
+        ${post.image_url ? `<div class="blog-image"><img src="${post.image_url}" alt="Cover"></div>` : '<div class="blog-image"><div style="color:var(--accent);opacity:0.4;font-size:3rem;"><i class="fa-solid fa-pen-nib"></i></div></div>'}
         <div class="blog-content">
             <div class="blog-meta">
                 <span>${post.category || 'Research'}</span>
@@ -201,13 +173,7 @@ function renderBlogCard(post) {
 
 async function fetchBlogsPublic() {
     try {
-        // Note: Assume 'blogs' table exists
-        const { data, error } = await supabase
-            .from('blogs')
-            .select('*')
-            .eq('status', 'published')
-            .order('created_at', { ascending: false });
-
+        const { data, error } = await supabase.from('blogs').select('*').eq('status', 'published').order('created_at', { ascending: false });
         if (error) throw error;
         loadedBlogs = data || [];
 
@@ -219,14 +185,10 @@ async function fetchBlogsPublic() {
         }
 
         const LIMIT = 3;
-        const shown = loadedBlogs.slice(0, LIMIT);
-        grid.innerHTML = shown.map(renderBlogCard).join('');
-        applySingleItemCentering(grid);
-
+        grid.innerHTML = loadedBlogs.slice(0, LIMIT).map(renderBlogCard).join('');
         const wrapper = document.getElementById('blog-view-all-wrapper');
         if (wrapper) wrapper.style.display = loadedBlogs.length <= LIMIT ? 'none' : '';
     } catch (e) {
-        console.log("Blogs table might not exist yet.", e);
         document.getElementById('public-blog-grid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Blog system initializing...</div>';
     }
 }
@@ -234,24 +196,109 @@ async function fetchBlogsPublic() {
 window.renderAllBlogs = function () {
     const grid = document.getElementById('all-blogs-grid');
     if (!grid) return;
-    if (!loadedBlogs.length) {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No articles published yet.</div>';
-        return;
-    }
     grid.innerHTML = loadedBlogs.map(renderBlogCard).join('');
-    applySingleItemCentering(grid);
 };
 
-window.previewNewsImage = function (input) {
-    const prev = document.getElementById('news-image-preview');
-    const prevImg = document.getElementById('news-image-preview-img');
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = e => { prevImg.src = e.target.result; prev.style.display = 'block'; };
-        reader.readAsDataURL(input.files[0]);
-    } else {
-        prev.style.display = 'none';
+window.openBlogReader = function (id) {
+    const post = loadedBlogs.find(b => b.id === id);
+    if (!post) return;
+
+    document.getElementById('reader-title').innerText = post.title;
+    document.getElementById('reader-category').innerText = post.category || 'Article';
+    document.getElementById('reader-content').innerHTML = post.content;
+    const d = new Date(post.created_at);
+    document.getElementById('reader-date').innerText = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const wordCount = post.content.replace(/<[^>]+>/g, '').split(/\s+/).length;
+    document.getElementById('reader-read-time').innerHTML = `<i class="fa-regular fa-clock"></i> ${Math.max(1, Math.ceil(wordCount / 200))} min read`;
+
+    const coverEl = document.getElementById('reader-cover');
+    if (post.image_url) { coverEl.src = post.image_url; coverEl.classList.remove('hidden'); }
+    else { coverEl.classList.add('hidden'); }
+
+    document.getElementById('reader-author-name').innerText = post.author_name || 'Lab Member';
+    document.getElementById('reader-author-img').src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(post.author_name || 'Lab') + '&background=f8fafc&color=0f172a';
+    window.showView('blog-reader');
+};
+
+function renderTagsHtml(tags) {
+    return (tags || []).map((t, i) => `<span class="news-tag" style="background:${TAG_COLORS[i % TAG_COLORS.length]};color:${TAG_TEXT[i % TAG_TEXT.length]};">${t}</span>`).join('');
+}
+
+function renderNewsCard(n) {
+    const dateStr = [n.month, n.year].filter(Boolean).join(' ') || '';
+    const excerpt = n.description ? n.description.replace(/<[^>]+>/g, '').substring(0, 120) + (n.description.length > 120 ? '…' : '') : '';
+    const featuredBadge = n.is_featured ? '<div style="position:absolute;top:0;right:1rem;background:var(--accent);color:white;font-size:0.7rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:0 0 6px 6px;letter-spacing:0.05em;z-index:2;">FEATURED</div>' : '';
+    const imagePart = n.image_url ? `<div class="news-card-image"><img src="${n.image_url}" alt="" loading="lazy"></div>` : `<div class="news-card-image"><div class="news-card-image-placeholder"><i class="fa-regular fa-newspaper"></i></div></div>`;
+
+    return `
+    <div class="news-card${n.is_featured ? ' featured-card' : ''}" onclick="window.openNewsModal('${n.id}')">
+        ${featuredBadge}
+        ${imagePart}
+        <div class="news-card-body">
+            ${dateStr ? `<div class="news-card-date"><i class="fa-regular fa-calendar"></i>${dateStr}</div>` : ''}
+            <div class="news-card-title">${n.title}</div>
+            ${excerpt ? `<div class="news-card-excerpt">${excerpt}</div>` : ''}
+            <div class="news-card-footer">
+                <div style="display:flex;flex-wrap:wrap;gap:0.35rem;">${renderTagsHtml(n.tags)}</div>
+                <button class="news-read-btn" onclick="event.stopPropagation();window.openNewsModal('${n.id}')">
+                    Read Story <i class="fa-solid fa-arrow-right" style="font-size:0.75rem;"></i>
+                </button>
+            </div>
+        </div>
+    </div>`;
+}
+
+async function fetchNewsPublic() {
+    try {
+        const { data, error } = await supabase.from('news').select('*').order('year', { ascending: false }).order('created_at', { ascending: false });
+        if (error) throw error;
+
+        const grid = document.getElementById('public-news-grid');
+        if (!data || data.length === 0) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);">No news items yet.</div>';
+            document.getElementById('news-view-all-wrapper').style.display = 'none';
+            return;
+        }
+
+        allNewsItems = [...data].sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
+        const LIMIT = 3;
+        grid.innerHTML = allNewsItems.slice(0, LIMIT).map(renderNewsCard).join('');
+
+        const wrapper = document.getElementById('news-view-all-wrapper');
+        if (wrapper) wrapper.style.display = allNewsItems.length <= LIMIT ? 'none' : '';
+    } catch (e) {
+        document.getElementById('public-news-grid').innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);">News section initializing...</div>';
     }
+}
+
+function renderAllNews() {
+    const grid = document.getElementById('all-news-grid');
+    if (grid) grid.innerHTML = allNewsItems.map(renderNewsCard).join('');
+}
+
+window.openNewsModal = function (id) {
+    const n = allNewsItems.find(x => x.id === id);
+    if (!n) return;
+    document.getElementById('news-modal-title').innerText = n.title;
+    document.getElementById('news-modal-date-text').innerText = [n.month, n.year].filter(Boolean).join(' ') || '';
+    document.getElementById('news-modal-tags').innerHTML = renderTagsHtml(n.tags);
+
+    const descEl = document.getElementById('news-modal-description');
+    if (n.description) descEl.innerHTML = n.description.trim().startsWith('<') ? n.description : `<p>${n.description}</p>`;
+    else descEl.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">No further details available.</p>';
+
+    const imgEl = document.getElementById('news-modal-img');
+    if (n.image_url) { imgEl.src = n.image_url; imgEl.classList.remove('hidden'); }
+    else imgEl.classList.add('hidden');
+
+    document.getElementById('news-modal-overlay').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+};
+
+window.closeNewsModal = function () {
+    document.getElementById('news-modal-overlay').classList.add('hidden');
+    document.body.style.overflow = '';
 };
 
 async function fetchMembersPublic() {
@@ -263,40 +310,32 @@ async function fetchMembersPublic() {
 
     const roleLabel = { director: 'Co-Director', phd: 'PhD Student', ms: 'MS Student', alumni: 'Alumni' };
     const roleCss = { director: 'role-director', phd: 'role-phd', ms: 'role-ms', alumni: 'role-alumni' };
-
-    const avatarSrc = (m) => m.image_url
-        || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true`;
-
-    const socialLinks = (m) => {
-        const links = [];
-        if (m.linkedin_url) links.push(`<a href="${m.linkedin_url}" target="_blank" rel="noopener" title="LinkedIn" class="member-social-link" style="--icon-color:#0077b5;"><i class="fa-brands fa-linkedin-in"></i></a>`);
-        if (m.google_scholar_url) links.push(`<a href="${m.google_scholar_url}" target="_blank" rel="noopener" title="Google Scholar" class="member-social-link" style="--icon-color:#4285f4;"><i class="fa-brands fa-google"></i></a>`);
-        if (m.github_url) links.push(`<a href="${m.github_url}" target="_blank" rel="noopener" title="GitHub" class="member-social-link" style="--icon-color:#24292f;"><i class="fa-brands fa-github"></i></a>`);
-        return links.length ? `<div class="member-social-links">${links.join('')}</div>` : '';
-    };
+    const avatarSrc = (m) => m.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true`;
 
     const renderCard = (m) => {
         const label = roleLabel[m.role_category] || m.role_category;
         const css = roleCss[m.role_category] || 'role-default';
         const displayTitle = m.title || label;
+
+        const links = [];
+        if (m.linkedin_url) links.push(`<a href="${m.linkedin_url}" target="_blank" class="member-social-link"><i class="fa-brands fa-linkedin-in"></i></a>`);
+        if (m.google_scholar_url) links.push(`<a href="${m.google_scholar_url}" target="_blank" class="member-social-link"><i class="fa-brands fa-google"></i></a>`);
+        if (m.github_url) links.push(`<a href="${m.github_url}" target="_blank" class="member-social-link"><i class="fa-brands fa-github"></i></a>`);
+
         return `
         <div class="member-card" data-role="${m.role_category || ''}">
-            <div class="member-avatar">
-                <img src="${avatarSrc(m)}" alt="${m.name}"
-                     onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true'">
-            </div>
+            <div class="member-avatar"><img src="${avatarSrc(m)}" alt="${m.name}"></div>
             <span class="member-role-badge ${css}">${label}</span>
             <div class="member-name">${m.name}</div>
             <div class="member-title">${displayTitle}</div>
             ${m.affiliation ? `<p class="member-affiliation"><i class="fa-solid fa-building-columns" style="font-size:0.68rem;margin-right:3px;opacity:0.7;"></i>${m.affiliation}</p>` : ''}
-            ${socialLinks(m)}
+            ${links.length ? `<div class="member-social-links">${links.join('')}</div>` : ''}
         </div>`;
     };
 
     const directors = members.filter(m => m.role_category === 'director');
     const students = members.filter(m => m.role_category !== 'director');
 
-    // Build director → students map from junction table
     const dirToStudents = {};
     directors.forEach(d => { dirToStudents[d.id] = []; });
     const assignedIds = new Set();
@@ -307,27 +346,25 @@ async function fetchMembersPublic() {
         }
     });
 
-    // Render directors row
     const dirGrid = document.getElementById('co-directors-grid');
-    if (dirGrid) {
-        dirGrid.innerHTML = directors.map(d => renderCard(d)).join('')
-            || '<div style="color:var(--text-muted);">No directors listed.</div>';
-        applySingleItemCentering(dirGrid);
-    }
+    if (dirGrid) dirGrid.innerHTML = directors.map(d => renderCard(d)).join('') || '<div style="color:var(--text-muted);">No directors listed.</div>';
 
-    // Render student groups under each director
     const groupContainer = document.getElementById('people-by-director');
     if (groupContainer) {
+        groupContainer.style.display = 'grid';
+        // Enforce a minimum width of 600px per group (or 100% on small mobile devices) 
+        // to guarantee that at least two 280px student cards fit per row.
+        groupContainer.style.gridTemplateColumns = 'repeat(auto-fit, minmax(min(100%, 600px), 1fr))';
+        groupContainer.style.gap = '2rem';
+        groupContainer.style.alignItems = 'start';
+
         groupContainer.innerHTML = directors.map(d => {
             const group = students.filter(s => dirToStudents[d.id]?.includes(s.id));
             if (!group.length) return '';
             return `
-            <div class="director-group" data-director-id="${d.id}">
-                <div class="people-section-label people-section-label--sub">
-                    <div class="director-group-avatar">
-                        <img src="${avatarSrc(d)}" alt="${d.name}"
-                             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(d.name)}&size=80&background=dbeafe&color=1d4ed8&bold=true'">
-                    </div>
+            <div class="director-group" data-director-id="${d.id}" style="margin-top: 0;">
+                <div class="people-section-label people-section-label--sub" style="margin-top: 2rem;">
+                    <div class="director-group-avatar"><img src="${avatarSrc(d)}" alt="${d.name}"></div>
                     <span>${d.name}'s Group</span>
                 </div>
                 <div class="member-grid">${group.map(s => renderCard(s)).join('')}</div>
@@ -335,199 +372,52 @@ async function fetchMembersPublic() {
         }).join('');
     }
 
-    // Render ungrouped members
     const ungrouped = students.filter(s => !assignedIds.has(s.id));
-    const ungroupedSection = document.getElementById('people-ungrouped');
     const ungroupedGrid = document.getElementById('students-ungrouped-grid');
-    if (ungroupedSection && ungroupedGrid) {
-        if (ungrouped.length) {
-            ungroupedGrid.innerHTML = ungrouped.map(s => renderCard(s)).join('');
-            ungroupedSection.classList.remove('hidden');
-            applySingleItemCentering(ungroupedGrid);
-        } else {
-            ungroupedSection.classList.add('hidden');
-        }
+    if (ungroupedGrid && ungrouped.length) {
+        ungroupedGrid.innerHTML = ungrouped.map(s => renderCard(s)).join('');
+        document.getElementById('people-ungrouped').classList.remove('hidden');
     }
-}
-
-let allPublications = [];
-
-function renderPubItem(p) {
-    return `
-    <div class="pub-item">
-        <div class="pub-year-badge">${p.year || '—'}</div>
-        <div class="pub-content">
-            <h4>${p.title}</h4>
-            <div style="color: var(--text-primary); font-weight: 500;">${p.authors}</div>
-            <div class="pub-meta">
-                ${p.venue ? `<span><i class="fa-solid fa-book-open"></i> ${p.venue}</span>` : ''}
-                ${p.citations ? `<span><i class="fa-solid fa-quote-right"></i> ${p.citations} citations</span>` : ''}
-                ${p.doi ? `<span><a href="${p.doi.startsWith('http') ? p.doi : 'https://doi.org/' + p.doi}" target="_blank"><i class="fa-solid fa-link"></i> DOI</a></span>` : ''}
-            </div>
-        </div>
-    </div>`;
 }
 
 async function fetchPublicationsPublic() {
     const { data, error } = await supabase.from('publications').select('*').order('year', { ascending: false });
     if (error || !data) return;
     allPublications = data;
-    const LIMIT = 4;
+
     const pubGrid = document.getElementById('publicationsGrid');
+    const viewAllWrapper = document.getElementById('pubs-view-all-wrapper');
+
+    if (data.length === 0) {
+        if (pubGrid) pubGrid.innerHTML = '<div style="text-align: center; color: var(--text-muted);">No publications yet.</div>';
+        if (viewAllWrapper) viewAllWrapper.style.display = 'none';
+        return;
+    }
+
     if (pubGrid) {
-        const shown = data.slice(0, LIMIT);
-        pubGrid.innerHTML = shown.map(renderPubItem).join('');
-        // Apply single-item centering
-        applySingleItemCentering(pubGrid);
-    }
-    // Hide View All if not needed
-    const wrapper = document.getElementById('pubs-view-all-wrapper');
-    if (wrapper) wrapper.style.display = data.length <= LIMIT ? 'none' : '';
-}
+        const renderItem = p => `
+            <div class="pub-item">
+                <div class="pub-year-badge">${p.year || '—'}</div>
+                <div class="pub-content">
+                    <h4>${p.title}</h4>
+                    <div style="color: var(--text-primary); font-weight: 500;">${p.authors}</div>
+                    <div class="pub-meta">
+                        ${p.venue ? `<span><i class="fa-solid fa-book-open"></i> ${p.venue}</span>` : ''}
+                        ${p.doi ? `<span><a href="${p.doi.startsWith('http') ? p.doi : 'https://doi.org/' + p.doi}" target="_blank"><i class="fa-solid fa-link"></i> DOI</a></span>` : ''}
+                    </div>
+                </div>
+            </div>`;
 
-function renderAllPublications() {
-    const grid = document.getElementById('all-publications-grid');
-    if (!grid) return;
-    if (!allPublications.length) {
-        grid.innerHTML = '<div style="text-align:center;color:var(--text-muted);">No publications found.</div>';
-        return;
-    }
-    grid.innerHTML = allPublications.map(renderPubItem).join('');
-}
-
-let allNewsItems = [];
-
-const TAG_COLORS = ['#eff6ff', '#f0fdf4', '#fef9c3', '#fdf2f8', '#fff7ed'];
-const TAG_TEXT = ['#1d4ed8', '#15803d', '#854d0e', '#9d174d', '#c2410c'];
-
-function renderTagsHtml(tags) {
-    return (tags || []).map((t, i) =>
-        `<span class="news-tag" style="background:${TAG_COLORS[i % TAG_COLORS.length]};color:${TAG_TEXT[i % TAG_TEXT.length]};">${t}</span>`
-    ).join('');
-}
-
-function renderNewsCard(n) {
-    const dateStr = [n.month, n.year].filter(Boolean).join(' ') || '';
-    const excerpt = n.description
-        ? n.description.replace(/<[^>]+>/g, '').substring(0, 120) + (n.description.length > 120 ? '…' : '')
-        : '';
-    const featuredBadge = n.is_featured
-        ? '<div style="position:absolute;top:0;right:1rem;background:var(--accent);color:white;font-size:0.7rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:0 0 6px 6px;letter-spacing:0.05em;">FEATURED</div>'
-        : '';
-    const imagePart = n.image_url
-        ? `<div class="news-card-image"><img src="${n.image_url}" alt="" loading="lazy"></div>`
-        : `<div class="news-card-image"><div class="news-card-image-placeholder"><i class="fa-regular fa-newspaper"></i></div></div>`;
-
-    return `
-    <div class="news-card${n.is_featured ? ' featured-card' : ''}"
-         style="${n.is_featured ? 'border-color:var(--accent);border-width:2px;' : ''}"
-         onclick="window.openNewsModal('${n.id}')">
-        ${featuredBadge}
-        ${imagePart}
-        <div class="news-card-body">
-            ${dateStr ? `<div class="news-card-date"><i class="fa-regular fa-calendar"></i>${dateStr}</div>` : ''}
-            <div class="news-card-title">${n.title}</div>
-            ${excerpt ? `<div class="news-card-excerpt">${excerpt}</div>` : ''}
-            <div class="news-card-footer">
-                <div style="display:flex;flex-wrap:wrap;gap:0.35rem;">${renderTagsHtml(n.tags)}</div>
-                <button class="news-read-btn" onclick="event.stopPropagation();window.openNewsModal('${n.id}')">
-                    Read Full Story <i class="fa-solid fa-arrow-right" style="font-size:0.75rem;"></i>
-                </button>
-            </div>
-        </div>
-    </div>`;
-}
-
-function applySingleItemCentering(container) {
-    // If a grid/flex container has exactly one visible child, center it
-    const children = Array.from(container.children).filter(c => c.style.display !== 'none' && !c.classList.contains('hidden'));
-    if (children.length === 1) {
-        container.style.display = 'flex';
-        container.style.justifyContent = 'center';
-    } else {
-        container.style.display = '';
-    }
-}
-
-async function fetchNewsPublic() {
-    try {
-        const { data, error } = await supabase.from('news').select('*').order('year', { ascending: false }).order('created_at', { ascending: false });
-        const grid = document.getElementById('public-news-grid');
-        if (!grid) return;
-        if (error) throw error;
-        if (!data || data.length === 0) {
-            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);">No news items yet.</div>';
-            document.getElementById('news-view-all-wrapper').style.display = 'none';
-            return;
-        }
-        // Sort: featured first
-        allNewsItems = [...data].sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
-        const LIMIT = 3;
-        const shown = allNewsItems.slice(0, LIMIT);
-        grid.innerHTML = shown.map(renderNewsCard).join('');
-        applySingleItemCentering(grid);
-
-        // View All button
-        const wrapper = document.getElementById('news-view-all-wrapper');
-        if (wrapper) wrapper.style.display = allNewsItems.length <= LIMIT ? 'none' : '';
-    } catch (e) {
-        const grid = document.getElementById('public-news-grid');
-        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);">News section initializing...</div>';
-    }
-}
-
-function renderAllNews() {
-    const grid = document.getElementById('all-news-grid');
-    if (!grid) return;
-    if (!allNewsItems.length) {
-        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);">No news items yet.</div>';
-        return;
-    }
-    grid.innerHTML = allNewsItems.map(renderNewsCard).join('');
-    applySingleItemCentering(grid);
-}
-
-window.openNewsModal = function (id) {
-    const n = allNewsItems.find(x => x.id === id);
-    if (!n) return;
-    const overlay = document.getElementById('news-modal-overlay');
-    const imgEl = document.getElementById('news-modal-img');
-    document.getElementById('news-modal-title').innerText = n.title;
-    document.getElementById('news-modal-date-text').innerText = [n.month, n.year].filter(Boolean).join(' ') || '';
-    document.getElementById('news-modal-tags').innerHTML = renderTagsHtml(n.tags);
-
-    // Rich description (may be Quill HTML or plain text)
-    const descEl = document.getElementById('news-modal-description');
-    if (n.description) {
-        // If it looks like HTML (from Quill editor), render as HTML; otherwise wrap in <p>
-        descEl.innerHTML = n.description.trim().startsWith('<') ? n.description : `<p>${n.description}</p>`;
-    } else {
-        descEl.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">No further details available.</p>';
+        pubGrid.innerHTML = data.slice(0, 4).map(renderItem).join('');
     }
 
-    if (n.image_url) {
-        imgEl.src = n.image_url;
-        imgEl.classList.remove('hidden');
-    } else {
-        imgEl.classList.add('hidden');
+    if (viewAllWrapper) {
+        viewAllWrapper.style.display = data.length <= 4 ? 'none' : '';
     }
-
-    overlay.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-};
-
-window.closeNewsModal = function () {
-    document.getElementById('news-modal-overlay').classList.add('hidden');
-    document.body.style.overflow = '';
-};
-
-// Close modal on Escape key
-document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') window.closeNewsModal();
-});
+}
 
 // ==========================================
-// ADMIN DASHBOARD & BLOG MANAGEMENT
+// ADMIN DASHBOARD LOGIC
 // ==========================================
 window.openAdminLogin = function (e) {
     e.preventDefault();
@@ -573,18 +463,13 @@ window.handleLogout = async function () {
 
 function updateNavbarLoginState(loggedIn) {
     const btn = document.getElementById('navbar-login-btn');
-    const label = document.getElementById('navbar-login-label');
-    if (!btn || !label) return;
+    if (!btn) return;
     if (loggedIn) {
-        label.innerText = 'Dashboard';
-        btn.style.background = 'var(--accent)';
-        btn.style.color = 'white';
-        btn.style.borderColor = 'var(--accent)';
+        btn.classList.add('logged-in');
+        btn.title = 'Dashboard';
     } else {
-        label.innerText = 'Member Login';
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.style.borderColor = '';
+        btn.classList.remove('logged-in');
+        btn.title = 'Member Login';
     }
 }
 
@@ -615,13 +500,13 @@ async function fetchAdminBlogs() {
             <td style="padding: 1rem; font-weight: 500;">${b.title}</td>
             <td style="padding: 1rem;"><span class="badge" style="background: ${b.status === 'published' ? '#dcfce7' : '#f1f5f9'}; color: ${b.status === 'published' ? '#166534' : '#475569'};">${b.status}</span></td>
             <td style="padding: 1rem; color: var(--text-muted);">${new Date(b.created_at).toLocaleDateString()}</td>
-            <td style="padding: 1rem;">
+            <td style="padding: 1rem; display: flex; gap: 0.5rem;">
                 <button class="btn btn-ghost btn-sm" onclick="window.editAdminBlog('${b.id}')">Edit</button>
+                <button class="btn btn-ghost btn-sm" style="color:#ef4444;" onclick="window.deleteAdminBlog('${b.id}')">Delete</button>
             </td>
         </tr>
     `).join('');
 
-        // Store for editing
         window.adminBlogs = data;
     } catch (e) {
         document.getElementById('admin-blog-tbody').innerHTML = '<tr><td colspan="4" style="padding: 1rem;">Error or table missing.</td></tr>';
@@ -632,7 +517,6 @@ window.showBlogEditor = function () {
     document.getElementById('admin-blog-list').classList.add('hidden');
     document.getElementById('admin-blog-editor').classList.remove('hidden');
 
-    // Reset form
     document.getElementById('edit-post-id').value = '';
     document.getElementById('post-title').value = '';
     document.getElementById('post-category').value = '';
@@ -691,7 +575,7 @@ window.savePost = async function (status) {
         status,
         tags: tagsRaw ? tagsRaw.split(',').map(t => t.trim()) : [],
         author_id: window.currentUser.id,
-        author_name: window.currentUser.email.split('@')[0] // Fallback
+        author_name: window.currentUser.email.split('@')[0]
     };
 
     if (imageUrl) payload.image_url = imageUrl;
@@ -707,16 +591,22 @@ window.savePost = async function (status) {
 
         msg.className = "message success"; msg.innerText = "✅ Post saved successfully!";
         fetchAdminBlogs();
-        fetchBlogsPublic(); // Refresh public view
+        fetchBlogsPublic();
         setTimeout(() => window.hideBlogEditor(), 1500);
     } catch (e) {
         msg.className = "message error"; msg.innerText = e.message;
     }
 };
 
-// ==========================================
-// ADMIN: PUBLICATIONS MANAGEMENT
-// ==========================================
+window.deleteAdminBlog = async function (id) {
+    if (!confirm('Delete this blog post? This cannot be undone.')) return;
+    const { error } = await supabase.from('blogs').delete().eq('id', id);
+    if (error) return alert('Delete failed: ' + error.message);
+    fetchAdminBlogs();
+    fetchBlogsPublic();
+};
+
+/* --- Admin Publications Management --- */
 window.adminPubs = [];
 
 async function fetchAdminPubs() {
@@ -788,9 +678,9 @@ window.savePub = async function () {
     if (!title) { msg.className = 'message error'; msg.innerText = 'Title is required.'; return; }
     if (!authors) { msg.className = 'message error'; msg.innerText = 'Authors are required.'; return; }
     msg.className = 'message'; msg.innerText = 'Saving...';
+
     const payload = {
-        title,
-        authors,
+        title, authors,
         venue: document.getElementById('pub-venue').value.trim() || null,
         year: parseInt(document.getElementById('pub-year').value) || null,
         citations: parseInt(document.getElementById('pub-citations').value) || 0,
@@ -822,9 +712,7 @@ window.deleteAdminPub = async function (id) {
     fetchPublicationsPublic();
 };
 
-// ==========================================
-// ADMIN: MEMBERS MANAGEMENT
-// ==========================================
+/* --- Admin Members Management --- */
 window.adminMembers = [];
 
 async function fetchAdminMembers() {
@@ -837,10 +725,8 @@ async function fetchAdminMembers() {
         window.adminMembers = data || [];
         window.adminRelations = relations || [];
 
-        // Build quick lookup: memberId → [directorNames]
         const dirMap = {};
-        window.adminMembers.filter(m => m.role_category === 'director')
-            .forEach(d => { dirMap[d.id] = d.name; });
+        window.adminMembers.filter(m => m.role_category === 'director').forEach(d => { dirMap[d.id] = d.name; });
         const memberDirNames = {};
         (relations || []).forEach(r => {
             if (!memberDirNames[r.member_id]) memberDirNames[r.member_id] = [];
@@ -863,8 +749,7 @@ async function fetchAdminMembers() {
                 <td style="padding:1rem;font-weight:500;">
                     <div style="display:flex;align-items:center;gap:0.75rem;">
                         <img src="${m.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=80&background=dbeafe&color=1d4ed8&bold=true`}"
-                             style="width:36px;height:36px;border-radius:50%;object-fit:cover;"
-                             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=80&background=dbeafe&color=1d4ed8&bold=true'">
+                             style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
                         ${m.name}
                     </div>
                 </td>
@@ -877,12 +762,10 @@ async function fetchAdminMembers() {
             </tr>`;
         }).join('');
     } catch (e) {
-        document.getElementById('admin-member-tbody').innerHTML =
-            '<tr><td colspan="4" style="padding:1rem;">Error loading people.</td></tr>';
+        document.getElementById('admin-member-tbody').innerHTML = '<tr><td colspan="4" style="padding:1rem;">Error loading people.</td></tr>';
     }
 }
 
-// Populate the supervisor checkboxes in the editor
 function renderSupervisorCheckboxes(selectedIds = []) {
     const directors = (window.adminMembers || []).filter(m => m.role_category === 'director');
     const container = document.getElementById('supervisor-checkboxes');
@@ -893,21 +776,17 @@ function renderSupervisorCheckboxes(selectedIds = []) {
     }
     container.innerHTML = directors.map(d => {
         const checked = selectedIds.includes(d.id) ? 'checked' : '';
-        const avatar = d.image_url
-            || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.name)}&size=80&background=dbeafe&color=1d4ed8&bold=true`;
+        const avatar = d.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.name)}&size=80&background=dbeafe&color=1d4ed8&bold=true`;
         return `
         <label style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 0.75rem;border-radius:99px;border:1px solid var(--border);cursor:pointer;background:white;transition:all 0.15s;"
-               onmouseenter="this.style.borderColor='var(--accent)'"
-               onmouseleave="this.style.borderColor='var(--border)'">
-            <input type="checkbox" name="supervisor" value="${d.id}" ${checked}
-                   style="accent-color:var(--accent);width:15px;height:15px;">
+               onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--border)'">
+            <input type="checkbox" name="supervisor" value="${d.id}" ${checked} style="accent-color:var(--accent);width:15px;height:15px;">
             <img src="${avatar}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;">
             <span style="font-size:0.875rem;font-weight:500;">${d.name}</span>
         </label>`;
     }).join('');
 }
 
-// Show/hide supervisor field based on role
 window.onRoleChange = function (role) {
     const group = document.getElementById('supervisor-group');
     if (!group) return;
@@ -951,11 +830,8 @@ window.editAdminMember = function (id) {
     document.getElementById('member-google-scholar').value = m.google_scholar_url || '';
     document.getElementById('member-github').value = m.github_url || '';
 
-    // Load supervisor checkboxes if not a director
     if (m.role_category !== 'director') {
-        const currentDirectorIds = (window.adminRelations || [])
-            .filter(r => r.member_id === id)
-            .map(r => r.director_id);
+        const currentDirectorIds = (window.adminRelations || []).filter(r => r.member_id === id).map(r => r.director_id);
         document.getElementById('supervisor-group').style.display = 'block';
         renderSupervisorCheckboxes(currentDirectorIds);
     }
@@ -966,11 +842,11 @@ window.saveMember = async function () {
     const name = document.getElementById('member-name').value.trim();
     const role = document.getElementById('member-role').value;
     const msg = document.getElementById('member-msg');
+
     if (!name) { msg.className = 'message error'; msg.innerText = 'Name is required.'; return; }
     if (!role) { msg.className = 'message error'; msg.innerText = 'Role is required.'; return; }
     msg.className = 'message'; msg.innerText = 'Saving...';
 
-    // Handle image upload
     let imageUrl = id ? (window.adminMembers.find(m => m.id === id)?.image_url || null) : null;
     const fileInput = document.getElementById('member-image-file');
     if (fileInput.files.length > 0) {
@@ -1004,21 +880,13 @@ window.saveMember = async function () {
             memberId = inserted.id;
         }
 
-        // Sync junction table (skip for directors)
         if (role !== 'director') {
-            const checked = Array.from(
-                document.querySelectorAll('#supervisor-checkboxes input[type=checkbox]:checked')
-            ).map(cb => cb.value);
-
-            // Delete existing then re-insert
+            const checked = Array.from(document.querySelectorAll('#supervisor-checkboxes input[type=checkbox]:checked')).map(cb => cb.value);
             await supabase.from('member_directors').delete().eq('member_id', memberId);
             if (checked.length) {
-                await supabase.from('member_directors').insert(
-                    checked.map(dirId => ({ member_id: memberId, director_id: dirId }))
-                );
+                await supabase.from('member_directors').insert(checked.map(dirId => ({ member_id: memberId, director_id: dirId })));
             }
         } else {
-            // Directors have no supervisors — clean up any stale rows
             await supabase.from('member_directors').delete().eq('member_id', memberId);
         }
 
@@ -1033,16 +901,13 @@ window.saveMember = async function () {
 
 window.deleteAdminMember = async function (id) {
     if (!confirm('Delete this person? This cannot be undone.')) return;
-    // Junction rows deleted automatically via ON DELETE CASCADE
     const { error } = await supabase.from('members').delete().eq('id', id);
     if (error) return alert('Delete failed: ' + error.message);
     fetchAdminMembers();
     fetchMembersPublic();
 };
 
-// ==========================================
-// ADMIN: NEWS MANAGEMENT
-// ==========================================
+/* --- Admin News Management --- */
 window.adminNews = [];
 
 async function fetchAdminNews() {
@@ -1093,6 +958,18 @@ window.hideNewsEditor = function () {
     document.getElementById('admin-news-editor').classList.add('hidden');
 };
 
+window.previewNewsImage = function (input) {
+    const prev = document.getElementById('news-image-preview');
+    const prevImg = document.getElementById('news-image-preview-img');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => { prevImg.src = e.target.result; prev.style.display = 'block'; };
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        prev.style.display = 'none';
+    }
+};
+
 window.editAdminNews = function (id) {
     const n = window.adminNews.find(x => x.id === id);
     if (!n) return;
@@ -1104,12 +981,12 @@ window.editAdminNews = function (id) {
     document.getElementById('news-year').value = n.year || '';
     document.getElementById('news-tags').value = (n.tags || []).join(', ');
     document.getElementById('news-featured').checked = !!n.is_featured;
-    // Populate Quill with existing description (HTML or plain text)
+
     if (window.newsQuillEditor) {
         const desc = n.description || '';
         window.newsQuillEditor.root.innerHTML = desc.trim().startsWith('<') ? desc : (desc ? `<p>${desc}</p>` : '');
     }
-    // Show existing image preview
+
     if (n.image_url) {
         const prev = document.getElementById('news-image-preview');
         const prevImg = document.getElementById('news-image-preview-img');
@@ -1122,24 +999,21 @@ window.saveNews = async function () {
     const id = document.getElementById('edit-news-id').value;
     const title = document.getElementById('news-title').value.trim();
     const msg = document.getElementById('news-msg');
+
     if (!title) { msg.className = 'message error'; msg.innerText = 'Title is required.'; return; }
     msg.className = 'message'; msg.innerText = 'Saving...';
     const tagsRaw = document.getElementById('news-tags').value.trim();
 
-    // Get rich text content from Quill
-    const descriptionHtml = window.newsQuillEditor
-        ? window.newsQuillEditor.root.innerHTML.trim()
-        : '';
+    const descriptionHtml = window.newsQuillEditor ? window.newsQuillEditor.root.innerHTML.trim() : '';
     const descriptionValue = descriptionHtml === '<p><br></p>' ? null : (descriptionHtml || null);
 
-    // Handle image upload
     let imageUrl = id ? (window.adminNews.find(n => n.id === id)?.image_url || null) : null;
     const fileInput = document.getElementById('news-image-file');
     if (fileInput && fileInput.files.length > 0) {
         const file = fileInput.files[0];
         const fileName = `news-${Date.now()}-${file.name}`;
         const { error: upErr } = await supabase.storage.from('profile-images').upload(fileName, file);
-        if (upErr) { msg.className = 'message error'; msg.innerText = 'Image upload failed: ' + upErr.message; return; }
+        if (upErr) { msg.className = 'message error'; msg.innerText = 'Image upload failed.'; return; }
         const { data: { publicUrl } } = supabase.storage.from('profile-images').getPublicUrl(fileName);
         imageUrl = publicUrl;
     }
@@ -1193,15 +1067,16 @@ function initHeaderEffects() {
 function initSmoothScroll() {
     document.querySelectorAll('.nav-link').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
+            const navList = document.querySelector('.nav-list');
+            if (navList) navList.classList.remove('active');
+
             const href = this.getAttribute('href');
             if (href.startsWith('#')) {
                 e.preventDefault();
-                window.showView('home'); // Ensure we are on home view
+                window.showView('home');
                 setTimeout(() => {
                     const target = document.querySelector(href);
-                    if (target) {
-                        window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-                    }
+                    if (target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
                 }, 50);
             }
         });
