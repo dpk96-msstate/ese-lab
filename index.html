@@ -1,530 +1,1603 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <title>HOME | Software Engineering Research and Analysis Lab</title>
     <link rel="icon" type="image/svg+xml" href="assets/sera logo favicon-transparent-sm.svg">
-    <link rel="stylesheet" href="style.css">
+
+    <!-- Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap"
+        rel="stylesheet">
+
+    <!-- Quill.js for Rich Text Blog Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Modern Minimalist CSS Overhaul -->
+    <style>
+        :root {
+            /* Modern Color Palette */
+            --bg-main: #ffffff;
+            --bg-alt: #f8fafc;
+            --bg-glass: rgba(255, 255, 255, 0.85);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #eff6ff;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-serif: 'Playfair Display', Georgia, serif;
+        }
+
+        /* Reset & Base */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            background-color: var(--bg-alt);
+            line-height: 1.6;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--accent-hover);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            color: var(--text-primary);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-family: var(--font-serif);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Buttons & Badges */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e293b;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--text-primary);
+            background: var(--bg-alt);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .btn-ghost:hover {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        /* Header (Glassmorphism) */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .main-logo {
+            height: 40px;
+        }
+
+        .nav-list {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--text-primary);
+        }
+
+        .ksu-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ksu-icon {
+            height: 32px;
+        }
+
+        .ksu-text {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-left: 1px solid var(--border);
+            padding-left: 12px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #ffffff;
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent-light) 0%, rgba(255, 255, 255, 0) 50%);
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            padding: 0 24px;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .subtitle-highlights {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* General Sections */
+        section {
+            padding: 6rem 0;
+            background: var(--bg-main);
+        }
+
+        section:nth-child(even) {
+            background: var(--bg-alt);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem auto;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+        }
+
+        /* Modern Cards */
+        .card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: transparent;
+        }
+
+        /* Members / Co-Directors */
+        .member-filters {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            border: 1px solid var(--border);
+            background: var(--bg-main);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--text-primary);
+            color: white;
+            border-color: var(--text-primary);
+        }
+
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .member-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-main);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .member-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .member-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem auto;
+            overflow: hidden;
+            background: var(--bg-alt);
+            border: 4px solid white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .member-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .member-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .member-title {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Publications Grid */
+        .pub-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .pub-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+        }
+
+        .pub-item:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e1;
+        }
+
+        .pub-year-badge {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--border);
+            min-width: 60px;
+        }
+
+        .pub-content h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pub-meta {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* ==========================================
+           NEW: BLOG SECTION STYLES
+           ========================================== */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .blog-card {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-main);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .blog-image {
+            height: 200px;
+            background: var(--bg-alt);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .blog-card:hover .blog-image img {
+            transform: scale(1.05);
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .blog-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .blog-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .blog-footer {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+
+        .blog-author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-alt);
+            overflow: hidden;
+        }
+
+        .blog-author-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-author-info {
+            font-size: 0.85rem;
+        }
+
+        .blog-author-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Blog Reader View */
+        .blog-reader {
+            max-width: 800px;
+            margin: 100px auto 4rem auto;
+            padding: 0 24px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .blog-reader-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .blog-reader-title {
+            font-size: 3rem;
+            font-family: var(--font-serif);
+            margin: 1.5rem 0;
+            line-height: 1.2;
+        }
+
+        .blog-reader-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .blog-reader-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .blog-reader-author img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+        }
+
+        .blog-reader-cover {
+            width: 100%;
+            max-height: 450px;
+            object-fit: cover;
+            border-radius: var(--radius-lg);
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Rich Text Content Styling */
+        .prose {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: #334155;
+        }
+
+        .prose p {
+            margin-bottom: 1.5rem;
+        }
+
+        .prose h2 {
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .prose h3 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .prose img {
+            border-radius: 8px;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .prose blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 1.5rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin: 2rem 0;
+            background: var(--bg-alt);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .prose code {
+            background: var(--bg-alt);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            border: 1px solid var(--border);
+        }
+
+        .prose pre {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+
+        .prose ul,
+        .prose ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .prose li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Social Share */
+        .share-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin: 4rem 0;
+        }
+
+        .share-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-alt);
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ==========================================
+           ADMIN / MEMBER DASHBOARD
+           ========================================== */
+        .admin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-main);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            width: 260px;
+            background: #f8fafc;
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-main {
+            flex: 1;
+            padding: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .admin-nav-item {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .admin-nav-item:hover,
+        .admin-nav-item.active {
+            background: #e2e8f0;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Quill Editor Tweaks */
+        .ql-container {
+            font-family: var(--font-sans);
+            font-size: 1.1rem;
+            min-height: 400px;
+            border-radius: 0 0 8px 8px;
+            border-color: var(--border) !important;
+        }
+
+        .ql-toolbar {
+            border-radius: 8px 8px 0 0;
+            border-color: var(--border) !important;
+            background: var(--bg-alt);
+        }
+
+        .ql-editor {
+            padding: 2rem;
+        }
+
+        /* Utilities */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 4rem 0 2rem 0;
+            text-align: center;
+        }
+
+        .footer-admin-link {
+            color: #475569;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+            display: block;
+        }
+
+        .footer-admin-link:hover {
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-list {
+                display: none;
+                /* Mobile menu needed */
+            }
+
+            .admin-layout {
+                flex-direction: column;
+            }
+
+            .admin-sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 1rem;
+            }
+
+            .admin-main {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-
-<!-- Main Header -->
-<header class="header">
-    <div class="header-container">
-        <!-- DSL Lab Logo (Left) -->
-        <div class="site-logo-container">
-            <div class="logo-wrapper">
-                <img src="assets/sera logo horiz-transparent.svg" alt="Software Engineering Research and Analysis Lab" class="main-logo">
+    <!-- MAIN PUBLIC APP VIEW -->
+    <div id="app-view">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-container">
+                <div class="site-logo-container">
+                    <a href="#" onclick="window.showView('home')">
+                        <img src="assets/sera logo horiz-transparent.svg" alt="SERA Lab" class="main-logo"
+                            onerror="this.src='https://placehold.co/200x50?text=SERA+Lab'">
+                    </a>
+                </div>
+                <nav class="navigation">
+                    <ul class="nav-list">
+                        <li><a href="#home" class="nav-link">Home</a></li>
+                        <li><a href="#members" class="nav-link">Members</a></li>
+                        <li><a href="#research" class="nav-link">Research</a></li>
+                        <li><a href="#blog" class="nav-link">Blog</a></li>
+                        <li><a href="#publications" class="nav-link">Publications</a></li>
+                    </ul>
+                </nav>
+                <div class="ksu-branding">
+                    <div class="ksu-wrapper">
+                        <img src="assets/ksu.png" alt="KSU" class="ksu-icon"
+                            onerror="this.src='https://placehold.co/40x40?text=KSU'">
+                        <div class="ksu-text">Kennesaw State University</div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </header>
 
-        <!-- Navigation (Center) -->
-        <nav class="navigation">
-            <ul class="nav-list">
-                <li><a href="#home" class="nav-link active">HOME</a></li>
-                <li><a href="#members" class="nav-link">MEMBERS</a></li>
-                <li><a href="#research" class="nav-link">RESEARCH</a></li>
-                <li><a href="#recent-news" class="nav-link">RECENT NEWS</a></li>
-                <li><a href="#publications" class="nav-link">PUBLICATIONS</a></li>
-                <li><a href="#about" class="nav-link">ABOUT</a></li>
-                <li><a href="#contact" class="nav-link">CONTACT US</a></li>
-            </ul>
-        </nav>
+        <!-- Homepage Content (Only visible when not reading a blog) -->
+        <div id="home-view">
+            <!-- Hero Section -->
+            <section id="home" class="hero-section">
+                <div class="hero-content">
+                    <div class="badge" style="margin-bottom: 1.5rem;">Evidence-Based Approach</div>
+                    <h1 class="hero-title">Software Engineering Research & Analysis</h1>
+                    <p class="subtitle-highlights">Requirements Engineering • Creativity in Requirements • AI</p>
+                    <div class="hero-actions">
+                        <a href="#research" class="btn btn-primary">Explore Research</a>
+                        <a href="#blog" class="btn btn-outline">Read Our Blog</a>
+                    </div>
+                </div>
+            </section>
 
-        <!-- KSU Branding (Right) -->
-        <div class="ksu-branding">
-            <div class="ksu-wrapper">
-                <img src="assets/ksu.png" alt="Kennesaw State University" class="ksu-icon">
-                <div class="ksu-text">Kennesaw State University</div>
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- Hero Section with Office Background -->
-<section id="home" class="hero-section">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <div class="hero-box">
-            <h1 class="hero-title">
-                <span class="title-accent">SOFTWARE ENGINEERING</span>
-                <span class="title-accent">RESEARCH AND ANALYSIS LAB</span>
-            </h1>
-            <div class="hero-divider"></div>
-            <span class="subtitle-highlights">Requirements Engineering • Creativity in Requirements • AI and Requirements Engineering</span></p>
-            <div class="hero-actions">
-                <a href="#research" class="hero-btn primary">Explore Research</a>
-                <a href="#publications" class="hero-btn secondary">View Publications</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Main Content -->
-<main class="main-content">
-    <!-- Introduction Section -->
-    <section class="intro-section">
-        <div class="container full-width">
-            <div class="intro-header">
-                <h2 class="intro-title">Software Engineering Research and Analysis</h2>
-                <div class="intro-subtitle">An Evidence-Based Approach</div>
-            </div>
-
-            <div class="intro-content-grid">
-                <div class="intro-main">
-                    <div class="intro-card vision-card">
-                        <div class="card-header">
+            <!-- Intro/Vision -->
+            <section id="about" class="intro-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Our Vision & Mission</h2>
+                        <p>A future where software systems are built on secure requirements systematically validated
+                            through tight integration with testing.</p>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                        <div class="card">
                             <h3>Our Vision</h3>
+                            <p>A future in which software systems are built on well-understood, creative, and secure
+                                requirements that are systematically validated through empirical evidence.</p>
                         </div>
-                        <p class="intro-text">
-                            A future in which software systems are built on well-understood, creative, and secure requirements that are systematically validated through tight integration with testing and empirical evidence.
-                        </p>
+                        <div class="card">
+                            <h3>Our Mission</h3>
+                            <p>SERA Lab is developing empirically grounded methods and tools that support creative
+                                requirements engineering and strengthen connections between requirements, testing, and
+                                security.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Co-Directors -->
+            <section id="directors" style="background: var(--bg-main);">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Lab Co-Directors</h2>
+                        <p>Guiding empirical research in software engineering</p>
+                    </div>
+                    <div class="member-grid" id="co-directors-grid" style="max-width: 800px; margin: 0 auto;">
+                        <!-- Injected via JS -->
+                        <div style="text-align: center; width: 100%; color: #94a3b8;">Loading directors...</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Blog Section (NEW) -->
+            <section id="blog">
+                <div class="container">
+                    <div class="section-header">
+                        <div class="badge" style="margin-bottom: 1rem;">Latest Insights</div>
+                        <h2>Research Blog & Articles</h2>
+                        <p>Discover our latest case studies, research thoughts, and engineering methodologies published
+                            directly by our lab members.</p>
                     </div>
 
-                    <div class="intro-card mission-card">
-                        <div class="card-header">
-                            <h3>Our Mission</h3>
+                    <div class="blog-grid" id="public-blog-grid">
+                        <!-- Dynamic Blogs Loaded Here -->
+                        <div style="text-align: center; grid-column: 1/-1; color: #94a3b8;"><i
+                                class="fa-solid fa-spinner fa-spin"></i> Loading articles...</div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 3rem;">
+                        <button class="btn btn-outline" onclick="alert('Pagination feature coming soon!')">View All
+                            Articles</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Members -->
+            <section id="members">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Lab Members</h2>
+                        <p>Meet the brilliant minds driving our research forward.</p>
+                    </div>
+                    <div class="member-filters">
+                        <button class="filter-btn active" data-filter="all">All Members</button>
+                        <button class="filter-btn" data-filter="phd">PhD Students</button>
+                        <button class="filter-btn" data-filter="ms">MS Students</button>
+                        <button class="filter-btn" data-filter="alumni">Alumni</button>
+                    </div>
+                    <div class="member-grid" id="students-grid">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Publications -->
+            <section id="publications" style="background: var(--bg-main);">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Recent Publications</h2>
+                        <p>Peer-reviewed contributions advancing Software Engineering.</p>
+                    </div>
+                    <div class="pub-grid" id="publicationsGrid" style="max-width: 900px; margin: 0 auto;">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Individual Blog Reader View (Hidden by default) -->
+        <div id="blog-reader-view" class="blog-reader hidden">
+            <button class="btn btn-ghost" style="margin-bottom: 2rem;" onclick="window.showView('home')">
+                <i class="fa-solid fa-arrow-left"></i> &nbsp; Back to Home
+            </button>
+
+            <header class="blog-reader-header">
+                <div class="badge" id="reader-category">Research</div>
+                <h1 class="blog-reader-title" id="reader-title">Loading Article...</h1>
+
+                <div class="blog-reader-meta">
+                    <div class="blog-reader-author">
+                        <img id="reader-author-img" src="https://placehold.co/100x100" alt="Author">
+                        <div style="text-align: left;">
+                            <div style="font-weight: 600; color: var(--text-primary);" id="reader-author-name">Author
+                                Name</div>
+                            <div style="font-size: 0.8rem;" id="reader-date">Date</div>
                         </div>
-                        <p class="intro-text">
-                            The <strong>Software Engineering Research and Analysis Lab (SERA)</strong> at Kennesaw State University is developing empirically grounded methods and tools that support creative requirements engineering and strengthen the connections between requirements, testing, and software security.
-                        </p>
+                    </div>
+                    <div>•</div>
+                    <div id="reader-read-time"><i class="fa-regular fa-clock"></i> 5 min read</div>
+                </div>
+            </header>
+
+            <img id="reader-cover" src="" class="blog-reader-cover hidden" alt="Cover Image">
+
+            <div class="prose" id="reader-content">
+                <!-- Quill HTML Content injected here -->
+            </div>
+
+            <div class="share-bar">
+                <span style="font-weight: 600; color: var(--text-primary);">Share this article:</span>
+                <button class="share-btn" onclick="window.copyUrl()"><i class="fa-solid fa-link"></i></button>
+                <button class="share-btn"
+                    onclick="window.open(`https://twitter.com/intent/tweet?url=${window.location.href}`)"><i
+                        class="fa-brands fa-twitter"></i></button>
+                <button class="share-btn"
+                    onclick="window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${window.location.href}`)"><i
+                        class="fa-brands fa-linkedin-in"></i></button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <img src="assets/sera logo horiz-transparent.svg" alt="SERA"
+                    style="height: 40px; margin: 0 auto 1.5rem auto; filter: grayscale(1) brightness(2);"
+                    onerror="this.style.display='none'">
+                <p>© 2026 Software Engineering Research and Analysis Lab. All Rights Reserved.</p>
+                <a href="#" onclick="window.openAdminLogin(event)" class="footer-admin-link"><i
+                        class="fa-solid fa-lock"></i> Member Login</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ==========================================
+     ADMIN / MEMBER DASHBOARD OVERLAY
+     ========================================== -->
+    <div id="admin-dashboard" class="admin-overlay hidden">
+        <!-- Login Screen -->
+        <div id="admin-login-screen"
+            style="display: flex; height: 100vh; align-items: center; justify-content: center; background: #f8fafc;">
+            <div class="card" style="width: 100%; max-width: 400px; text-align: center;">
+                <h2 style="margin-bottom: 2rem;">Member Login</h2>
+                <input type="email" id="admin-email" class="form-control" placeholder="Email Address">
+                <input type="password" id="admin-password" class="form-control" placeholder="Password">
+                <button class="btn btn-primary" style="width: 100%;" onclick="window.handleLogin()">Sign In</button>
+                <button class="btn btn-ghost" style="width: 100%; margin-top: 1rem;"
+                    onclick="window.closeAdmin()">Cancel</button>
+                <p id="admin-msg" class="message error"></p>
+            </div>
+        </div>
+
+        <!-- Dashboard App -->
+        <div id="admin-app-screen" class="admin-layout hidden">
+            <aside class="admin-sidebar">
+                <h3 style="margin-bottom: 2rem;">SERA Workspace</h3>
+                <div class="admin-nav-item active" onclick="window.switchAdminTab('blogs', this)"><i
+                        class="fa-solid fa-pen-nib"></i> &nbsp; Blog Posts</div>
+                <div class="admin-nav-item" onclick="window.switchAdminTab('pubs', this)"><i
+                        class="fa-solid fa-book"></i> &nbsp; Publications</div>
+                <div class="admin-nav-item" onclick="window.switchAdminTab('members', this)"><i
+                        class="fa-solid fa-users"></i> &nbsp; Members</div>
+
+                <div style="margin-top: auto;">
+                    <button class="btn btn-outline" style="width: 100%;" onclick="window.handleLogout()"><i
+                            class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+                    <button class="btn btn-ghost" style="width: 100%; margin-top: 10px;"
+                        onclick="window.closeAdmin()">Exit Dashboard</button>
+                </div>
+            </aside>
+
+            <main class="admin-main">
+                <!-- BLOG MANAGER TAB -->
+                <div id="admin-tab-blogs">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>Manage Blog Posts</h2>
+                        <button class="btn btn-primary" onclick="window.showBlogEditor()"><i
+                                class="fa-solid fa-plus"></i> New Post</button>
+                    </div>
+
+                    <!-- Blog List -->
+                    <div id="admin-blog-list">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+                                    <th style="padding: 1rem;">Title</th>
+                                    <th style="padding: 1rem;">Status</th>
+                                    <th style="padding: 1rem;">Date</th>
+                                    <th style="padding: 1rem;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-blog-tbody">
+                                <tr>
+                                    <td colspan="4" style="padding: 1rem;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Rich Text Blog Editor (Hidden initially) -->
+                    <div id="admin-blog-editor" class="card hidden" style="margin-top: 1rem; max-width: none;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 id="editor-title-heading">Create New Post</h3>
+                            <button class="btn btn-ghost" onclick="window.hideBlogEditor()"><i
+                                    class="fa-solid fa-times"></i> Close</button>
+                        </div>
+
+                        <input type="hidden" id="edit-post-id">
+
+                        <input type="text" id="post-title" class="form-control" placeholder="Post Title"
+                            style="font-size: 1.5rem; font-weight: 700;">
+
+                        <div style="display: flex; gap: 1rem;">
+                            <input type="text" id="post-category" class="form-control"
+                                placeholder="Category (e.g., Research)">
+                            <input type="text" id="post-tags" class="form-control" placeholder="Tags (comma separated)">
+                        </div>
+
+                        <div style="margin-bottom: 1.5rem;">
+                            <label>Cover Image (Optional)</label>
+                            <input type="file" id="post-cover" class="form-control" accept="image/*">
+                        </div>
+
+                        <!-- Quill Editor Container -->
+                        <div style="background: white; border-radius: 8px; margin-bottom: 2rem;">
+                            <div id="quill-editor"></div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                            <button class="btn btn-outline" onclick="window.savePost('draft')">Save as Draft</button>
+                            <button class="btn btn-primary" onclick="window.savePost('published')">Publish Post</button>
+                        </div>
+                        <p id="post-msg" class="message"></p>
                     </div>
                 </div>
 
-                <div class="intro-highlights">
-                    <div class="highlight-card director-card">
-                        <div class="director-info">
-                            <div class="hexagon-avatar" style="margin-bottom: 15px;">
-                                <div class="hexagon-inner">
-                                    <img src="assets/Bhowmik_ProfilePic.jpg" alt="Dr. Tanmay Bhowmik">
+                <!-- PLACEHOLDERS FOR OTHER TABS -->
+                <div id="admin-tab-pubs" class="hidden">
+                    <h2>Manage Publications</h2>
+                    <p>Use the database or existing tools to manage publications.</p>
+                </div>
+                <div id="admin-tab-members" class="hidden">
+                    <h2>Manage Members</h2>
+                    <p>Use the database or existing tools to manage members.</p>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        // ==========================================
+        // SUPABASE CONFIGURATION
+        // ==========================================
+        const supabaseUrl = 'https://uozmlevtkfqskdgqxejw.supabase.co';
+        const supabaseKey = 'sb_publishable_GS6J9I_G7vfn3mDExAEq1A_tGfctcjF';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        window.supabase = supabase; // Export for inline handlers
+
+        // Globals
+        window.currentUser = null;
+        let quillEditor = null;
+        let loadedBlogs = [];
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Init UI
+            initSmoothScroll();
+            initHeaderEffects();
+
+            // Fetch Public Data
+            fetchMembersPublic();
+            fetchPublicationsPublic();
+            fetchBlogsPublic();
+
+            // Check Auth Status silently
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                window.currentUser = session.user;
+            }
+
+            // Init Quill Editor
+            quillEditor = new Quill('#quill-editor', {
+                theme: 'snow',
+                placeholder: 'Write your story...',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        ['link', 'image', 'code-block'],
+                        ['clean']
+                    ]
+                }
+            });
+        });
+
+        // ==========================================
+        // PUBLIC UI: NAVIGATION & VIEWS
+        // ==========================================
+        window.showView = function (view) {
+            if (view === 'home') {
+                document.getElementById('home-view').classList.remove('hidden');
+                document.getElementById('blog-reader-view').classList.add('hidden');
+                window.scrollTo(0, 0);
+            } else if (view === 'blog-reader') {
+                document.getElementById('home-view').classList.add('hidden');
+                document.getElementById('blog-reader-view').classList.remove('hidden');
+                window.scrollTo(0, 0);
+            }
+        };
+
+        window.openBlogReader = function (id) {
+            const post = loadedBlogs.find(b => b.id === id);
+            if (!post) return;
+
+            document.getElementById('reader-title').innerText = post.title;
+            document.getElementById('reader-category').innerText = post.category || 'Article';
+            document.getElementById('reader-content').innerHTML = post.content;
+
+            // Date formatting
+            const d = new Date(post.created_at);
+            document.getElementById('reader-date').innerText = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Calculate reading time
+            const wordCount = post.content.replace(/<[^>]+>/g, '').split(/\s+/).length;
+            const readTime = Math.max(1, Math.ceil(wordCount / 200));
+            document.getElementById('reader-read-time').innerHTML = `<i class="fa-regular fa-clock"></i> ${readTime} min read`;
+
+            // Cover image
+            const coverEl = document.getElementById('reader-cover');
+            if (post.image_url) {
+                coverEl.src = post.image_url;
+                coverEl.classList.remove('hidden');
+            } else {
+                coverEl.classList.add('hidden');
+            }
+
+            // Setup mock author (In a real app, join with members table)
+            document.getElementById('reader-author-name').innerText = post.author_name || 'Lab Member';
+            document.getElementById('reader-author-img').src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(post.author_name || 'Lab') + '&background=f8fafc&color=0f172a';
+
+            window.showView('blog-reader');
+        };
+
+        window.copyUrl = function () {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copied to clipboard!');
+        };
+
+        // ==========================================
+        // PUBLIC DATA FETCHING
+        // ==========================================
+        async function fetchBlogsPublic() {
+            try {
+                // Note: Assume 'blogs' table exists
+                const { data, error } = await supabase
+                    .from('blogs')
+                    .select('*')
+                    .eq('status', 'published')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                loadedBlogs = data || [];
+
+                const grid = document.getElementById('public-blog-grid');
+                if (loadedBlogs.length === 0) {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No articles published yet.</div>';
+                    return;
+                }
+
+                grid.innerHTML = loadedBlogs.map(post => {
+                    const wordCount = post.content.replace(/<[^>]+>/g, '').split(/\s+/).length;
+                    const readTime = Math.max(1, Math.ceil(wordCount / 200));
+                    const dateStr = new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const excerpt = post.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...';
+
+                    return `
+                    <article class="blog-card" onclick="window.openBlogReader('${post.id}')">
+                        ${post.image_url ? `<div class="blog-image"><img src="${post.image_url}" alt="Cover"></div>` : ''}
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <span>${post.category || 'Research'}</span>
+                                <span>${readTime} min read</span>
+                            </div>
+                            <h3 class="blog-title">${post.title}</h3>
+                            <p class="blog-excerpt">${excerpt}</p>
+                            <div class="blog-footer">
+                                <div class="blog-author-avatar">
+                                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(post.author_name || 'Lab')}&background=f8fafc&color=0f172a">
+                                </div>
+                                <div class="blog-author-info">
+                                    <div class="blog-author-name">${post.author_name || 'Lab Member'}</div>
+                                    <div style="color: var(--text-muted); font-size: 0.75rem;">${dateStr}</div>
                                 </div>
                             </div>
-                            <h4>Lab Director</h4>
-                            <div class="director-name">Dr. Tanmay Bhowmik</div>
-                            <div class="director-title">Lab Director | Researcher | Requirements Engineering</div>
                         </div>
-                    </div>
+                    </article>
+                `;
+                }).join('');
+            } catch (e) {
+                console.log("Blogs table might not exist yet.", e);
+                document.getElementById('public-blog-grid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Blog system initializing...</div>';
+            }
+        }
 
-                    <div class="highlight-card focus-areas-card">
-                        <h4>Core Research Areas</h4>
-                        <div class="focus-tags">
-                            <span class="focus-tag">Software Engineering</span>
-                            <span class="focus-tag">Requirements Engineering</span>
-                            <span class="focus-tag">Creativity in Requirements</span>
-                            <span class="focus-tag">Requirements and Software Security</span>
-                            <span class="focus-tag">Requirements and Testing</span>
-                            <span class="focus-tag">AI and Requirements</span>
-                        </div>
-                    </div>
+        async function fetchMembersPublic() {
+            const { data, error } = await supabase.from('members').select('*');
+            if (error || !data) return;
+
+            const directors = data.filter(m => m.role_category === 'director');
+            const others = data.filter(m => m.role_category !== 'director');
+
+            // Render Co-Directors
+            const dirGrid = document.getElementById('co-directors-grid');
+            if (dirGrid) {
+                dirGrid.innerHTML = directors.map(d => `
+                <div class="member-card">
+                    <div class="member-avatar"><img src="${d.image_url || 'https://placehold.co/200x200'}" alt="${d.name}"></div>
+                    <div class="member-name">${d.name}</div>
+                    <div class="member-title">${d.title || 'Co-Director'}</div>
                 </div>
-            </div>
+            `).join('');
+            }
 
-            <div class="intro-cta">
-                <a href="#about" class="cta-btn">Learn More About Our Lab</a>
-                <div class="cta-note">Discover how evidence-driven software engineering research is transforming the future of requirements engineering.</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Members Section -->
-    <section id="members" class="members-section">
-        <div class="container full-width">
-            <h2 class="section-heading">Members</h2>
-
-            <!-- Member Filters -->
-            <div class="member-filters">
-                <button class="filter-btn active" data-filter="all">All Members</button>
-                <button class="filter-btn" data-filter="director">Director</button>
-                <button class="filter-btn" data-filter="collaborator">Collaborators</button>
-                <button class="filter-btn" data-filter="current">Current Students</button>
-                <button class="filter-btn" data-filter="alumni">Alumni</button>
-            </div>
-
-            <!-- Search Box -->
-            <div class="member-search">
-                <input type="text" id="memberSearch" placeholder="Search members by name or degree..." aria-label="Search members">
-            </div>
-
-            <!-- Director Section -->
-            <div class="member-section" data-category="director">
-                <h3 class="member-section-title">Director</h3>
-                <div class="member-grid director-grid">
-                    <!-- Director will be loaded dynamically from members.js -->
+            // Render Others (Simplified for redesign)
+            const stdGrid = document.getElementById('students-grid');
+            if (stdGrid) {
+                stdGrid.innerHTML = others.map(m => `
+                <div class="member-card">
+                    <div class="member-avatar"><img src="${m.image_url || 'https://placehold.co/200x200'}" alt="${m.name}"></div>
+                    <div class="member-name">${m.name}</div>
+                    <div class="member-title" style="color:var(--text-secondary)">${m.role_category.toUpperCase()}</div>
                 </div>
-            </div>
+            `).join('');
+            }
+        }
 
-            <!-- Lab Collaborators Section -->
-            <div class="member-section" data-category="collaborator">
-                <h3 class="member-section-title">Lab Collaborators</h3>
-                <div class="member-grid collaborator-grid">
-                    <!-- Collaborators will be loaded dynamically from members.js -->
-                </div>
-            </div>
+        async function fetchPublicationsPublic() {
+            const { data, error } = await supabase.from('publications').select('*').order('year', { ascending: false }).limit(5);
+            if (error || !data) return;
 
-            <!-- Current Students Section -->
-            <div class="member-section" data-category="current">
-                <h3 class="member-section-title">Current PhD and MS Students</h3>
-                <div class="member-grid student-grid">
-                    <!-- Current students will be loaded dynamically from members.js -->
-                </div>
-            </div>
-
-            <!-- Alumni Section -->
-            <div class="member-section" data-category="alumni">
-                <h3 class="member-section-title">Alumni</h3>
-                <div class="member-grid alumni-grid">
-                    <!-- Alumni will be loaded dynamically from members.js -->
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Research Section -->
-    <section id="research" class="research-section">
-        <div class="container full-width">
-            <h2 class="section-heading">Research</h2>
-            <div class="research-content">
-                <p class="research-intro">
-                    Our research pushes the boundaries of how software requirements are conceived, validated, and integrated with testing and security practices.
-                </p>
-
-                <div class="research-themes">
-                    <div class="theme-card expandable">
-                        <div class="theme-header">
-                            <h3>Empirical Requirements Engineering & Validation</h3>
-                            <button class="expand-btn" aria-label="Expand research details">+</button>
-                        </div>
-                        <p class="theme-summary">
-                            Investigating how software requirements are elicited, refined, and validated in practice through empirical studies. Our work examines how requirements quality, creativity, and structure influence downstream activities such as testing, maintenance, and security assurance.
-                        </p>
-                        <div class="theme-details">
-                            <h4>Key Research Areas:</h4>
-                            <ul>
-                                <li><strong>Requirements Quality Assessment:</strong> Empirical evaluation of ambiguity, completeness, and testability in functional and non-functional requirements</li>
-                                <li><strong>Creative Requirements Practices:</strong> Studying methods that encourage innovation and creativity while maintaining rigor and traceability</li>
-                                <li><strong>Requirements Validation Techniques:</strong> Systematic approaches for validating requirements using reviews, prototypes, and executable artifacts</li>
-                                <li><strong>Empirical Study Design:</strong> Controlled experiments, case studies, and surveys to understand real-world requirements engineering practices</li>
-                            </ul>
-                            <h4>Impact & Applications:</h4>
-                            <p>
-                                This research informs evidence-based guidance for practitioners and educators, leading to more reliable requirements and improved alignment between stakeholder intent and implemented systems.
-                            </p>
-                        </div>
-                    </div>
-
-
-                    <div class="theme-card expandable">
-                        <div class="theme-header">
-                            <h3>Integration of Requirements and Software Testing</h3>
-                            <button class="expand-btn" aria-label="Expand research details">+</button>
-                        </div>
-                        <p class="theme-summary">
-                            Developing empirically grounded methods that strengthen the relationship between requirements and testing. We study how requirements artifacts can drive effective test design and how test results can be used to assess and improve requirements quality.
-                        </p>
-                        <div class="theme-details">
-                            <h4>Technical Innovations:</h4>
-                            <ul>
-                                <li><strong>Requirements-Based Test Design:</strong> Techniques for systematically deriving unit, integration, and system tests from requirements</li>
-                                <li><strong>Testability of Requirements:</strong> Empirical analysis of how requirements characteristics affect test effectiveness and fault detection</li>
-                                <li><strong>Bidirectional Traceability:</strong> Methods for maintaining and validating trace links between requirements and test artifacts</li>
-                                <li><strong>Tool Support:</strong> Lightweight tools that support automated analysis and validation of requirements–test alignment</li>
-                            </ul>
-                            <h4>Research Outcomes:</h4>
-                            <p>
-                                Our studies provide empirical evidence on how tighter requirements–testing integration improves defect detection, regression resilience, and long-term software maintainability.
-                            </p>
-                        </div>
-                    </div>
-
-
-                    <div class="theme-card expandable">
-                        <div class="theme-header">
-                            <h3>Creativity and Human Factors in Software Engineering</h3>
-                            <button class="expand-btn" aria-label="Expand research details">+</button>
-                        </div>
-                        <p class="theme-summary">
-                            Exploring the role of creativity, cognition, and human decision-making in requirements engineering and software development. We empirically study how individuals and teams generate, evaluate, and refine innovative requirements.
-                        </p>
-                        <div class="theme-details">
-                            <h4>Core Research Focus:</h4>
-                            <ul>
-                                <li><strong>Creativity Evaluation Frameworks:</strong> Empirical models and metrics for assessing creativity in requirements artifacts</li>
-                                <li><strong>Human-Centered RE Methods:</strong> Studying how stakeholders reason about, negotiate, and evolve requirements</li>
-                                <li><strong>Educational Interventions:</strong> Evaluating pedagogical techniques for teaching creative and effective requirements engineering</li>
-                                <li><strong>Decision-Making Analysis:</strong> Investigating cognitive biases and their impact on requirements and testing outcomes</li>
-                            </ul>
-                            <h4>Methodological Contributions:</h4>
-                            <p>
-                                This work advances the scientific understanding of creativity in software engineering and provides evidence-based practices for improving both industrial and educational outcomes.
-                            </p>
-                        </div>
-                    </div>
-
-
-                    <div class="theme-card expandable">
-                        <div class="theme-header">
-                            <h3>Software Security Requirements & Empirical Assurance</h3>
-                            <button class="expand-btn" aria-label="Expand research details">+</button>
-                        </div>
-                        <p class="theme-summary">
-                            Studying how security requirements are specified, validated, and tested in real-world systems. Our research emphasizes empirical evaluation of security-related requirements and their systematic integration into software testing processes.
-                        </p>
-                        <div class="theme-details">
-                            <h4>Security-Focused Research Areas:</h4>
-                            <ul>
-                                <li><strong>Security Requirements Elicitation:</strong> Empirical analysis of practices for identifying and documenting security needs</li>
-                                <li><strong>Test-Driven Security Validation:</strong> Using security-focused tests to assess the adequacy of security requirements</li>
-                                <li><strong>Requirements–Security Alignment:</strong> Studying mismatches between stated security requirements and implemented safeguards</li>
-                                <li><strong>Evidence-Based Security Assurance:</strong> Leveraging empirical data to support claims about software security</li>
-                            </ul>
-                            <h4>Industry Relevance:</h4>
-                            <p>
-                                Our findings help organizations build more secure systems by grounding security decisions in empirical evidence and systematic validation rather than ad hoc practices.
-                            </p>
+            const pubGrid = document.getElementById('publicationsGrid');
+            if (pubGrid) {
+                pubGrid.innerHTML = data.map(p => `
+                <div class="pub-item">
+                    <div class="pub-year-badge">${p.year}</div>
+                    <div class="pub-content">
+                        <h4>${p.title}</h4>
+                        <div style="color: var(--text-primary); font-weight: 500;">${p.authors}</div>
+                        <div class="pub-meta">
+                            <span><i class="fa-solid fa-book-open"></i> ${p.venue}</span>
+                            ${p.doi ? `<span><a href="${p.doi.startsWith('http') ? p.doi : 'https://doi.org/' + p.doi}" target="_blank"><i class="fa-solid fa-link"></i> DOI</a></span>` : ''}
                         </div>
                     </div>
                 </div>
-                <div class="research-impact">
-                    <h3>Research Impact</h3>
-                    <p>
-                        Our research advances the state of empirical software engineering by providing evidence-based methods that improve requirements quality, testing effectiveness, and software security. Through collaborations with academia and industry, our work informs practice, supports education, and contributes to the development of reliable, creative, and secure software systems.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
+            `).join('');
+            }
+        }
 
-    <!-- Recent News Section -->
-    <section id="recent-news" class="recent-news-section">
-        <div class="container full-width">
-            <h2 class="section-heading">Recent News</h2>
+        // ==========================================
+        // ADMIN DASHBOARD & BLOG MANAGEMENT
+        // ==========================================
+        window.openAdminLogin = function (e) {
+            e.preventDefault();
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            if (window.currentUser) {
+                document.getElementById('admin-login-screen').classList.add('hidden');
+                document.getElementById('admin-app-screen').classList.remove('hidden');
+                fetchAdminBlogs();
+            } else {
+                document.getElementById('admin-login-screen').classList.remove('hidden');
+                document.getElementById('admin-app-screen').classList.add('hidden');
+            }
+        };
 
-            <div class="news-intro-card">
-                <p>Stay updated with the latest developments, achievements, and announcements from the Software Engineering Research and Analysis Lab. Discover our recent research breakthroughs, conference acceptances, and collaborative initiatives.</p>
-            </div>
+        window.closeAdmin = function () {
+            document.getElementById('admin-dashboard').classList.add('hidden');
+        };
 
-            <div class="recent-news-grid" id="detailedNewsGrid">
-                <!-- Detailed news items will be loaded dynamically from JSON -->
-            </div>
-        </div>
-    </section>
+        window.handleLogin = async function () {
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+            const msg = document.getElementById('admin-msg');
+            msg.innerText = "Authenticating...";
 
-    <!-- Publications Section -->
-    <section id="publications" class="publications-section">
-        <div class="container full-width">
-            <h2 class="section-heading">Publications</h2>
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                msg.innerText = error.message;
+            } else {
+                window.currentUser = data.user;
+                document.getElementById('admin-login-screen').classList.add('hidden');
+                document.getElementById('admin-app-screen').classList.remove('hidden');
+                fetchAdminBlogs();
+            }
+        };
 
-            <div class="publications-intro-card">
-                <div class="lab-metrics" id="labMetrics">
-                    <!-- Metrics will be loaded dynamically from JS -->
-                </div>
-                <p>Explore our comprehensive portfolio of peer-reviewed publications, conference papers, and research contributions advancing Software Engineering.</p>
-            </div>
+        window.handleLogout = async function () {
+            await supabase.auth.signOut();
+            window.currentUser = null;
+            window.closeAdmin();
+        };
 
-            <div class="publications-filters">
-                <button class="pub-filter-btn" data-filter="all">All Publications</button>
-                <button class="pub-filter-btn active" data-filter="2025">2025</button>
-                <button class="pub-filter-btn" data-filter="2024">2024</button>
-                <button class="pub-filter-btn" data-filter="2023">2023</button>
-                <button class="pub-filter-btn" data-filter="2021-2022">2021-2022</button>
-                <button class="pub-filter-btn" data-filter="2019-2020">2019-2020</button>
-                <button class="pub-filter-btn" data-filter="high-impact">Most Cited</button>
-            </div>
+        window.switchAdminTab = function (tab, el) {
+            document.querySelectorAll('.admin-nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('admin-tab-blogs').classList.add('hidden');
+            document.getElementById('admin-tab-pubs').classList.add('hidden');
+            document.getElementById('admin-tab-members').classList.add('hidden');
+            document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
+        };
 
-            <div class="publications-grid" id="publicationsGrid">
-                <!-- Publications will be loaded dynamically from JS -->
-            </div>
-        </div>
-    </section>
+        /* --- Admin Blog Management --- */
+        async function fetchAdminBlogs() {
+            try {
+                const { data, error } = await supabase.from('blogs').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
 
+                const tbody = document.getElementById('admin-blog-tbody');
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="padding: 1rem;">No posts found.</td></tr>';
+                    return;
+                }
 
-<!-- About Section -->
-<section id="about" class="about-section">
-    <div class="container full-width">
-        <h2 class="section-heading">About Us</h2>
+                tbody.innerHTML = data.map(b => `
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 1rem; font-weight: 500;">${b.title}</td>
+                    <td style="padding: 1rem;"><span class="badge" style="background: ${b.status === 'published' ? '#dcfce7' : '#f1f5f9'}; color: ${b.status === 'published' ? '#166534' : '#475569'};">${b.status}</span></td>
+                    <td style="padding: 1rem; color: var(--text-muted);">${new Date(b.created_at).toLocaleDateString()}</td>
+                    <td style="padding: 1rem;">
+                        <button class="btn btn-ghost btn-sm" onclick="window.editAdminBlog('${b.id}')">Edit</button>
+                    </td>
+                </tr>
+            `).join('');
 
-        <div class="about-intro-card">
-            <div class="about-content">
-                <p>The <strong>Software Engineering Research and Analysis Lab (SERA)</strong> is a research lab focused on advancing knowledge and driving innovation in requirements engineering and its integration with testing and secure software development through empirical, data-driven methods.</p>
-            </div>
-        </div>
+                // Store for editing
+                window.adminBlogs = data;
+            } catch (e) {
+                document.getElementById('admin-blog-tbody').innerHTML = '<tr><td colspan="4" style="padding: 1rem;">Error or table missing.</td></tr>';
+            }
+        }
 
-        <div class="about-grid">
-            <div class="about-card mission-card">
-                <h3>Our Mission</h3>
-                <p>Is to develop empirically grounded methods and tools that support creative requirements engineering and strengthen the connections between requirements, testing, and software security.</p>
-            </div>
+        window.showBlogEditor = function () {
+            document.getElementById('admin-blog-list').classList.add('hidden');
+            document.getElementById('admin-blog-editor').classList.remove('hidden');
 
-            <div class="about-card vision-card">
-                <h3>Our Vision</h3>
-                <p>A future in which software systems are built on well-understood, creative, and secure requirements that are systematically validated through tight integration with testing and empirical evidence.</p>
-            </div>
+            // Reset form
+            document.getElementById('edit-post-id').value = '';
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-category').value = '';
+            document.getElementById('post-tags').value = '';
+            quillEditor.root.innerHTML = '';
+            document.getElementById('editor-title-heading').innerText = 'Create New Post';
+            document.getElementById('post-msg').innerText = '';
+        };
 
-            <div class="about-card focus-card">
-                <h3>Our Focus</h3>
-                <p>Is on empirically studying and developing methods that identify, evaluate, and validate creative and secure software requirements through their systematic integration with testing activities.</p>
-            </div>
-        </div>
+        window.hideBlogEditor = function () {
+            document.getElementById('admin-blog-list').classList.remove('hidden');
+            document.getElementById('admin-blog-editor').classList.add('hidden');
+        };
 
-        <div class="research-areas-grid">
-            <h3 class="areas-title">Research Areas</h3>
-            <div class="areas-grid">
-                <div class="area-tag">Software Engineering</div>
-                <div class="area-tag">Requirements Engineering</div>
-                <div class="area-tag">Creativity in Requirements</div>
-                <div class="area-tag">Requirements and Software Security</div>
-                <div class="area-tag">Requirements and Testing</div>
-                <div class="area-tag">AI and Requirements</div>
-            </div>
-        </div>
+        window.editAdminBlog = function (id) {
+            const post = window.adminBlogs.find(b => b.id === id);
+            if (!post) return;
 
-        <div class="director-quote-card">
-            <div class="quote-content">
-                <div class="quote-text">
-                    "The Software Engineering Research and Analysis Lab (SERA) provides innovative research, tools, and empirical insights to advance the practice of requirements engineering, testing, and secure software development."
-                </div>
-                <div class="quote-attribution">
-                    <div class="hexagon-avatar">
-                        <div class="hexagon-inner">
-                            <img src="assets/Bhowmik_ProfilePic.jpg" alt="Dr. Tanmay Bhowmik">
-                        </div>
-                    </div>
-                    <div class="quote-author-info">
-                        <div class="quote-author-name">Dr. Tanmay Bhowmik</div>
-                        <div class="quote-author-title">Lab Director</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+            window.showBlogEditor();
+            document.getElementById('editor-title-heading').innerText = 'Edit Post';
+            document.getElementById('edit-post-id').value = post.id;
+            document.getElementById('post-title').value = post.title;
+            document.getElementById('post-category').value = post.category || '';
+            document.getElementById('post-tags').value = (post.tags || []).join(', ');
+            quillEditor.root.innerHTML = post.content || '';
+        };
 
-<!-- Contact Section -->
-<section id="contact" class="contact-section">
-        <div class="container full-width">
-        <h2 class="section-heading">Contact Us and Location</h2>
+        window.savePost = async function (status) {
+            const id = document.getElementById('edit-post-id').value;
+            const title = document.getElementById('post-title').value;
+            const content = quillEditor.root.innerHTML;
+            const category = document.getElementById('post-category').value;
+            const tagsRaw = document.getElementById('post-tags').value;
+            const fileInput = document.getElementById('post-cover');
+            const msg = document.getElementById('post-msg');
 
-        <div class="contact-grid">
-            <div class="contact-info-card">
-                <div class="contact-header">
-                    <h3>Visit Our Lab</h3>
-                </div>
-                <div class="contact-details">
-                    <div class="lab-info">
-                        <div class="lab-header">
-                            <img src="assets/sera logo horiz-transparent.svg" alt="Software Engineering Research and Analysis Lab" style="max-height: 90px; margin-bottom: 15px;">
-                            <h4>Software Engineering Research and Analysis Lab (SERA)</h4>
-                        </div>
-                        <div class="address-info">
-                            <p class="university">College of Computing and Software Engineering</p>
-                            <p class="university">Kennesaw State University</p>
-                            <p class="location">680 Arntson Drive</p>
-                            <p class="location">Marietta, GA 30060, USA</p>
-                        </div>
-                    </div>
-                    <div class="contact-methods">
-                        <div class="contact-item">
-                            <div class="contact-icon-wrapper">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                                </svg>
-                            </div>
-                            <div class="contact-info">
-                                <span class="contact-label">Email:</span>
-                                <a href="#" class="contact-link email-protected" data-user="tbhowmik" data-domain="kennesaw.edu" onclick="openEmail(event, this)" style="cursor: pointer;">E-mail us</a>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon-wrapper">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                                </svg>
-                            </div>
-                            <div class="contact-info">
-                                <span class="contact-label">Office:</span>
-                                <span class="contact-value">680 Arntson Drive, Marietta, GA 30060, USA</span>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon-wrapper">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-                                </svg>
-                            </div>
-                            <div class="contact-info">
-                                <span class="contact-label">Phone:</span>
-                                <a href="tel:+1-470-578-2118" class="contact-link">+1 (662) -617-3253</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            if (!title) return msg.innerText = "Title is required.", msg.className = "message error";
+            if (quillEditor.getText().trim().length === 0) return msg.innerText = "Content is required.", msg.className = "message error";
 
-            <div class="social-links-card">
-                <div class="contact-header">
-                    <h3>Connect & Collaborate</h3>
-                </div>
-                <div class="social-buttons">
-                    <a href="https://www.linkedin.com/in/tanmay-bhowmik-219b9a222/" target="_blank" class="social-btn linkedin-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                        </svg>
-                        <span>LinkedIn</span>
-                    </a>
+            msg.className = "message"; msg.innerText = "Saving post...";
 
-                    <a href="https://scholar.google.com/citations?user=pat4_roAAAAJ&hl=en" target="_blank" class="social-btn scholar-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/>
-                        </svg>
-                        <span>Google Scholar</span>
-                    </a>
+            let imageUrl = null;
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileName = `blog-${Date.now()}-${file.name}`;
+                const { error: upErr } = await supabase.storage.from('profile-images').upload(fileName, file);
+                if (upErr) return msg.className = "message error", msg.innerText = "Image upload failed.";
+                const { data: { publicUrl } } = supabase.storage.from('profile-images').getPublicUrl(fileName);
+                imageUrl = publicUrl;
+            }
 
-                </div>
-                <div class="collaboration-sections">
-                    <div class="collaboration-item">
-                        <h4>Research Collaboration</h4>
-                        <p>Industry partners, academic institutions, and researchers worldwide are welcome to explore joint research opportunities.</p>
-                    </div>
-                    <div class="collaboration-item">
-                        <h4>Student Opportunities</h4>
-                        <p>PhD and Master's students interested in Software Engineering, Requirements Engineering, Creativity in Requirements, Requirements and Software Security, Requirements and Testing, or AI and Requirements.</p>
-                    </div>
-                    <div class="collaboration-item">
-                        <h4>Industry Partnerships</h4>
-                        <p>Technology companies seeking expertise in Software Engineering, Requirements Engineering, Creativity in Requirements, Requirements and Software Security, Requirements and Testing, or AI and Requirements.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+            const payload = {
+                title,
+                content,
+                category,
+                status,
+                tags: tagsRaw ? tagsRaw.split(',').map(t => t.trim()) : [],
+                author_id: window.currentUser.id,
+                author_name: window.currentUser.email.split('@')[0] // Fallback
+            };
 
+            if (imageUrl) payload.image_url = imageUrl;
 
-    </div>
-</section>
-</main>
+            try {
+                if (id) {
+                    const { error } = await supabase.from('blogs').update(payload).eq('id', id);
+                    if (error) throw error;
+                } else {
+                    const { error } = await supabase.from('blogs').insert([payload]);
+                    if (error) throw error;
+                }
 
-<!-- Footer -->
-<footer class="footer">
-    <div class="footer-content">
-        <p>© 2026 Software Engineering Research and Analysis Lab. All Rights Reserved.</p>
-    </div>
-</footer>
+                msg.className = "message success"; msg.innerText = "✅ Post saved successfully!";
+                fetchAdminBlogs();
+                fetchBlogsPublic(); // Refresh public view
+                setTimeout(() => window.hideBlogEditor(), 1500);
+            } catch (e) {
+                msg.className = "message error"; msg.innerText = e.message;
+            }
+        };
 
-<!-- Scroll to Top Button -->
-<button id="scrollToTop" class="scroll-to-top" aria-label="Scroll to top">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-    </svg>
-</button>
+        // ==========================================
+        // UTILS
+        // ==========================================
+        function initHeaderEffects() {
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('.header');
+                if (window.pageYOffset > 20) header.style.boxShadow = 'var(--shadow-sm)';
+                else header.style.boxShadow = 'none';
+            });
+        }
 
-<script src="data/members.js"></script>
-<script src="data/publications.js?v=20260101"></script>
-<script src="script.js"></script>
+        function initSmoothScroll() {
+            document.querySelectorAll('.nav-link').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        window.showView('home'); // Ensure we are on home view
+                        setTimeout(() => {
+                            const target = document.querySelector(href);
+                            if (target) {
+                                window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+                            }
+                        }, 50);
+                    }
+                });
+            });
+        }
+
+    </script>
+
 </body>
+
 </html>
