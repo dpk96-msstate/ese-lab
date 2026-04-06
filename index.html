@@ -113,39 +113,56 @@
                 <div class="container">
                     <div class="section-header">
                         <h2>Our People</h2>
-                        <p>Meet the directors and students driving our research forward.</p>
+                        <p>Meet the directors, collaborators, and students driving our research forward.</p>
                     </div>
 
                     <!-- Filter bar -->
                     <div class="member-filters">
                         <button class="filter-btn active" data-filter="all">All</button>
                         <button class="filter-btn" data-filter="director">Co-Directors</button>
+                        <button class="filter-btn" data-filter="collaborator">Collaborators</button>
                         <button class="filter-btn" data-filter="phd">PhD Students</button>
                         <button class="filter-btn" data-filter="ms">MS Students</button>
                         <button class="filter-btn" data-filter="alumni">Alumni</button>
                     </div>
 
-                    <!-- Co-Directors row (always shown at top) -->
-                    <div class="people-section-label" id="directors-label">
-                        <i class="fa-solid fa-chalkboard-user"></i> Co-Directors
-                    </div>
-                    <div class="directors-grid" id="co-directors-grid">
-                        <div style="text-align:center;width:100%;color:var(--text-muted);">
-                            <i class="fa-solid fa-spinner fa-spin"></i> Loading...
+                    <!-- Top Level: Directors & Collaborators Split -->
+                    <div id="top-level-section" class="macro-grid">
+                        <!-- Left Column: Co-Directors -->
+                        <div id="directors-wrapper">
+                            <div class="people-section-label" id="directors-label">
+                                <i class="fa-solid fa-chalkboard-user"></i> Co-Directors
+                            </div>
+                            <div class="member-grid" id="co-directors-grid">
+                                <div style="text-align:center;width:100%;color:var(--text-muted);">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> Loading...
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Collaborators -->
+                        <div id="collaborators-wrapper">
+                            <div class="people-section-label" id="collaborators-label">
+                                <i class="fa-solid fa-handshake"></i> External Collaborators
+                            </div>
+                            <div class="member-grid" id="collaborators-grid">
+                                <!-- Injected via JS -->
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Students grouped by director -->
-                    <div id="people-by-director">
-                        <!-- Injected via JS — one group per director -->
+                    <!-- Students grouped by director (also 2-column macro layout) -->
+                    <div id="people-by-director" class="macro-grid" style="margin-top: 3rem;">
+                        <!-- Injected via JS — one group per director per column -->
                     </div>
 
                     <!-- Ungrouped students (no director assigned) -->
-                    <div id="people-ungrouped" class="hidden">
+                    <div id="people-ungrouped" class="hidden" style="margin-top: 3rem;">
                         <div class="people-section-label">
                             <i class="fa-solid fa-user-graduate"></i> Other Members
                         </div>
-                        <div class="member-grid" id="students-ungrouped-grid"></div>
+                        <div class="member-grid" id="students-ungrouped-grid" style="max-width: 800px; margin: 0 auto;">
+                        </div>
                     </div>
                 </div>
             </section>
@@ -622,6 +639,7 @@
                                     onchange="window.onRoleChange(this.value)">
                                     <option value="">Select a role…</option>
                                     <option value="director">Co-Director / Faculty</option>
+                                    <option value="collaborator">External Collaborator</option>
                                     <option value="phd">PhD Student</option>
                                     <option value="ms">MS Student</option>
                                     <option value="alumni">Alumni</option>
@@ -635,7 +653,7 @@
                             </div>
                         </div>
 
-                        <!-- Supervised By — hidden for directors, shown for students/alumni -->
+                        <!-- Supervised By — hidden for directors & collaborators, shown for students/alumni -->
                         <div class="form-group" id="supervisor-group" style="display:none;">
                             <label class="form-label">Supervised By <span class="optional">(select one or
                                     more)</span></label>

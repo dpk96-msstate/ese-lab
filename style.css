@@ -377,11 +377,27 @@ section:nth-child(even) {
 /* -------------------------------------
    PEOPLE / STUDENT CARDS LAYOUT
    ------------------------------------- */
+
+/* Macro 2-Column Grid (For Symmetrical Section Alignment) */
+.macro-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 2rem;
+    align-items: start;
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    .macro-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .member-filters {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
     flex-wrap: wrap;
 }
 
@@ -403,39 +419,40 @@ section:nth-child(even) {
     border-color: var(--text-primary);
 }
 
+/* Section Header Labels */
 .people-section-label {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.6rem;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-muted);
-    margin: 2.5rem 0 1.25rem 0;
+    margin: 0 0 1.5rem 0;
     padding-bottom: 0.6rem;
     border-bottom: 1px solid var(--border);
+    text-align: center;
 }
 
 .people-section-label i {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--accent);
     opacity: 0.7;
 }
 
 .people-section-label--sub {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     text-transform: none;
     letter-spacing: 0;
-    font-weight: 600;
-    margin-top: 3rem;
-    border-bottom-color: var(--border);
+    font-size: 1.05rem;
+    border-bottom: 2px solid var(--border);
 }
 
 .director-group-avatar {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
@@ -448,56 +465,47 @@ section:nth-child(even) {
     object-fit: cover;
 }
 
-.director-group+.director-group {
-    margin-top: 1rem;
+/* Individual Card Grid */
+.member-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    justify-items: center;
+    /* Symmetrical centering */
 }
 
-#co-directors-grid+#people-by-director .director-group:first-child .people-section-label {
-    margin-top: 2rem;
-}
-
-.member-grid,
-.directors-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
-    align-items: stretch;
-}
-
-/* Robust Equal-Height Cards Fix */
+/* Compact Horizontal Cards */
 .member-card {
-    width: 280px !important;
-    flex: 0 0 280px !important;
-    height: 100%;
-    min-height: 400px;
-    margin: 0;
-    text-align: center;
-    padding: 2rem 1.5rem 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    padding: 1.15rem;
     background: var(--bg-main);
     border-radius: var(--radius-lg);
     border: 1px solid var(--border);
     transition: all 0.3s;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    gap: 1.15rem;
+    text-align: left;
 }
 
 .member-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
     border-color: #cbd5e1;
 }
 
 .member-avatar {
-    width: 110px;
-    height: 110px;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
-    margin: 0 auto 1rem auto;
+    margin: 0;
     overflow: hidden;
     background: var(--bg-alt);
-    border: 3px solid white;
-    box-shadow: 0 0 0 2px var(--border), var(--shadow-sm);
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px var(--border), var(--shadow-sm);
     flex-shrink: 0;
 }
 
@@ -507,27 +515,41 @@ section:nth-child(even) {
     object-fit: cover;
 }
 
+.member-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
 .member-name {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     margin-bottom: 0.1rem;
     color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .member-title {
     color: var(--text-secondary);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 500;
     margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .member-affiliation {
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     color: var(--text-muted);
     margin-top: 0.15rem;
     margin-bottom: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -535,10 +557,9 @@ section:nth-child(even) {
 
 .member-social-links {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 0.5rem;
-    margin-top: auto;
-    padding-top: 0.85rem;
+    margin-top: 0.4rem;
     width: 100%;
 }
 
@@ -546,12 +567,12 @@ section:nth-child(even) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    border: 1.5px solid var(--border);
+    border: 1px solid var(--border);
     color: var(--text-muted);
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     transition: all 0.2s;
 }
 
@@ -563,22 +584,27 @@ section:nth-child(even) {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Member Role Badges */
 .member-role-badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.2rem 0.65rem;
+    padding: 0.15rem 0.5rem;
     border-radius: 9999px;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.4rem;
+    align-self: flex-start;
 }
 
 .role-director {
     background: #eff6ff;
     color: #1d4ed8;
+}
+
+.role-collaborator {
+    background: #fdf4ff;
+    color: #a21caf;
 }
 
 .role-phd {
@@ -704,6 +730,7 @@ section:nth-child(even) {
     color: var(--text-primary);
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -715,6 +742,7 @@ section:nth-child(even) {
     margin-bottom: 1.5rem;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -1027,7 +1055,6 @@ section:nth-child(even) {
     color: white;
     transform: translateY(-2px);
 }
-
 
 /* -------------------------------------
    NEWS MODAL

@@ -27,25 +27,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     fetchMembersPublic();
     fetchBlogsPublic();
     fetchNewsPublic();
-    fetchPublicationsPublic();
-
-    // People filter buttons logic
+    // People filter buttons — filter all .member-card elements across all groups
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             const filter = this.dataset.filter;
 
-            const dirLabel = document.getElementById('directors-label');
-            const dirGrid = document.getElementById('co-directors-grid');
-            if (filter === 'all' || filter === 'director') {
-                if (dirLabel) dirLabel.style.display = '';
-                if (dirGrid) dirGrid.style.display = '';
+            const topLevelSection = document.getElementById('top-level-section');
+            const dirWrapper = document.getElementById('directors-wrapper');
+            const colWrapper = document.getElementById('collaborators-wrapper');
+
+            // Show/hide director and collaborator row gracefully
+            if (filter === 'all') {
+                if (topLevelSection) topLevelSection.style.display = 'grid';
+                if (dirWrapper) dirWrapper.style.display = '';
+                if (colWrapper) colWrapper.style.display = '';
+            } else if (filter === 'director') {
+                if (topLevelSection) topLevelSection.style.display = 'grid';
+                if (dirWrapper) dirWrapper.style.display = '';
+                if (colWrapper) colWrapper.style.display = 'none';
+            } else if (filter === 'collaborator') {
+                if (topLevelSection) topLevelSection.style.display = 'grid';
+                if (dirWrapper) dirWrapper.style.display = 'none';
+                if (colWrapper) colWrapper.style.display = '';
             } else {
-                if (dirLabel) dirLabel.style.display = 'none';
-                if (dirGrid) dirGrid.style.display = 'none';
+                if (topLevelSection) topLevelSection.style.display = 'none';
             }
 
+            // Show/hide each director group + individual cards
             document.querySelectorAll('.director-group').forEach(group => {
                 const cards = group.querySelectorAll('.member-card');
                 const visible = Array.from(cards).filter(c => filter === 'all' || c.dataset.role === filter);
@@ -308,34 +318,45 @@ async function fetchMembersPublic() {
     ]);
     if (mErr || !members) return;
 
-    const roleLabel = { director: 'Co-Director', phd: 'PhD Student', ms: 'MS Student', alumni: 'Alumni' };
-    const roleCss = { director: 'role-director', phd: 'role-phd', ms: 'role-ms', alumni: 'role-alumni' };
-    const avatarSrc = (m) => m.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true`;
+    const roleLabel = { director: 'Co-Director', collaborator: 'External Collaborator', phd: 'PhD Student', ms: 'MS Student', alumni: 'Alumni' };
+    const roleCss = { director: 'role-director', collaborator: 'role-collaborator', phd: 'role-phd', ms: 'role-ms', alumni: 'role-alumni' };
+
+    const avatarSrc = (m) => m.image_url
+        || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true`;
+
+    const socialLinks = (m) => {
+        const links = [];
+        if (m.linkedin_url) links.push(`<a href="${m.linkedin_url}" target="_blank" rel="noopener" title="LinkedIn" class="member-social-link" style="--icon-color:#0077b5;"><i class="fa-brands fa-linkedin-in"></i></a>`);
+        if (m.google_scholar_url) links.push(`<a href="${m.google_scholar_url}" target="_blank" rel="noopener" title="Google Scholar" class="member-social-link" style="--icon-color:#4285f4;"><i class="fa-brands fa-google"></i></a>`);
+        if (m.github_url) links.push(`<a href="${m.github_url}" target="_blank" rel="noopener" title="GitHub" class="member-social-link" style="--icon-color:#24292f;"><i class="fa-brands fa-github"></i></a>`);
+        return links.length ? `<div class="member-social-links">${links.join('')}</div>` : '';
+    };
 
     const renderCard = (m) => {
         const label = roleLabel[m.role_category] || m.role_category;
         const css = roleCss[m.role_category] || 'role-default';
         const displayTitle = m.title || label;
-
-        const links = [];
-        if (m.linkedin_url) links.push(`<a href="${m.linkedin_url}" target="_blank" class="member-social-link"><i class="fa-brands fa-linkedin-in"></i></a>`);
-        if (m.google_scholar_url) links.push(`<a href="${m.google_scholar_url}" target="_blank" class="member-social-link"><i class="fa-brands fa-google"></i></a>`);
-        if (m.github_url) links.push(`<a href="${m.github_url}" target="_blank" class="member-social-link"><i class="fa-brands fa-github"></i></a>`);
-
         return `
         <div class="member-card" data-role="${m.role_category || ''}">
-            <div class="member-avatar"><img src="${avatarSrc(m)}" alt="${m.name}"></div>
-            <span class="member-role-badge ${css}">${label}</span>
-            <div class="member-name">${m.name}</div>
-            <div class="member-title">${displayTitle}</div>
-            ${m.affiliation ? `<p class="member-affiliation"><i class="fa-solid fa-building-columns" style="font-size:0.68rem;margin-right:3px;opacity:0.7;"></i>${m.affiliation}</p>` : ''}
-            ${links.length ? `<div class="member-social-links">${links.join('')}</div>` : ''}
+            <div class="member-avatar">
+                <img src="${avatarSrc(m)}" alt="${m.name}"
+                     onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true'">
+            </div>
+            <div class="member-info">
+                <span class="member-role-badge ${css}">${label}</span>
+                <div class="member-name">${m.name}</div>
+                <div class="member-title">${displayTitle}</div>
+                ${m.affiliation ? `<p class="member-affiliation"><i class="fa-solid fa-building-columns" style="font-size:0.68rem;margin-right:3px;opacity:0.7;"></i>${m.affiliation}</p>` : ''}
+                ${socialLinks(m)}
+            </div>
         </div>`;
     };
 
     const directors = members.filter(m => m.role_category === 'director');
-    const students = members.filter(m => m.role_category !== 'director');
+    const collaborators = members.filter(m => m.role_category === 'collaborator');
+    const students = members.filter(m => m.role_category !== 'director' && m.role_category !== 'collaborator');
 
+    // Build director → students map from junction table
     const dirToStudents = {};
     directors.forEach(d => { dirToStudents[d.id] = []; });
     const assignedIds = new Set();
@@ -346,25 +367,45 @@ async function fetchMembersPublic() {
         }
     });
 
+    // Render directors and collaborators rows
     const dirGrid = document.getElementById('co-directors-grid');
-    if (dirGrid) dirGrid.innerHTML = directors.map(d => renderCard(d)).join('') || '<div style="color:var(--text-muted);">No directors listed.</div>';
+    if (dirGrid) {
+        if (directors.length) {
+            dirGrid.innerHTML = directors.map(d => renderCard(d)).join('');
+            document.getElementById('directors-wrapper').style.display = '';
+        } else {
+            document.getElementById('directors-wrapper').style.display = 'none';
+        }
+    }
 
+    const colGrid = document.getElementById('collaborators-grid');
+    if (colGrid) {
+        if (collaborators.length) {
+            colGrid.innerHTML = collaborators.map(c => renderCard(c)).join('');
+            document.getElementById('collaborators-wrapper').style.display = '';
+        } else {
+            document.getElementById('collaborators-wrapper').style.display = 'none';
+        }
+    }
+
+    if (!directors.length && !collaborators.length && document.getElementById('top-level-section')) {
+        document.getElementById('top-level-section').style.display = 'none';
+    }
+
+    // Render student groups under each director
     const groupContainer = document.getElementById('people-by-director');
     if (groupContainer) {
-        groupContainer.style.display = 'grid';
-        // Enforce a minimum width of 600px per group (or 100% on small mobile devices) 
-        // to guarantee that at least two 280px student cards fit per row.
-        groupContainer.style.gridTemplateColumns = 'repeat(auto-fit, minmax(min(100%, 600px), 1fr))';
-        groupContainer.style.gap = '2rem';
-        groupContainer.style.alignItems = 'start';
-
+        // Macro-grid applies the 2-column layout natively here.
         groupContainer.innerHTML = directors.map(d => {
             const group = students.filter(s => dirToStudents[d.id]?.includes(s.id));
             if (!group.length) return '';
             return `
-            <div class="director-group" data-director-id="${d.id}" style="margin-top: 0;">
-                <div class="people-section-label people-section-label--sub" style="margin-top: 2rem;">
-                    <div class="director-group-avatar"><img src="${avatarSrc(d)}" alt="${d.name}"></div>
+            <div class="director-group" data-director-id="${d.id}">
+                <div class="people-section-label people-section-label--sub">
+                    <div class="director-group-avatar">
+                        <img src="${avatarSrc(d)}" alt="${d.name}"
+                             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(d.name)}&size=80&background=dbeafe&color=1d4ed8&bold=true'">
+                    </div>
                     <span>${d.name}'s Group</span>
                 </div>
                 <div class="member-grid">${group.map(s => renderCard(s)).join('')}</div>
@@ -372,6 +413,7 @@ async function fetchMembersPublic() {
         }).join('');
     }
 
+    // Render ungrouped members
     const ungrouped = students.filter(s => !assignedIds.has(s.id));
     const ungroupedGrid = document.getElementById('students-ungrouped-grid');
     if (ungroupedGrid && ungrouped.length) {
@@ -738,7 +780,7 @@ async function fetchAdminMembers() {
             tbody.innerHTML = '<tr><td colspan="4" style="padding:1rem;">No people found.</td></tr>';
             return;
         }
-        const roleLabel = { director: 'Co-Director', phd: 'PhD', ms: 'MS', alumni: 'Alumni' };
+        const roleLabel = { director: 'Co-Director', collaborator: 'External Collaborator', phd: 'PhD', ms: 'MS', alumni: 'Alumni' };
         tbody.innerHTML = window.adminMembers.map(m => {
             const supervisors = memberDirNames[m.id];
             const supCell = supervisors?.length
@@ -786,12 +828,12 @@ function renderSupervisorCheckboxes(selectedIds = []) {
         </label>`;
     }).join('');
 }
-
+// Show/hide supervisor field based on role
 window.onRoleChange = function (role) {
     const group = document.getElementById('supervisor-group');
     if (!group) return;
-    group.style.display = (role === 'director' || role === '') ? 'none' : 'block';
-    if (role !== 'director' && role !== '') renderSupervisorCheckboxes();
+    group.style.display = (role === 'director' || role === 'collaborator' || role === '') ? 'none' : 'block';
+    if (role !== 'director' && role !== 'collaborator' && role !== '') renderSupervisorCheckboxes();
 };
 
 window.showMemberEditor = function () {
@@ -830,8 +872,11 @@ window.editAdminMember = function (id) {
     document.getElementById('member-google-scholar').value = m.google_scholar_url || '';
     document.getElementById('member-github').value = m.github_url || '';
 
-    if (m.role_category !== 'director') {
-        const currentDirectorIds = (window.adminRelations || []).filter(r => r.member_id === id).map(r => r.director_id);
+    // Load supervisor checkboxes if not a director or collaborator
+    if (m.role_category !== 'director' && m.role_category !== 'collaborator') {
+        const currentDirectorIds = (window.adminRelations || [])
+            .filter(r => r.member_id === id)
+            .map(r => r.director_id);
         document.getElementById('supervisor-group').style.display = 'block';
         renderSupervisorCheckboxes(currentDirectorIds);
     }
@@ -880,13 +925,21 @@ window.saveMember = async function () {
             memberId = inserted.id;
         }
 
-        if (role !== 'director') {
-            const checked = Array.from(document.querySelectorAll('#supervisor-checkboxes input[type=checkbox]:checked')).map(cb => cb.value);
+        // Sync junction table (skip for directors and collaborators)
+        if (role !== 'director' && role !== 'collaborator') {
+            const checked = Array.from(
+                document.querySelectorAll('#supervisor-checkboxes input[type=checkbox]:checked')
+            ).map(cb => cb.value);
+
+            // Delete existing then re-insert
             await supabase.from('member_directors').delete().eq('member_id', memberId);
             if (checked.length) {
-                await supabase.from('member_directors').insert(checked.map(dirId => ({ member_id: memberId, director_id: dirId })));
+                await supabase.from('member_directors').insert(
+                    checked.map(dirId => ({ member_id: memberId, director_id: dirId }))
+                );
             }
         } else {
+            // Directors and collaborators have no supervisors — clean up any stale rows
             await supabase.from('member_directors').delete().eq('member_id', memberId);
         }
 
