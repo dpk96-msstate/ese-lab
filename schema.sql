@@ -21,6 +21,8 @@ create table public.members (
   image_url text null,
   linkedin_url text null,
   created_at timestamp with time zone not null default timezone ('utc'::text, now()),
+  google_scholar_url text null,
+  github_url text null,
   constraint members_pkey primary key (id)
 ) TABLESPACE pg_default;
 
@@ -48,3 +50,16 @@ create table public.publications (
   created_at timestamp with time zone not null default timezone ('utc'::text, now()),
   constraint publications_pkey primary key (id)
 ) TABLESPACE pg_default;
+
+
+create table public.member_directors (
+    member_id uuid not null,
+    director_id uuid not null,
+    constraint member_directors_pkey primary key (member_id, director_id),
+    constraint member_directors_director_id_fkey foreign KEY (director_id) references members (id) on delete CASCADE,
+    constraint member_directors_member_id_fkey foreign KEY (member_id) references members (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create index IF not exists idx_member_directors_director on public.member_directors using btree (director_id) TABLESPACE pg_default;
+
+create index IF not exists idx_member_directors_member on public.member_directors using btree (member_id) TABLESPACE pg_default;

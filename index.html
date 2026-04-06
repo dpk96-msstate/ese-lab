@@ -121,9 +121,10 @@
                                 class="fa-solid fa-spinner fa-spin"></i> Loading articles...</div>
                     </div>
 
-                    <div style="text-align: center; margin-top: 3rem;">
-                        <button class="btn btn-outline" onclick="alert('Pagination feature coming soon!')">View All
-                            Articles</button>
+                    <div style="text-align: center; margin-top: 3rem;" id="blog-view-all-wrapper">
+                        <button class="view-all-btn outline" onclick="window.showView('all-blogs')">
+                            <i class="fa-solid fa-pen-nib"></i> View All Articles
+                        </button>
                     </div>
                 </div>
             </section>
@@ -249,6 +250,27 @@
                 <button class="share-btn"
                     onclick="window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${window.location.href}`)"><i
                         class="fa-brands fa-linkedin-in"></i></button>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             ALL BLOGS PAGE VIEW
+             ========================================== -->
+        <div id="all-blogs-view" class="view-all-page hidden">
+            <div class="container">
+                <button class="btn btn-ghost" style="margin-bottom: 2rem;"
+                    onclick="window.showView('home'); setTimeout(()=>{document.querySelector('#blog').scrollIntoView({behavior:'smooth',block:'start'})},50)">
+                    <i class="fa-solid fa-arrow-left"></i> &nbsp; Back to Home
+                </button>
+                <div class="section-header" style="text-align:left; margin-bottom: 2.5rem; max-width: none;">
+                    <div class="badge" style="margin-bottom: 0.75rem;">Research & Insights</div>
+                    <h2 style="margin-bottom: 0.5rem;">All Blog Articles</h2>
+                    <p>Complete archive of case studies, research thoughts, and engineering methodologies.</p>
+                </div>
+                <div id="all-blogs-grid" class="blog-grid">
+                    <div style="grid-column:1/-1;text-align:center;color:var(--text-muted);"><i
+                            class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
+                </div>
             </div>
         </div>
 
@@ -776,3 +798,5 @@
     <script type="module" src="script.js"></script>
 
 </body>
+
+</html>

@@ -435,6 +435,7 @@ section:nth-child(even) {
     flex-wrap: wrap;
     justify-content: center;
     gap: 2rem;
+    align-items: stretch;
 }
 
 .directors-grid .member-card {
@@ -453,6 +454,7 @@ section:nth-child(even) {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
 }
 
 .member-card:hover {
@@ -497,7 +499,9 @@ section:nth-child(even) {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
-    margin-top: 0.85rem;
+    margin-top: auto;
+    padding-top: 0.85rem;
+    width: 100%;
 }
 
 .member-social-link {
@@ -539,6 +543,7 @@ section:nth-child(even) {
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
     position: relative;
+    height: 100%;
 }
 
 .news-card:hover {

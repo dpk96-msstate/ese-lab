@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // PUBLIC UI: NAVIGATION & VIEWS
 // ==========================================
 window.showView = function (view) {
-    const allViews = ['home-view', 'blog-reader-view', 'all-news-view', 'all-publications-view'];
+    const allViews = ['home-view', 'blog-reader-view', 'all-news-view', 'all-publications-view', 'all-blogs-view'];
     allViews.forEach(v => document.getElementById(v)?.classList.add('hidden'));
 
     if (view === 'home') {
@@ -119,6 +119,10 @@ window.showView = function (view) {
     } else if (view === 'all-publications') {
         document.getElementById('all-publications-view').classList.remove('hidden');
         renderAllPublications();
+        window.scrollTo(0, 0);
+    } else if (view === 'all-blogs') {
+        document.getElementById('all-blogs-view').classList.remove('hidden');
+        window.renderAllBlogs();
         window.scrollTo(0, 0);
     }
 };
@@ -164,6 +168,37 @@ window.copyUrl = function () {
 // ==========================================
 // PUBLIC DATA FETCHING
 // ==========================================
+
+function renderBlogCard(post) {
+    const wordCount = post.content.replace(/<[^>]+>/g, '').split(/\s+/).length;
+    const readTime = Math.max(1, Math.ceil(wordCount / 200));
+    const dateStr = new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const excerpt = post.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...';
+
+    return `
+    <article class="blog-card" onclick="window.openBlogReader('${post.id}')">
+        ${post.image_url ? `<div class="blog-image"><img src="${post.image_url}" alt="Cover"></div>` : ''}
+        <div class="blog-content">
+            <div class="blog-meta">
+                <span>${post.category || 'Research'}</span>
+                <span>${readTime} min read</span>
+            </div>
+            <h3 class="blog-title">${post.title}</h3>
+            <p class="blog-excerpt">${excerpt}</p>
+            <div class="blog-footer">
+                <div class="blog-author-avatar">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(post.author_name || 'Lab')}&background=f8fafc&color=0f172a">
+                </div>
+                <div class="blog-author-info">
+                    <div class="blog-author-name">${post.author_name || 'Lab Member'}</div>
+                    <div style="color: var(--text-muted); font-size: 0.75rem;">${dateStr}</div>
+                </div>
+            </div>
+        </div>
+    </article>
+    `;
+}
+
 async function fetchBlogsPublic() {
     try {
         // Note: Assume 'blogs' table exists
@@ -179,44 +214,33 @@ async function fetchBlogsPublic() {
         const grid = document.getElementById('public-blog-grid');
         if (loadedBlogs.length === 0) {
             grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No articles published yet.</div>';
+            document.getElementById('blog-view-all-wrapper').style.display = 'none';
             return;
         }
 
-        grid.innerHTML = loadedBlogs.map(post => {
-            const wordCount = post.content.replace(/<[^>]+>/g, '').split(/\s+/).length;
-            const readTime = Math.max(1, Math.ceil(wordCount / 200));
-            const dateStr = new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            const excerpt = post.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...';
-
-            return `
-            <article class="blog-card" onclick="window.openBlogReader('${post.id}')">
-                ${post.image_url ? `<div class="blog-image"><img src="${post.image_url}" alt="Cover"></div>` : ''}
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span>${post.category || 'Research'}</span>
-                        <span>${readTime} min read</span>
-                    </div>
-                    <h3 class="blog-title">${post.title}</h3>
-                    <p class="blog-excerpt">${excerpt}</p>
-                    <div class="blog-footer">
-                        <div class="blog-author-avatar">
-                            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(post.author_name || 'Lab')}&background=f8fafc&color=0f172a">
-                        </div>
-                        <div class="blog-author-info">
-                            <div class="blog-author-name">${post.author_name || 'Lab Member'}</div>
-                            <div style="color: var(--text-muted); font-size: 0.75rem;">${dateStr}</div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        `;
-        }).join('');
+        const LIMIT = 3;
+        const shown = loadedBlogs.slice(0, LIMIT);
+        grid.innerHTML = shown.map(renderBlogCard).join('');
         applySingleItemCentering(grid);
+
+        const wrapper = document.getElementById('blog-view-all-wrapper');
+        if (wrapper) wrapper.style.display = loadedBlogs.length <= LIMIT ? 'none' : '';
     } catch (e) {
         console.log("Blogs table might not exist yet.", e);
         document.getElementById('public-blog-grid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Blog system initializing...</div>';
     }
 }
+
+window.renderAllBlogs = function () {
+    const grid = document.getElementById('all-blogs-grid');
+    if (!grid) return;
+    if (!loadedBlogs.length) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No articles published yet.</div>';
+        return;
+    }
+    grid.innerHTML = loadedBlogs.map(renderBlogCard).join('');
+    applySingleItemCentering(grid);
+};
 
 window.previewNewsImage = function (input) {
     const prev = document.getElementById('news-image-preview');
