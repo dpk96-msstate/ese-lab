@@ -395,7 +395,7 @@
 
         .member-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 2rem;
         }
 
@@ -489,6 +489,284 @@
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Single-element centering within any section */
+        .single-item-center {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* News Cards */
+        .news-card {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: transparent;
+        }
+
+        .news-card-image {
+            height: 160px;
+            background: linear-gradient(135deg, var(--accent-light), #e0f2fe);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .news-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .news-card-image-placeholder {
+            color: var(--accent);
+            font-size: 2rem;
+            opacity: 0.4;
+        }
+
+        .news-card-body {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .news-card-date {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .news-card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 0.6rem;
+            color: var(--text-primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-card-excerpt {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .news-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .news-tag {
+            display: inline-flex;
+            padding: 0.2rem 0.6rem;
+            border-radius: 99px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .news-read-btn {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--accent);
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .news-read-btn:hover {
+            color: var(--accent-hover);
+        }
+
+        /* View-All section views */
+        .view-all-page {
+            min-height: 100vh;
+            padding-top: 100px;
+            padding-bottom: 4rem;
+            background: var(--bg-alt);
+        }
+
+        .view-all-page .container {
+            max-width: 1200px;
+        }
+
+        /* "View All" button styling */
+        .view-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            text-decoration: none;
+        }
+
+        .view-all-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            color: white;
+        }
+
+        .view-all-btn.outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .view-all-btn.outline:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* News Modal */
+        .news-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.2s ease;
+        }
+
+        .news-modal {
+            background: var(--bg-main);
+            border-radius: var(--radius-lg);
+            max-width: 680px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.25s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .news-modal-image {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .news-modal-body {
+            padding: 2rem;
+        }
+
+        .news-modal-date {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .news-modal-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .news-modal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .news-modal-description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .news-modal-description p {
+            margin-bottom: 1rem;
+        }
+
+        .news-modal-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            margin: 1rem 1rem 0 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg-main);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .news-modal-close:hover {
+            background: var(--text-primary);
+            color: white;
+            border-color: var(--text-primary);
         }
 
         /* Publications Grid */
@@ -1053,8 +1331,9 @@
                 <nav class="navigation">
                     <ul class="nav-list">
                         <li><a href="#home" class="nav-link">Home</a></li>
+                        <li><a href="#Vision&Mission" class="nav-link">Vision</a></li>
+                        <li><a href="#directors" class="nav-link">Directors</a></li>
                         <li><a href="#members" class="nav-link">Members</a></li>
-                        <li><a href="#research" class="nav-link">Research</a></li>
                         <li><a href="#blog" class="nav-link">Blog</a></li>
                         <li><a href="#publications" class="nav-link">Publications</a></li>
                         <li><a href="#news" class="nav-link">News</a></li>
@@ -1092,7 +1371,7 @@
             </section>
 
             <!-- Intro/Vision -->
-            <section id="research" class="intro-section">
+            <section id="Vision&Mission" class="intro-section">
                 <div class="container">
                     <div class="section-header">
                         <h2>Our Vision & Mission</h2>
@@ -1182,6 +1461,11 @@
                     <div class="pub-grid" id="publicationsGrid" style="max-width: 900px; margin: 0 auto;">
                         <!-- Injected via JS -->
                     </div>
+                    <div style="text-align: center; margin-top: 2.5rem;" id="pubs-view-all-wrapper">
+                        <button class="view-all-btn outline" onclick="window.showView('all-publications')">
+                            <i class="fa-solid fa-book-open"></i> View All Publications
+                        </button>
+                    </div>
                 </div>
             </section>
 
@@ -1194,9 +1478,14 @@
                         <p>Stay up to date with the latest achievements, awards, and announcements from SERA Lab.</p>
                     </div>
                     <div id="public-news-grid"
-                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.5rem;">
                         <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);"><i
                                 class="fa-solid fa-spinner fa-spin"></i> Loading news...</div>
+                    </div>
+                    <div style="text-align: center; margin-top: 2.5rem;" id="news-view-all-wrapper">
+                        <button class="view-all-btn outline" onclick="window.showView('all-news')">
+                            <i class="fa-solid fa-newspaper"></i> View All News
+                        </button>
                     </div>
                 </div>
             </section>
@@ -1241,6 +1530,69 @@
                 <button class="share-btn"
                     onclick="window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${window.location.href}`)"><i
                         class="fa-brands fa-linkedin-in"></i></button>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             ALL NEWS PAGE VIEW
+             ========================================== -->
+        <div id="all-news-view" class="view-all-page hidden">
+            <div class="container">
+                <button class="btn btn-ghost" style="margin-bottom: 2rem;"
+                    onclick="window.showView('home'); setTimeout(()=>{document.querySelector('#news').scrollIntoView({behavior:'smooth',block:'start'})},50)">
+                    <i class="fa-solid fa-arrow-left"></i> &nbsp; Back to Home
+                </button>
+                <div class="section-header" style="text-align:left; margin-bottom: 2.5rem; max-width: none;">
+                    <div class="badge" style="margin-bottom: 0.75rem;">Updates</div>
+                    <h2 style="margin-bottom: 0.5rem;">All Lab News &amp; Highlights</h2>
+                    <p>Every achievement, award, and announcement from SERA Lab.</p>
+                </div>
+                <div id="all-news-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+                    <div style="grid-column:1/-1;text-align:center;color:var(--text-muted);"><i
+                            class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             ALL PUBLICATIONS PAGE VIEW
+             ========================================== -->
+        <div id="all-publications-view" class="view-all-page hidden">
+            <div class="container">
+                <button class="btn btn-ghost" style="margin-bottom: 2rem;"
+                    onclick="window.showView('home'); setTimeout(()=>{document.querySelector('#publications').scrollIntoView({behavior:'smooth',block:'start'})},50)">
+                    <i class="fa-solid fa-arrow-left"></i> &nbsp; Back to Home
+                </button>
+                <div class="section-header" style="text-align:left; margin-bottom: 2.5rem; max-width: none;">
+                    <h2 style="margin-bottom: 0.5rem;">All Publications</h2>
+                    <p>Complete list of peer-reviewed contributions advancing Software Engineering.</p>
+                </div>
+                <div class="pub-grid" id="all-publications-grid" style="max-width: 900px;">
+                    <div style="text-align:center;color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i>
+                        Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             NEWS DETAIL MODAL
+             ========================================== -->
+        <div id="news-modal-overlay" class="news-modal-overlay hidden"
+            onclick="if(event.target===this)window.closeNewsModal()">
+            <div class="news-modal" id="news-modal">
+                <button class="news-modal-close" onclick="window.closeNewsModal()"><i
+                        class="fa-solid fa-times"></i></button>
+                <img id="news-modal-img" src="" alt="" class="news-modal-image hidden">
+                <div class="news-modal-body">
+                    <div class="news-modal-date">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span id="news-modal-date-text"></span>
+                    </div>
+                    <h2 class="news-modal-title" id="news-modal-title"></h2>
+                    <div class="news-modal-tags" id="news-modal-tags"></div>
+                    <div class="news-modal-description prose" id="news-modal-description"></div>
+                </div>
             </div>
         </div>
 
@@ -1626,9 +1978,24 @@
                         <div class="form-group">
                             <label class="form-label" for="news-description">Description <span
                                     class="optional">(optional)</span></label>
-                            <textarea id="news-description" class="form-control"
-                                placeholder="A short paragraph with more detail about this news item…" rows="3"
-                                style="resize: vertical;"></textarea>
+                            <!-- Quill News Editor -->
+                            <div style="background: white; border-radius: 8px; border: 1px solid var(--border);">
+                                <div id="quill-news-editor" style="min-height: 180px;"></div>
+                            </div>
+                            <!-- Hidden field to store HTML content -->
+                            <input type="hidden" id="news-description">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="news-image-file">Image <span
+                                    class="optional">(optional)</span></label>
+                            <input type="file" id="news-image-file" class="form-control" accept="image/*"
+                                onchange="window.previewNewsImage(this)">
+                            <p class="form-hint">Recommended: 1200 × 630 px, JPG or PNG</p>
+                            <div id="news-image-preview" style="display:none;margin-top:0.5rem;">
+                                <img id="news-image-preview-img"
+                                    style="max-height:120px;border-radius:8px;border:1px solid var(--border);">
+                            </div>
                         </div>
 
                         <div class="form-row">
@@ -1731,7 +2098,7 @@
                 updateNavbarLoginState(true);
             }
 
-            // Init Quill Editor
+            // Init Blog Quill Editor
             quillEditor = new Quill('#quill-editor', {
                 theme: 'snow',
                 placeholder: 'Write your story...',
@@ -1745,19 +2112,43 @@
                     ]
                 }
             });
+
+            // Init News Quill Editor
+            window.newsQuillEditor = new Quill('#quill-news-editor', {
+                theme: 'snow',
+                placeholder: 'Write a detailed description of this news item…',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'blockquote'],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                }
+            });
         });
 
         // ==========================================
         // PUBLIC UI: NAVIGATION & VIEWS
         // ==========================================
         window.showView = function (view) {
+            const allViews = ['home-view', 'blog-reader-view', 'all-news-view', 'all-publications-view'];
+            allViews.forEach(v => document.getElementById(v)?.classList.add('hidden'));
+
             if (view === 'home') {
                 document.getElementById('home-view').classList.remove('hidden');
-                document.getElementById('blog-reader-view').classList.add('hidden');
                 window.scrollTo(0, 0);
             } else if (view === 'blog-reader') {
-                document.getElementById('home-view').classList.add('hidden');
                 document.getElementById('blog-reader-view').classList.remove('hidden');
+                window.scrollTo(0, 0);
+            } else if (view === 'all-news') {
+                document.getElementById('all-news-view').classList.remove('hidden');
+                renderAllNews();
+                window.scrollTo(0, 0);
+            } else if (view === 'all-publications') {
+                document.getElementById('all-publications-view').classList.remove('hidden');
+                renderAllPublications();
                 window.scrollTo(0, 0);
             }
         };
@@ -1850,11 +2241,24 @@
                     </article>
                 `;
                 }).join('');
+                applySingleItemCentering(grid);
             } catch (e) {
                 console.log("Blogs table might not exist yet.", e);
                 document.getElementById('public-blog-grid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Blog system initializing...</div>';
             }
         }
+
+        window.previewNewsImage = function (input) {
+            const prev = document.getElementById('news-image-preview');
+            const prevImg = document.getElementById('news-image-preview-img');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => { prevImg.src = e.target.result; prev.style.display = 'block'; };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                prev.style.display = 'none';
+            }
+        };
 
         async function fetchMembersPublic() {
             const { data, error } = await supabase.from('members').select('*');
@@ -1896,32 +2300,114 @@
             };
 
             const dirGrid = document.getElementById('co-directors-grid');
-            if (dirGrid) dirGrid.innerHTML = directors.map(d => renderMemberCard(d, true)).join('') || '<div style="color:var(--text-muted);">No directors listed.</div>';
+            if (dirGrid) {
+                dirGrid.innerHTML = directors.map(d => renderMemberCard(d, true)).join('') || '<div style="color:var(--text-muted);">No directors listed.</div>';
+                applySingleItemCentering(dirGrid);
+            }
 
             const stdGrid = document.getElementById('students-grid');
-            if (stdGrid) stdGrid.innerHTML = others.map(m => renderMemberCard(m, false)).join('') || '<div style="color:var(--text-muted);">No members listed.</div>';
+            if (stdGrid) {
+                stdGrid.innerHTML = others.map(m => renderMemberCard(m, false)).join('') || '<div style="color:var(--text-muted);">No members listed.</div>';
+                applySingleItemCentering(stdGrid);
+            }
+        }
+
+        let allPublications = [];
+
+        function renderPubItem(p) {
+            return `
+            <div class="pub-item">
+                <div class="pub-year-badge">${p.year || '—'}</div>
+                <div class="pub-content">
+                    <h4>${p.title}</h4>
+                    <div style="color: var(--text-primary); font-weight: 500;">${p.authors}</div>
+                    <div class="pub-meta">
+                        ${p.venue ? `<span><i class="fa-solid fa-book-open"></i> ${p.venue}</span>` : ''}
+                        ${p.citations ? `<span><i class="fa-solid fa-quote-right"></i> ${p.citations} citations</span>` : ''}
+                        ${p.doi ? `<span><a href="${p.doi.startsWith('http') ? p.doi : 'https://doi.org/' + p.doi}" target="_blank"><i class="fa-solid fa-link"></i> DOI</a></span>` : ''}
+                    </div>
+                </div>
+            </div>`;
         }
 
         async function fetchPublicationsPublic() {
-            const { data, error } = await supabase.from('publications').select('*').order('year', { ascending: false }).limit(5);
+            const { data, error } = await supabase.from('publications').select('*').order('year', { ascending: false });
             if (error || !data) return;
-
+            allPublications = data;
+            const LIMIT = 4;
             const pubGrid = document.getElementById('publicationsGrid');
             if (pubGrid) {
-                pubGrid.innerHTML = data.map(p => `
-                <div class="pub-item">
-                    <div class="pub-year-badge">${p.year || '—'}</div>
-                    <div class="pub-content">
-                        <h4>${p.title}</h4>
-                        <div style="color: var(--text-primary); font-weight: 500;">${p.authors}</div>
-                        <div class="pub-meta">
-                            ${p.venue ? `<span><i class="fa-solid fa-book-open"></i> ${p.venue}</span>` : ''}
-                            ${p.citations ? `<span><i class="fa-solid fa-quote-right"></i> ${p.citations} citations</span>` : ''}
-                            ${p.doi ? `<span><a href="${p.doi.startsWith('http') ? p.doi : 'https://doi.org/' + p.doi}" target="_blank"><i class="fa-solid fa-link"></i> DOI</a></span>` : ''}
-                        </div>
+                const shown = data.slice(0, LIMIT);
+                pubGrid.innerHTML = shown.map(renderPubItem).join('');
+                // Apply single-item centering
+                applySingleItemCentering(pubGrid);
+            }
+            // Hide View All if not needed
+            const wrapper = document.getElementById('pubs-view-all-wrapper');
+            if (wrapper) wrapper.style.display = data.length <= LIMIT ? 'none' : '';
+        }
+
+        function renderAllPublications() {
+            const grid = document.getElementById('all-publications-grid');
+            if (!grid) return;
+            if (!allPublications.length) {
+                grid.innerHTML = '<div style="text-align:center;color:var(--text-muted);">No publications found.</div>';
+                return;
+            }
+            grid.innerHTML = allPublications.map(renderPubItem).join('');
+        }
+
+        let allNewsItems = [];
+
+        const TAG_COLORS = ['#eff6ff', '#f0fdf4', '#fef9c3', '#fdf2f8', '#fff7ed'];
+        const TAG_TEXT = ['#1d4ed8', '#15803d', '#854d0e', '#9d174d', '#c2410c'];
+
+        function renderTagsHtml(tags) {
+            return (tags || []).map((t, i) =>
+                `<span class="news-tag" style="background:${TAG_COLORS[i % TAG_COLORS.length]};color:${TAG_TEXT[i % TAG_TEXT.length]};">${t}</span>`
+            ).join('');
+        }
+
+        function renderNewsCard(n) {
+            const dateStr = [n.month, n.year].filter(Boolean).join(' ') || '';
+            const excerpt = n.description
+                ? n.description.replace(/<[^>]+>/g, '').substring(0, 120) + (n.description.length > 120 ? '…' : '')
+                : '';
+            const featuredBadge = n.is_featured
+                ? '<div style="position:absolute;top:0;right:1rem;background:var(--accent);color:white;font-size:0.7rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:0 0 6px 6px;letter-spacing:0.05em;">FEATURED</div>'
+                : '';
+            const imagePart = n.image_url
+                ? `<div class="news-card-image"><img src="${n.image_url}" alt="" loading="lazy"></div>`
+                : `<div class="news-card-image"><div class="news-card-image-placeholder"><i class="fa-regular fa-newspaper"></i></div></div>`;
+
+            return `
+            <div class="news-card${n.is_featured ? ' featured-card' : ''}"
+                 style="${n.is_featured ? 'border-color:var(--accent);border-width:2px;' : ''}"
+                 onclick="window.openNewsModal('${n.id}')">
+                ${featuredBadge}
+                ${imagePart}
+                <div class="news-card-body">
+                    ${dateStr ? `<div class="news-card-date"><i class="fa-regular fa-calendar"></i>${dateStr}</div>` : ''}
+                    <div class="news-card-title">${n.title}</div>
+                    ${excerpt ? `<div class="news-card-excerpt">${excerpt}</div>` : ''}
+                    <div class="news-card-footer">
+                        <div style="display:flex;flex-wrap:wrap;gap:0.35rem;">${renderTagsHtml(n.tags)}</div>
+                        <button class="news-read-btn" onclick="event.stopPropagation();window.openNewsModal('${n.id}')">
+                            Read Full Story <i class="fa-solid fa-arrow-right" style="font-size:0.75rem;"></i>
+                        </button>
                     </div>
                 </div>
-            `).join('');
+            </div>`;
+        }
+
+        function applySingleItemCentering(container) {
+            // If a grid/flex container has exactly one visible child, center it
+            const children = Array.from(container.children).filter(c => c.style.display !== 'none' && !c.classList.contains('hidden'));
+            if (children.length === 1) {
+                container.style.display = 'flex';
+                container.style.justifyContent = 'center';
+            } else {
+                container.style.display = '';
             }
         }
 
@@ -1933,33 +2419,74 @@
                 if (error) throw error;
                 if (!data || data.length === 0) {
                     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);">No news items yet.</div>';
+                    document.getElementById('news-view-all-wrapper').style.display = 'none';
                     return;
                 }
+                // Sort: featured first
+                allNewsItems = [...data].sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
+                const LIMIT = 3;
+                const shown = allNewsItems.slice(0, LIMIT);
+                grid.innerHTML = shown.map(renderNewsCard).join('');
+                applySingleItemCentering(grid);
 
-                // Sort: featured first, then by year desc
-                const sorted = [...data].sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
-
-                grid.innerHTML = sorted.map(n => {
-                    const tagColors = ['#eff6ff', '#f0fdf4', '#fef9c3', '#fdf2f8', '#fff7ed'];
-                    const tagTextColors = ['#1d4ed8', '#15803d', '#854d0e', '#9d174d', '#c2410c'];
-                    const tags = (n.tags || []).map((t, i) => `<span style="background:${tagColors[i % tagColors.length]};color:${tagTextColors[i % tagTextColors.length]};padding:0.2rem 0.6rem;border-radius:99px;font-size:0.72rem;font-weight:600;">${t}</span>`).join('');
-                    return `
-                    <div class="card" style="position:relative;transition:transform 0.2s,box-shadow 0.2s;${n.is_featured ? 'border-color:var(--accent);border-width:2px;' : ''}">
-                        ${n.is_featured ? '<div style="position:absolute;top:-1px;right:1rem;background:var(--accent);color:white;font-size:0.7rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:0 0 6px 6px;letter-spacing:0.05em;">FEATURED</div>' : ''}
-                        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;color:var(--text-muted);font-size:0.85rem;">
-                            <i class="fa-regular fa-calendar"></i>
-                            ${n.month ? n.month + ' ' : ''}${n.year || ''}
-                        </div>
-                        <h4 style="font-size:1.05rem;margin-bottom:0.5rem;line-height:1.4;">${n.title}</h4>
-                        ${n.description ? `<p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:1rem;margin-top:0;">${n.description}</p>` : ''}
-                        ${tags ? `<div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:auto;">${tags}</div>` : ''}
-                    </div>`;
-                }).join('');
+                // View All button
+                const wrapper = document.getElementById('news-view-all-wrapper');
+                if (wrapper) wrapper.style.display = allNewsItems.length <= LIMIT ? 'none' : '';
             } catch (e) {
                 const grid = document.getElementById('public-news-grid');
                 if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);">News section initializing...</div>';
             }
         }
+
+        function renderAllNews() {
+            const grid = document.getElementById('all-news-grid');
+            if (!grid) return;
+            if (!allNewsItems.length) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);">No news items yet.</div>';
+                return;
+            }
+            grid.innerHTML = allNewsItems.map(renderNewsCard).join('');
+            applySingleItemCentering(grid);
+        }
+
+        window.openNewsModal = function (id) {
+            const n = allNewsItems.find(x => x.id === id);
+            if (!n) return;
+            const overlay = document.getElementById('news-modal-overlay');
+            const imgEl = document.getElementById('news-modal-img');
+            document.getElementById('news-modal-title').innerText = n.title;
+            document.getElementById('news-modal-date-text').innerText = [n.month, n.year].filter(Boolean).join(' ') || '';
+            document.getElementById('news-modal-tags').innerHTML = renderTagsHtml(n.tags);
+
+            // Rich description (may be Quill HTML or plain text)
+            const descEl = document.getElementById('news-modal-description');
+            if (n.description) {
+                // If it looks like HTML (from Quill editor), render as HTML; otherwise wrap in <p>
+                descEl.innerHTML = n.description.trim().startsWith('<') ? n.description : `<p>${n.description}</p>`;
+            } else {
+                descEl.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">No further details available.</p>';
+            }
+
+            if (n.image_url) {
+                imgEl.src = n.image_url;
+                imgEl.classList.remove('hidden');
+            } else {
+                imgEl.classList.add('hidden');
+            }
+
+            overlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeNewsModal = function () {
+            document.getElementById('news-modal-overlay').classList.add('hidden');
+            document.body.style.overflow = '';
+        };
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') window.closeNewsModal();
+        });
 
         // ==========================================
         // ADMIN DASHBOARD & BLOG MANAGEMENT
@@ -2428,6 +2955,9 @@
             document.getElementById('news-featured').checked = false;
             document.getElementById('news-editor-heading').innerText = 'Add News Item';
             document.getElementById('news-msg').innerText = '';
+            document.getElementById('news-image-file').value = '';
+            document.getElementById('news-image-preview').style.display = 'none';
+            if (window.newsQuillEditor) window.newsQuillEditor.root.innerHTML = '';
         };
 
         window.hideNewsEditor = function () {
@@ -2442,11 +2972,22 @@
             document.getElementById('news-editor-heading').innerText = 'Edit News Item';
             document.getElementById('edit-news-id').value = n.id;
             document.getElementById('news-title').value = n.title || '';
-            document.getElementById('news-description').value = n.description || '';
             document.getElementById('news-month').value = n.month || '';
             document.getElementById('news-year').value = n.year || '';
             document.getElementById('news-tags').value = (n.tags || []).join(', ');
             document.getElementById('news-featured').checked = !!n.is_featured;
+            // Populate Quill with existing description (HTML or plain text)
+            if (window.newsQuillEditor) {
+                const desc = n.description || '';
+                window.newsQuillEditor.root.innerHTML = desc.trim().startsWith('<') ? desc : (desc ? `<p>${desc}</p>` : '');
+            }
+            // Show existing image preview
+            if (n.image_url) {
+                const prev = document.getElementById('news-image-preview');
+                const prevImg = document.getElementById('news-image-preview-img');
+                prevImg.src = n.image_url;
+                prev.style.display = 'block';
+            }
         };
 
         window.saveNews = async function () {
@@ -2456,14 +2997,35 @@
             if (!title) { msg.className = 'message error'; msg.innerText = 'Title is required.'; return; }
             msg.className = 'message'; msg.innerText = 'Saving...';
             const tagsRaw = document.getElementById('news-tags').value.trim();
+
+            // Get rich text content from Quill
+            const descriptionHtml = window.newsQuillEditor
+                ? window.newsQuillEditor.root.innerHTML.trim()
+                : '';
+            const descriptionValue = descriptionHtml === '<p><br></p>' ? null : (descriptionHtml || null);
+
+            // Handle image upload
+            let imageUrl = id ? (window.adminNews.find(n => n.id === id)?.image_url || null) : null;
+            const fileInput = document.getElementById('news-image-file');
+            if (fileInput && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileName = `news-${Date.now()}-${file.name}`;
+                const { error: upErr } = await supabase.storage.from('profile-images').upload(fileName, file);
+                if (upErr) { msg.className = 'message error'; msg.innerText = 'Image upload failed: ' + upErr.message; return; }
+                const { data: { publicUrl } } = supabase.storage.from('profile-images').getPublicUrl(fileName);
+                imageUrl = publicUrl;
+            }
+
             const payload = {
                 title,
-                description: document.getElementById('news-description').value.trim() || null,
+                description: descriptionValue,
                 month: document.getElementById('news-month').value.trim() || null,
                 year: parseInt(document.getElementById('news-year').value) || null,
                 tags: tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [],
                 is_featured: document.getElementById('news-featured').checked,
             };
+            if (imageUrl !== undefined) payload.image_url = imageUrl;
+
             try {
                 if (id) {
                     const { error } = await supabase.from('news').update(payload).eq('id', id);
