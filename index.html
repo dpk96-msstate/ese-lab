@@ -251,7 +251,7 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: #ffffff;
+            background: url('assets/visit-banner.jpg') center/cover no-repeat;
             padding-top: 80px;
             position: relative;
             overflow: hidden;
@@ -260,14 +260,12 @@
         .hero-section::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, var(--accent-light) 0%, rgba(255, 255, 255, 0) 50%);
-            opacity: 0.5;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
             z-index: 0;
-            pointer-events: none;
         }
 
         .hero-content {
@@ -279,23 +277,52 @@
 
         .hero-title {
             font-size: 4rem;
-            color: var(--text-primary);
+            color: #ffffff;
             margin-bottom: 1.5rem;
             line-height: 1.1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .subtitle-highlights {
             font-size: 1.25rem;
-            color: var(--text-secondary);
+            color: #e2e8f0;
             display: block;
             margin-bottom: 2.5rem;
             font-weight: 400;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .hero-actions {
             display: flex;
             gap: 1rem;
             justify-content: center;
+        }
+
+        /* Specialized Hero Buttons & Badges for dark background */
+        .hero-section .badge {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-section .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .hero-section .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .hero-section .btn-outline {
+            border-color: rgba(255, 255, 255, 0.6);
+            color: #ffffff;
+            background: transparent;
+        }
+
+        .hero-section .btn-outline:hover {
+            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         /* General Sections */
