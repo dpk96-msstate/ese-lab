@@ -41,6 +41,7 @@ create table public.news (
   year integer null,
   tags text[] null,
   is_featured boolean null default false,
+  image_url text null,
   created_at timestamp with time zone not null default timezone ('utc'::text, now()),
   constraint news_pkey primary key (id)
 ) TABLESPACE pg_default;
