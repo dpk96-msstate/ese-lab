@@ -399,29 +399,48 @@
             gap: 2rem;
         }
 
+        /* Directors grid: flex so a single card is centred */
+        .directors-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .directors-grid .member-card {
+            width: 280px;
+            flex: 0 0 280px;
+        }
+
+        /* ── member-card base (overridden by .directors-grid variant below) ── */
         .member-card {
             text-align: center;
-            padding: 2rem;
+            padding: 2rem 1.5rem 1.5rem;
             background: var(--bg-main);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-lg);
             border: 1px solid var(--border);
             transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .member-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: #cbd5e1;
         }
 
         .member-avatar {
-            width: 120px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
-            margin: 0 auto 1.5rem auto;
+            margin: 0 auto 1rem auto;
             overflow: hidden;
             background: var(--bg-alt);
-            border: 4px solid white;
-            box-shadow: var(--shadow-sm);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--border), var(--shadow-sm);
+            flex-shrink: 0;
         }
 
         .member-avatar img {
@@ -431,16 +450,45 @@
         }
 
         .member-name {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.1rem;
+            color: var(--text-primary);
         }
 
         .member-title {
-            color: var(--accent);
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
             font-weight: 500;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .member-social-links {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.85rem;
+        }
+
+        .member-social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .member-social-link:hover {
+            background: var(--icon-color, var(--accent));
+            border-color: var(--icon-color, var(--accent));
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
         /* Publications Grid */
@@ -817,6 +865,99 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
+        /* ── Form Groups (labeled inputs) ── */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-label .required {
+            color: #ef4444;
+            margin-left: 2px;
+        }
+
+        .form-label .optional {
+            color: var(--text-muted);
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 0.78rem;
+            margin-left: 4px;
+        }
+
+        .form-group .form-control {
+            margin-bottom: 0;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-hint {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        /* ── Enhanced Member Cards ── */
+        .member-role-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.2rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.6rem;
+        }
+
+        .role-director {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .role-phd {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .role-ms {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .role-alumni {
+            background: #f5f3ff;
+            color: #6d28d9;
+        }
+
+        .role-default {
+            background: var(--bg-alt);
+            color: var(--text-secondary);
+        }
+
+        .member-affiliation {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+            margin-bottom: 0;
+        }
+
         /* Quill Editor Tweaks */
         .ql-container {
             font-family: var(--font-sans);
@@ -981,7 +1122,8 @@
                         <h2>Lab Co-Directors</h2>
                         <p>Guiding empirical research in software engineering</p>
                     </div>
-                    <div class="member-grid" id="co-directors-grid" style="max-width: 800px; margin: 0 auto;">
+                    <div class="member-grid directors-grid" id="co-directors-grid"
+                        style="max-width: 800px; margin: 0 auto;">
                         <!-- Injected via JS -->
                         <div style="text-align: center; width: 100%; color: #94a3b8;">Loading directors...</div>
                     </div>
@@ -1194,23 +1336,42 @@
 
                         <input type="hidden" id="edit-post-id">
 
-                        <input type="text" id="post-title" class="form-control" placeholder="Post Title"
-                            style="font-size: 1.5rem; font-weight: 700;">
-
-                        <div style="display: flex; gap: 1rem;">
-                            <input type="text" id="post-category" class="form-control"
-                                placeholder="Category (e.g., Research)">
-                            <input type="text" id="post-tags" class="form-control" placeholder="Tags (comma separated)">
+                        <div class="form-group">
+                            <label class="form-label" for="post-title">Post Title <span
+                                    class="required">*</span></label>
+                            <input type="text" id="post-title" class="form-control"
+                                placeholder="e.g. Advances in Requirements Engineering"
+                                style="font-size: 1.25rem; font-weight: 600;">
                         </div>
 
-                        <div style="margin-bottom: 1.5rem;">
-                            <label>Cover Image (Optional)</label>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="post-category">Category <span
+                                        class="optional">(optional)</span></label>
+                                <input type="text" id="post-category" class="form-control"
+                                    placeholder="e.g. Research, Tutorial, News">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="post-tags">Tags <span class="optional">(comma
+                                        separated)</span></label>
+                                <input type="text" id="post-tags" class="form-control"
+                                    placeholder="e.g. AI, Testing, Security">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="post-cover">Cover Image <span
+                                    class="optional">(optional)</span></label>
                             <input type="file" id="post-cover" class="form-control" accept="image/*">
+                            <p class="form-hint">Recommended: 1200 × 630 px, JPG or PNG</p>
                         </div>
 
-                        <!-- Quill Editor Container -->
-                        <div style="background: white; border-radius: 8px; margin-bottom: 2rem;">
-                            <div id="quill-editor"></div>
+                        <div class="form-group">
+                            <label class="form-label">Article Content <span class="required">*</span></label>
+                            <!-- Quill Editor Container -->
+                            <div style="background: white; border-radius: 8px;">
+                                <div id="quill-editor"></div>
+                            </div>
                         </div>
 
                         <div style="display: flex; gap: 1rem; justify-content: flex-end;">
@@ -1256,20 +1417,51 @@
                                     class="fa-solid fa-times"></i> Close</button>
                         </div>
                         <input type="hidden" id="edit-pub-id">
-                        <input type="text" id="pub-title" class="form-control" placeholder="Publication Title *">
-                        <input type="text" id="pub-authors" class="form-control"
-                            placeholder="Authors * (e.g. Smith, J., Doe, A.)">
-                        <div style="display: flex; gap: 1rem;">
-                            <input type="text" id="pub-venue" class="form-control"
-                                placeholder="Venue / Journal / Conference">
-                            <input type="number" id="pub-year" class="form-control" placeholder="Year"
-                                style="max-width: 120px;">
-                            <input type="number" id="pub-citations" class="form-control" placeholder="Citations"
-                                style="max-width: 130px;" min="0">
+
+                        <div class="form-group">
+                            <label class="form-label" for="pub-title">Publication Title <span
+                                    class="required">*</span></label>
+                            <input type="text" id="pub-title" class="form-control"
+                                placeholder="e.g. Towards Automated Requirements Traceability">
                         </div>
-                        <input type="text" id="pub-doi" class="form-control" placeholder="DOI (e.g. 10.1145/12345)">
-                        <textarea id="pub-bibtex" class="form-control" placeholder="BibTeX entry (optional)" rows="5"
-                            style="resize: vertical; font-family: monospace; font-size: 0.85rem;"></textarea>
+
+                        <div class="form-group">
+                            <label class="form-label" for="pub-authors">Authors <span class="required">*</span></label>
+                            <input type="text" id="pub-authors" class="form-control"
+                                placeholder="e.g. Smith, J., Doe, A., Lee, B.">
+                            <p class="form-hint">Separate multiple authors with commas</p>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 2;">
+                                <label class="form-label" for="pub-venue">Venue / Journal / Conference <span
+                                        class="optional">(optional)</span></label>
+                                <input type="text" id="pub-venue" class="form-control"
+                                    placeholder="e.g. IEEE ICSE 2024, ACM TOSEM">
+                            </div>
+                            <div class="form-group" style="flex: 0 0 110px;">
+                                <label class="form-label" for="pub-year">Year</label>
+                                <input type="number" id="pub-year" class="form-control" placeholder="2024">
+                            </div>
+                            <div class="form-group" style="flex: 0 0 120px;">
+                                <label class="form-label" for="pub-citations">Citations</label>
+                                <input type="number" id="pub-citations" class="form-control" placeholder="0" min="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="pub-doi">DOI <span class="optional">(optional)</span></label>
+                            <input type="text" id="pub-doi" class="form-control"
+                                placeholder="e.g. 10.1145/1234567.1234568">
+                            <p class="form-hint">Enter just the DOI identifier or a full URL</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="pub-bibtex">BibTeX Entry <span
+                                    class="optional">(optional)</span></label>
+                            <textarea id="pub-bibtex" class="form-control" placeholder="@inproceedings{...}" rows="5"
+                                style="resize: vertical; font-family: monospace; font-size: 0.85rem;"></textarea>
+                        </div>
                         <div style="display: flex; gap: 1rem; justify-content: flex-end;">
                             <button class="btn btn-outline" onclick="window.hidePubEditor()">Cancel</button>
                             <button class="btn btn-primary" onclick="window.savePub()">Save Publication</button>
@@ -1313,29 +1505,72 @@
                                     class="fa-solid fa-times"></i> Close</button>
                         </div>
                         <input type="hidden" id="edit-member-id">
-                        <div style="display: flex; gap: 1rem;">
-                            <input type="text" id="member-name" class="form-control" placeholder="Full Name *">
-                            <input type="text" id="member-title" class="form-control"
-                                placeholder="Title / Degree Program">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="member-name">Full Name <span
+                                        class="required">*</span></label>
+                                <input type="text" id="member-name" class="form-control" placeholder="e.g. Jane Smith">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="member-title">Title / Degree Program <span
+                                        class="optional">(optional)</span></label>
+                                <input type="text" id="member-title" class="form-control"
+                                    placeholder="e.g. Ph.D. Candidate, Assistant Professor">
+                            </div>
                         </div>
-                        <div style="display: flex; gap: 1rem;">
-                            <select id="member-role" class="form-control">
-                                <option value="">Select Role Category *</option>
-                                <option value="director">Co-Director / Faculty</option>
-                                <option value="phd">PhD Student</option>
-                                <option value="ms">MS Student</option>
-                                <option value="alumni">Alumni</option>
-                            </select>
-                            <input type="text" id="member-affiliation" class="form-control"
-                                placeholder="Affiliation (optional)">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="member-role">Role Category <span
+                                        class="required">*</span></label>
+                                <select id="member-role" class="form-control">
+                                    <option value="">Select a role…</option>
+                                    <option value="director">Co-Director / Faculty</option>
+                                    <option value="phd">PhD Student</option>
+                                    <option value="ms">MS Student</option>
+                                    <option value="alumni">Alumni</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="member-affiliation">Affiliation <span
+                                        class="optional">(optional)</span></label>
+                                <input type="text" id="member-affiliation" class="form-control"
+                                    placeholder="e.g. Kennesaw State University">
+                            </div>
                         </div>
-                        <input type="url" id="member-linkedin" class="form-control"
-                            placeholder="LinkedIn URL (optional, e.g. https://linkedin.com/in/username)">
-                        <div style="margin-bottom: 1.5rem;">
-                            <label
-                                style="font-size:0.9rem; font-weight:600; margin-bottom:0.5rem; display:block;">Profile
-                                Photo (Optional)</label>
+
+                        <p
+                            style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;">
+                            Social &amp; Academic Links <span
+                                style="font-weight:400;text-transform:none;letter-spacing:0;">(all optional)</span></p>
+
+                        <div class="form-group">
+                            <label class="form-label" for="member-linkedin"><i class="fa-brands fa-linkedin-in"
+                                    style="color:#0077b5;margin-right:5px;"></i> LinkedIn Profile URL</label>
+                            <input type="url" id="member-linkedin" class="form-control"
+                                placeholder="https://linkedin.com/in/username">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="member-google-scholar"><i class="fa-brands fa-google"
+                                    style="color:#4285f4;margin-right:5px;"></i> Google Scholar Profile URL</label>
+                            <input type="url" id="member-google-scholar" class="form-control"
+                                placeholder="https://scholar.google.com/citations?user=…">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="member-github"><i class="fa-brands fa-github"
+                                    style="color:#24292f;margin-right:5px;"></i> GitHub Profile URL</label>
+                            <input type="url" id="member-github" class="form-control"
+                                placeholder="https://github.com/username">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="member-image-file">Profile Photo <span
+                                    class="optional">(optional)</span></label>
                             <input type="file" id="member-image-file" class="form-control" accept="image/*">
+                            <p class="form-hint">Recommended: square image, at least 400 × 400 px</p>
                         </div>
                         <div style="display: flex; gap: 1rem; justify-content: flex-end;">
                             <button class="btn btn-outline" onclick="window.hideMemberEditor()">Cancel</button>
@@ -1380,21 +1615,51 @@
                                     class="fa-solid fa-times"></i> Close</button>
                         </div>
                         <input type="hidden" id="edit-news-id">
-                        <input type="text" id="news-title" class="form-control" placeholder="Title *">
-                        <textarea id="news-description" class="form-control" placeholder="Description (optional)"
-                            rows="3" style="resize: vertical;"></textarea>
-                        <div style="display: flex; gap: 1rem;">
-                            <input type="text" id="news-month" class="form-control" placeholder="Month (e.g. January)">
-                            <input type="number" id="news-year" class="form-control" placeholder="Year"
-                                style="max-width: 120px;">
+
+                        <div class="form-group">
+                            <label class="form-label" for="news-title">Headline / Title <span
+                                    class="required">*</span></label>
+                            <input type="text" id="news-title" class="form-control"
+                                placeholder="e.g. Lab receives NSF grant for AI research">
                         </div>
-                        <input type="text" id="news-tags" class="form-control"
-                            placeholder="Tags (comma separated, e.g. Award, Publication, Grant)">
-                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
-                            <input type="checkbox" id="news-featured"
-                                style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent);">
-                            <label for="news-featured" style="font-weight: 500; cursor: pointer;">Mark as
-                                Featured</label>
+
+                        <div class="form-group">
+                            <label class="form-label" for="news-description">Description <span
+                                    class="optional">(optional)</span></label>
+                            <textarea id="news-description" class="form-control"
+                                placeholder="A short paragraph with more detail about this news item…" rows="3"
+                                style="resize: vertical;"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="news-month">Month <span
+                                        class="optional">(optional)</span></label>
+                                <input type="text" id="news-month" class="form-control" placeholder="e.g. January">
+                            </div>
+                            <div class="form-group" style="flex: 0 0 130px;">
+                                <label class="form-label" for="news-year">Year <span
+                                        class="optional">(optional)</span></label>
+                                <input type="number" id="news-year" class="form-control" placeholder="2024">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="news-tags">Tags <span class="optional">(comma
+                                    separated)</span></label>
+                            <input type="text" id="news-tags" class="form-control"
+                                placeholder="e.g. Award, Publication, Grant, Conference">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label"
+                                style="display:flex;align-items:center;gap:0.5rem;text-transform:none;letter-spacing:0;font-size:0.875rem;">
+                                <input type="checkbox" id="news-featured"
+                                    style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent);flex-shrink:0;">
+                                <span>Pin as Featured &mdash; <span
+                                        style="font-weight:400;color:var(--text-muted);">Featured items appear
+                                        highlighted at the top</span></span>
+                            </label>
                         </div>
                         <div style="display: flex; gap: 1rem; justify-content: flex-end;">
                             <button class="btn btn-outline" onclick="window.hideNewsEditor()">Cancel</button>
@@ -1439,6 +1704,25 @@
             fetchPublicationsPublic();
             fetchBlogsPublic();
             fetchNewsPublic();
+
+            // Member filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const filter = this.dataset.filter;
+                    const grid = document.getElementById('students-grid');
+                    if (!grid) return;
+                    grid.querySelectorAll('.member-card').forEach(card => {
+                        const role = card.dataset.role || '';
+                        if (filter === 'all' || role === filter) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
 
             // Check Auth Status silently
             const { data: { session } } = await supabase.auth.getSession();
@@ -1579,14 +1863,37 @@
             const directors = data.filter(m => m.role_category === 'director');
             const others = data.filter(m => m.role_category !== 'director');
 
-            const renderMemberCard = (m, isDirector) => `
-                <div class="member-card">
-                    <div class="member-avatar"><img src="${m.image_url || 'https://placehold.co/200x200'}" alt="${m.name}"></div>
+            const roleLabel = { director: 'Co-Director', phd: 'PhD Student', ms: 'MS Student', alumni: 'Alumni' };
+            const roleCss = { director: 'role-director', phd: 'role-phd', ms: 'role-ms', alumni: 'role-alumni' };
+
+            const socialLinks = (m) => {
+                const links = [];
+                if (m.linkedin_url) links.push(`<a href="${m.linkedin_url}" target="_blank" rel="noopener" title="LinkedIn" class="member-social-link" style="--icon-color:#0077b5;"><i class="fa-brands fa-linkedin-in"></i></a>`);
+                if (m.google_scholar_url) links.push(`<a href="${m.google_scholar_url}" target="_blank" rel="noopener" title="Google Scholar" class="member-social-link" style="--icon-color:#4285f4;"><i class="fa-brands fa-google"></i></a>`);
+                if (m.github_url) links.push(`<a href="${m.github_url}" target="_blank" rel="noopener" title="GitHub" class="member-social-link" style="--icon-color:#24292f;"><i class="fa-brands fa-github"></i></a>`);
+                return links.length ? `<div class="member-social-links">${links.join('')}</div>` : '';
+            };
+
+            const avatarSrc = (m) => m.image_url
+                || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true`;
+
+            const renderMemberCard = (m, isDirector) => {
+                const label = roleLabel[m.role_category] || m.role_category;
+                const css = roleCss[m.role_category] || 'role-default';
+                const displayTitle = m.title || (isDirector ? 'Lab Co-Director' : label);
+                return `
+                <div class="member-card" data-role="${m.role_category || ''}">
+                    <div class="member-avatar">
+                        <img src="${avatarSrc(m)}" alt="${m.name}"
+                             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true'">
+                    </div>
+                    <span class="member-role-badge ${css}">${label}</span>
                     <div class="member-name">${m.name}</div>
-                    <div class="member-title" style="color:${isDirector ? 'var(--accent)' : 'var(--text-secondary)'};">${m.title || (isDirector ? 'Co-Director' : m.role_category.toUpperCase())}</div>
-                    ${m.affiliation ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem;">${m.affiliation}</div>` : ''}
-                    ${m.linkedin_url ? `<a href="${m.linkedin_url}" target="_blank" style="display:inline-flex;align-items:center;gap:0.3rem;margin-top:0.75rem;font-size:0.82rem;color:var(--accent);"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>` : ''}
+                    <div class="member-title">${displayTitle}</div>
+                    ${m.affiliation ? `<p class="member-affiliation"><i class="fa-solid fa-building-columns" style="font-size:0.68rem;margin-right:3px;opacity:0.7;"></i>${m.affiliation}</p>` : ''}
+                    ${socialLinks(m)}
                 </div>`;
+            };
 
             const dirGrid = document.getElementById('co-directors-grid');
             if (dirGrid) dirGrid.innerHTML = directors.map(d => renderMemberCard(d, true)).join('') || '<div style="color:var(--text-muted);">No directors listed.</div>';
@@ -1995,6 +2302,8 @@
             document.getElementById('member-role').value = '';
             document.getElementById('member-affiliation').value = '';
             document.getElementById('member-linkedin').value = '';
+            document.getElementById('member-google-scholar').value = '';
+            document.getElementById('member-github').value = '';
             document.getElementById('member-image-file').value = '';
             document.getElementById('member-editor-heading').innerText = 'Add Member';
             document.getElementById('member-msg').innerText = '';
@@ -2016,6 +2325,8 @@
             document.getElementById('member-role').value = m.role_category || '';
             document.getElementById('member-affiliation').value = m.affiliation || '';
             document.getElementById('member-linkedin').value = m.linkedin_url || '';
+            document.getElementById('member-google-scholar').value = m.google_scholar_url || '';
+            document.getElementById('member-github').value = m.github_url || '';
         };
 
         window.saveMember = async function () {
@@ -2044,6 +2355,8 @@
                 role_category: role,
                 affiliation: document.getElementById('member-affiliation').value.trim() || null,
                 linkedin_url: document.getElementById('member-linkedin').value.trim() || null,
+                google_scholar_url: document.getElementById('member-google-scholar').value.trim() || null,
+                github_url: document.getElementById('member-github').value.trim() || null,
             };
             if (imageUrl) payload.image_url = imageUrl;
 
