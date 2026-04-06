@@ -916,13 +916,20 @@
                         <li><a href="#research" class="nav-link">Research</a></li>
                         <li><a href="#blog" class="nav-link">Blog</a></li>
                         <li><a href="#publications" class="nav-link">Publications</a></li>
+                        <li><a href="#news" class="nav-link">News</a></li>
                     </ul>
                 </nav>
-                <div class="ksu-branding">
-                    <div class="ksu-wrapper">
-                        <img src="assets/ksu.png" alt="KSU" class="ksu-icon"
-                            onerror="this.src='https://placehold.co/40x40?text=KSU'">
-                        <div class="ksu-text">Kennesaw State University</div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <a href="#" onclick="window.openAdminLogin(event)" class="btn btn-outline" id="navbar-login-btn"
+                        style="font-size: 0.85rem; padding: 0.5rem 1rem; gap: 0.4rem;">
+                        <i class="fa-solid fa-lock"></i> <span id="navbar-login-label">Member Login</span>
+                    </a>
+                    <div class="ksu-branding">
+                        <div class="ksu-wrapper">
+                            <img src="assets/ksu.png" alt="KSU" class="ksu-icon"
+                                onerror="this.src='https://placehold.co/40x40?text=KSU'">
+                            <div class="ksu-text">Kennesaw State University</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -944,7 +951,7 @@
             </section>
 
             <!-- Intro/Vision -->
-            <section id="about" class="intro-section">
+            <section id="research" class="intro-section">
                 <div class="container">
                     <div class="section-header">
                         <h2>Our Vision & Mission</h2>
@@ -1035,6 +1042,22 @@
                     </div>
                 </div>
             </section>
+
+            <!-- News Section -->
+            <section id="news">
+                <div class="container">
+                    <div class="section-header">
+                        <div class="badge" style="margin-bottom: 1rem;">Updates</div>
+                        <h2>Lab News & Highlights</h2>
+                        <p>Stay up to date with the latest achievements, awards, and announcements from SERA Lab.</p>
+                    </div>
+                    <div id="public-news-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+                        <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);"><i
+                                class="fa-solid fa-spinner fa-spin"></i> Loading news...</div>
+                    </div>
+                </div>
+            </section>
         </div>
 
         <!-- Individual Blog Reader View (Hidden by default) -->
@@ -1120,6 +1143,8 @@
                         class="fa-solid fa-book"></i> &nbsp; Publications</div>
                 <div class="admin-nav-item" onclick="window.switchAdminTab('members', this)"><i
                         class="fa-solid fa-users"></i> &nbsp; Members</div>
+                <div class="admin-nav-item" onclick="window.switchAdminTab('news', this)"><i
+                        class="fa-solid fa-newspaper"></i> &nbsp; News</div>
 
                 <div style="margin-top: auto;">
                     <button class="btn btn-outline" style="width: 100%;" onclick="window.handleLogout()"><i
@@ -1196,14 +1221,187 @@
                     </div>
                 </div>
 
-                <!-- PLACEHOLDERS FOR OTHER TABS -->
+                <!-- PUBLICATIONS TAB -->
                 <div id="admin-tab-pubs" class="hidden">
-                    <h2>Manage Publications</h2>
-                    <p>Use the database or existing tools to manage publications.</p>
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>Manage Publications</h2>
+                        <button class="btn btn-primary" onclick="window.showPubEditor()"><i
+                                class="fa-solid fa-plus"></i> New Publication</button>
+                    </div>
+
+                    <div id="admin-pub-list">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+                                    <th style="padding: 1rem;">Title</th>
+                                    <th style="padding: 1rem;">Authors</th>
+                                    <th style="padding: 1rem;">Year</th>
+                                    <th style="padding: 1rem;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-pub-tbody">
+                                <tr>
+                                    <td colspan="4" style="padding: 1rem;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="admin-pub-editor" class="card hidden" style="margin-top: 1rem; max-width: none;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 id="pub-editor-heading">Add Publication</h3>
+                            <button class="btn btn-ghost" onclick="window.hidePubEditor()"><i
+                                    class="fa-solid fa-times"></i> Close</button>
+                        </div>
+                        <input type="hidden" id="edit-pub-id">
+                        <input type="text" id="pub-title" class="form-control" placeholder="Publication Title *">
+                        <input type="text" id="pub-authors" class="form-control"
+                            placeholder="Authors * (e.g. Smith, J., Doe, A.)">
+                        <div style="display: flex; gap: 1rem;">
+                            <input type="text" id="pub-venue" class="form-control"
+                                placeholder="Venue / Journal / Conference">
+                            <input type="number" id="pub-year" class="form-control" placeholder="Year"
+                                style="max-width: 120px;">
+                            <input type="number" id="pub-citations" class="form-control" placeholder="Citations"
+                                style="max-width: 130px;" min="0">
+                        </div>
+                        <input type="text" id="pub-doi" class="form-control" placeholder="DOI (e.g. 10.1145/12345)">
+                        <textarea id="pub-bibtex" class="form-control" placeholder="BibTeX entry (optional)" rows="5"
+                            style="resize: vertical; font-family: monospace; font-size: 0.85rem;"></textarea>
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                            <button class="btn btn-outline" onclick="window.hidePubEditor()">Cancel</button>
+                            <button class="btn btn-primary" onclick="window.savePub()">Save Publication</button>
+                        </div>
+                        <p id="pub-msg" class="message"></p>
+                    </div>
                 </div>
+
+                <!-- MEMBERS TAB -->
                 <div id="admin-tab-members" class="hidden">
-                    <h2>Manage Members</h2>
-                    <p>Use the database or existing tools to manage members.</p>
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>Manage Members</h2>
+                        <button class="btn btn-primary" onclick="window.showMemberEditor()"><i
+                                class="fa-solid fa-plus"></i> New Member</button>
+                    </div>
+
+                    <div id="admin-member-list">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+                                    <th style="padding: 1rem;">Name</th>
+                                    <th style="padding: 1rem;">Title</th>
+                                    <th style="padding: 1rem;">Role</th>
+                                    <th style="padding: 1rem;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-member-tbody">
+                                <tr>
+                                    <td colspan="4" style="padding: 1rem;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="admin-member-editor" class="card hidden" style="margin-top: 1rem; max-width: none;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 id="member-editor-heading">Add Member</h3>
+                            <button class="btn btn-ghost" onclick="window.hideMemberEditor()"><i
+                                    class="fa-solid fa-times"></i> Close</button>
+                        </div>
+                        <input type="hidden" id="edit-member-id">
+                        <div style="display: flex; gap: 1rem;">
+                            <input type="text" id="member-name" class="form-control" placeholder="Full Name *">
+                            <input type="text" id="member-title" class="form-control"
+                                placeholder="Title / Degree Program">
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <select id="member-role" class="form-control">
+                                <option value="">Select Role Category *</option>
+                                <option value="director">Co-Director / Faculty</option>
+                                <option value="phd">PhD Student</option>
+                                <option value="ms">MS Student</option>
+                                <option value="alumni">Alumni</option>
+                            </select>
+                            <input type="text" id="member-affiliation" class="form-control"
+                                placeholder="Affiliation (optional)">
+                        </div>
+                        <input type="url" id="member-linkedin" class="form-control"
+                            placeholder="LinkedIn URL (optional, e.g. https://linkedin.com/in/username)">
+                        <div style="margin-bottom: 1.5rem;">
+                            <label
+                                style="font-size:0.9rem; font-weight:600; margin-bottom:0.5rem; display:block;">Profile
+                                Photo (Optional)</label>
+                            <input type="file" id="member-image-file" class="form-control" accept="image/*">
+                        </div>
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                            <button class="btn btn-outline" onclick="window.hideMemberEditor()">Cancel</button>
+                            <button class="btn btn-primary" onclick="window.saveMember()">Save Member</button>
+                        </div>
+                        <p id="member-msg" class="message"></p>
+                    </div>
+                </div>
+
+                <!-- NEWS TAB -->
+                <div id="admin-tab-news" class="hidden">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>Manage News</h2>
+                        <button class="btn btn-primary" onclick="window.showNewsEditor()"><i
+                                class="fa-solid fa-plus"></i> New Item</button>
+                    </div>
+
+                    <div id="admin-news-list">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+                                    <th style="padding: 1rem;">Title</th>
+                                    <th style="padding: 1rem;">Date</th>
+                                    <th style="padding: 1rem;">Featured</th>
+                                    <th style="padding: 1rem;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-news-tbody">
+                                <tr>
+                                    <td colspan="4" style="padding: 1rem;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="admin-news-editor" class="card hidden" style="margin-top: 1rem; max-width: none;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 id="news-editor-heading">Add News Item</h3>
+                            <button class="btn btn-ghost" onclick="window.hideNewsEditor()"><i
+                                    class="fa-solid fa-times"></i> Close</button>
+                        </div>
+                        <input type="hidden" id="edit-news-id">
+                        <input type="text" id="news-title" class="form-control" placeholder="Title *">
+                        <textarea id="news-description" class="form-control" placeholder="Description (optional)"
+                            rows="3" style="resize: vertical;"></textarea>
+                        <div style="display: flex; gap: 1rem;">
+                            <input type="text" id="news-month" class="form-control" placeholder="Month (e.g. January)">
+                            <input type="number" id="news-year" class="form-control" placeholder="Year"
+                                style="max-width: 120px;">
+                        </div>
+                        <input type="text" id="news-tags" class="form-control"
+                            placeholder="Tags (comma separated, e.g. Award, Publication, Grant)">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                            <input type="checkbox" id="news-featured"
+                                style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent);">
+                            <label for="news-featured" style="font-weight: 500; cursor: pointer;">Mark as
+                                Featured</label>
+                        </div>
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                            <button class="btn btn-outline" onclick="window.hideNewsEditor()">Cancel</button>
+                            <button class="btn btn-primary" onclick="window.saveNews()">Save News Item</button>
+                        </div>
+                        <p id="news-msg" class="message"></p>
+                    </div>
                 </div>
 
             </main>
@@ -1240,11 +1438,13 @@
             fetchMembersPublic();
             fetchPublicationsPublic();
             fetchBlogsPublic();
+            fetchNewsPublic();
 
             // Check Auth Status silently
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
                 window.currentUser = session.user;
+                updateNavbarLoginState(true);
             }
 
             // Init Quill Editor
@@ -1379,29 +1579,20 @@
             const directors = data.filter(m => m.role_category === 'director');
             const others = data.filter(m => m.role_category !== 'director');
 
-            // Render Co-Directors
-            const dirGrid = document.getElementById('co-directors-grid');
-            if (dirGrid) {
-                dirGrid.innerHTML = directors.map(d => `
-                <div class="member-card">
-                    <div class="member-avatar"><img src="${d.image_url || 'https://placehold.co/200x200'}" alt="${d.name}"></div>
-                    <div class="member-name">${d.name}</div>
-                    <div class="member-title">${d.title || 'Co-Director'}</div>
-                </div>
-            `).join('');
-            }
-
-            // Render Others (Simplified for redesign)
-            const stdGrid = document.getElementById('students-grid');
-            if (stdGrid) {
-                stdGrid.innerHTML = others.map(m => `
+            const renderMemberCard = (m, isDirector) => `
                 <div class="member-card">
                     <div class="member-avatar"><img src="${m.image_url || 'https://placehold.co/200x200'}" alt="${m.name}"></div>
                     <div class="member-name">${m.name}</div>
-                    <div class="member-title" style="color:var(--text-secondary)">${m.role_category.toUpperCase()}</div>
-                </div>
-            `).join('');
-            }
+                    <div class="member-title" style="color:${isDirector ? 'var(--accent)' : 'var(--text-secondary)'};">${m.title || (isDirector ? 'Co-Director' : m.role_category.toUpperCase())}</div>
+                    ${m.affiliation ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem;">${m.affiliation}</div>` : ''}
+                    ${m.linkedin_url ? `<a href="${m.linkedin_url}" target="_blank" style="display:inline-flex;align-items:center;gap:0.3rem;margin-top:0.75rem;font-size:0.82rem;color:var(--accent);"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>` : ''}
+                </div>`;
+
+            const dirGrid = document.getElementById('co-directors-grid');
+            if (dirGrid) dirGrid.innerHTML = directors.map(d => renderMemberCard(d, true)).join('') || '<div style="color:var(--text-muted);">No directors listed.</div>';
+
+            const stdGrid = document.getElementById('students-grid');
+            if (stdGrid) stdGrid.innerHTML = others.map(m => renderMemberCard(m, false)).join('') || '<div style="color:var(--text-muted);">No members listed.</div>';
         }
 
         async function fetchPublicationsPublic() {
@@ -1412,17 +1603,54 @@
             if (pubGrid) {
                 pubGrid.innerHTML = data.map(p => `
                 <div class="pub-item">
-                    <div class="pub-year-badge">${p.year}</div>
+                    <div class="pub-year-badge">${p.year || '—'}</div>
                     <div class="pub-content">
                         <h4>${p.title}</h4>
                         <div style="color: var(--text-primary); font-weight: 500;">${p.authors}</div>
                         <div class="pub-meta">
-                            <span><i class="fa-solid fa-book-open"></i> ${p.venue}</span>
+                            ${p.venue ? `<span><i class="fa-solid fa-book-open"></i> ${p.venue}</span>` : ''}
+                            ${p.citations ? `<span><i class="fa-solid fa-quote-right"></i> ${p.citations} citations</span>` : ''}
                             ${p.doi ? `<span><a href="${p.doi.startsWith('http') ? p.doi : 'https://doi.org/' + p.doi}" target="_blank"><i class="fa-solid fa-link"></i> DOI</a></span>` : ''}
                         </div>
                     </div>
                 </div>
             `).join('');
+            }
+        }
+
+        async function fetchNewsPublic() {
+            try {
+                const { data, error } = await supabase.from('news').select('*').order('year', { ascending: false }).order('created_at', { ascending: false });
+                const grid = document.getElementById('public-news-grid');
+                if (!grid) return;
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);">No news items yet.</div>';
+                    return;
+                }
+
+                // Sort: featured first, then by year desc
+                const sorted = [...data].sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
+
+                grid.innerHTML = sorted.map(n => {
+                    const tagColors = ['#eff6ff', '#f0fdf4', '#fef9c3', '#fdf2f8', '#fff7ed'];
+                    const tagTextColors = ['#1d4ed8', '#15803d', '#854d0e', '#9d174d', '#c2410c'];
+                    const tags = (n.tags || []).map((t, i) => `<span style="background:${tagColors[i % tagColors.length]};color:${tagTextColors[i % tagTextColors.length]};padding:0.2rem 0.6rem;border-radius:99px;font-size:0.72rem;font-weight:600;">${t}</span>`).join('');
+                    return `
+                    <div class="card" style="position:relative;transition:transform 0.2s,box-shadow 0.2s;${n.is_featured ? 'border-color:var(--accent);border-width:2px;' : ''}">
+                        ${n.is_featured ? '<div style="position:absolute;top:-1px;right:1rem;background:var(--accent);color:white;font-size:0.7rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:0 0 6px 6px;letter-spacing:0.05em;">FEATURED</div>' : ''}
+                        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;color:var(--text-muted);font-size:0.85rem;">
+                            <i class="fa-regular fa-calendar"></i>
+                            ${n.month ? n.month + ' ' : ''}${n.year || ''}
+                        </div>
+                        <h4 style="font-size:1.05rem;margin-bottom:0.5rem;line-height:1.4;">${n.title}</h4>
+                        ${n.description ? `<p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:1rem;margin-top:0;">${n.description}</p>` : ''}
+                        ${tags ? `<div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:auto;">${tags}</div>` : ''}
+                    </div>`;
+                }).join('');
+            } catch (e) {
+                const grid = document.getElementById('public-news-grid');
+                if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);">News section initializing...</div>';
             }
         }
 
@@ -1457,6 +1685,7 @@
                 msg.innerText = error.message;
             } else {
                 window.currentUser = data.user;
+                updateNavbarLoginState(true);
                 document.getElementById('admin-login-screen').classList.add('hidden');
                 document.getElementById('admin-app-screen').classList.remove('hidden');
                 fetchAdminBlogs();
@@ -1466,16 +1695,35 @@
         window.handleLogout = async function () {
             await supabase.auth.signOut();
             window.currentUser = null;
+            updateNavbarLoginState(false);
             window.closeAdmin();
         };
+
+        function updateNavbarLoginState(loggedIn) {
+            const btn = document.getElementById('navbar-login-btn');
+            const label = document.getElementById('navbar-login-label');
+            if (!btn || !label) return;
+            if (loggedIn) {
+                label.innerText = 'Dashboard';
+                btn.style.background = 'var(--accent)';
+                btn.style.color = 'white';
+                btn.style.borderColor = 'var(--accent)';
+            } else {
+                label.innerText = 'Member Login';
+                btn.style.background = '';
+                btn.style.color = '';
+                btn.style.borderColor = '';
+            }
+        }
 
         window.switchAdminTab = function (tab, el) {
             document.querySelectorAll('.admin-nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            document.getElementById('admin-tab-blogs').classList.add('hidden');
-            document.getElementById('admin-tab-pubs').classList.add('hidden');
-            document.getElementById('admin-tab-members').classList.add('hidden');
+            ['blogs', 'pubs', 'members', 'news'].forEach(t => document.getElementById(`admin-tab-${t}`).classList.add('hidden'));
             document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
+            if (tab === 'pubs') fetchAdminPubs();
+            if (tab === 'members') fetchAdminMembers();
+            if (tab === 'news') fetchAdminNews();
         };
 
         /* --- Admin Blog Management --- */
@@ -1592,6 +1840,340 @@
             } catch (e) {
                 msg.className = "message error"; msg.innerText = e.message;
             }
+        };
+
+        // ==========================================
+        // ADMIN: PUBLICATIONS MANAGEMENT
+        // ==========================================
+        window.adminPubs = [];
+
+        async function fetchAdminPubs() {
+            try {
+                const { data, error } = await supabase.from('publications').select('*').order('year', { ascending: false });
+                if (error) throw error;
+                window.adminPubs = data || [];
+                const tbody = document.getElementById('admin-pub-tbody');
+                if (!window.adminPubs.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="padding: 1rem;">No publications found.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = window.adminPubs.map(p => `
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 1rem; font-weight: 500; max-width: 300px;">${p.title}</td>
+                        <td style="padding: 1rem; color: var(--text-secondary); font-size: 0.9rem;">${p.authors || '—'}</td>
+                        <td style="padding: 1rem;"><span class="badge">${p.year || '—'}</span></td>
+                        <td style="padding: 1rem; display: flex; gap: 0.5rem;">
+                            <button class="btn btn-ghost btn-sm" onclick="window.editAdminPub('${p.id}')">Edit</button>
+                            <button class="btn btn-ghost btn-sm" style="color:#ef4444;" onclick="window.deleteAdminPub('${p.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                document.getElementById('admin-pub-tbody').innerHTML = '<tr><td colspan="4" style="padding: 1rem;">Error loading publications.</td></tr>';
+            }
+        }
+
+        window.showPubEditor = function () {
+            document.getElementById('admin-pub-list').classList.add('hidden');
+            document.getElementById('admin-pub-editor').classList.remove('hidden');
+            document.getElementById('edit-pub-id').value = '';
+            document.getElementById('pub-title').value = '';
+            document.getElementById('pub-authors').value = '';
+            document.getElementById('pub-venue').value = '';
+            document.getElementById('pub-year').value = '';
+            document.getElementById('pub-citations').value = '';
+            document.getElementById('pub-doi').value = '';
+            document.getElementById('pub-bibtex').value = '';
+            document.getElementById('pub-editor-heading').innerText = 'Add Publication';
+            document.getElementById('pub-msg').innerText = '';
+        };
+
+        window.hidePubEditor = function () {
+            document.getElementById('admin-pub-list').classList.remove('hidden');
+            document.getElementById('admin-pub-editor').classList.add('hidden');
+        };
+
+        window.editAdminPub = function (id) {
+            const pub = window.adminPubs.find(p => p.id === id);
+            if (!pub) return;
+            window.showPubEditor();
+            document.getElementById('pub-editor-heading').innerText = 'Edit Publication';
+            document.getElementById('edit-pub-id').value = pub.id;
+            document.getElementById('pub-title').value = pub.title || '';
+            document.getElementById('pub-authors').value = pub.authors || '';
+            document.getElementById('pub-venue').value = pub.venue || '';
+            document.getElementById('pub-year').value = pub.year || '';
+            document.getElementById('pub-citations').value = pub.citations ?? '';
+            document.getElementById('pub-doi').value = pub.doi || '';
+            document.getElementById('pub-bibtex').value = pub.bibtex || '';
+        };
+
+        window.savePub = async function () {
+            const id = document.getElementById('edit-pub-id').value;
+            const title = document.getElementById('pub-title').value.trim();
+            const authors = document.getElementById('pub-authors').value.trim();
+            const msg = document.getElementById('pub-msg');
+            if (!title) { msg.className = 'message error'; msg.innerText = 'Title is required.'; return; }
+            if (!authors) { msg.className = 'message error'; msg.innerText = 'Authors are required.'; return; }
+            msg.className = 'message'; msg.innerText = 'Saving...';
+            const payload = {
+                title,
+                authors,
+                venue: document.getElementById('pub-venue').value.trim() || null,
+                year: parseInt(document.getElementById('pub-year').value) || null,
+                citations: parseInt(document.getElementById('pub-citations').value) || 0,
+                doi: document.getElementById('pub-doi').value.trim() || null,
+                bibtex: document.getElementById('pub-bibtex').value.trim() || null,
+            };
+            try {
+                if (id) {
+                    const { error } = await supabase.from('publications').update(payload).eq('id', id);
+                    if (error) throw error;
+                } else {
+                    const { error } = await supabase.from('publications').insert([payload]);
+                    if (error) throw error;
+                }
+                msg.className = 'message success'; msg.innerText = '✅ Publication saved!';
+                fetchAdminPubs();
+                fetchPublicationsPublic();
+                setTimeout(() => window.hidePubEditor(), 1500);
+            } catch (e) {
+                msg.className = 'message error'; msg.innerText = e.message;
+            }
+        };
+
+        window.deleteAdminPub = async function (id) {
+            if (!confirm('Delete this publication? This cannot be undone.')) return;
+            const { error } = await supabase.from('publications').delete().eq('id', id);
+            if (error) return alert('Delete failed: ' + error.message);
+            fetchAdminPubs();
+            fetchPublicationsPublic();
+        };
+
+        // ==========================================
+        // ADMIN: MEMBERS MANAGEMENT
+        // ==========================================
+        window.adminMembers = [];
+
+        async function fetchAdminMembers() {
+            try {
+                const { data, error } = await supabase.from('members').select('*').order('name');
+                if (error) throw error;
+                window.adminMembers = data || [];
+                const tbody = document.getElementById('admin-member-tbody');
+                if (!window.adminMembers.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="padding: 1rem;">No members found.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = window.adminMembers.map(m => `
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 1rem; font-weight: 500;">
+                            <div style="display:flex; align-items:center; gap: 0.75rem;">
+                                <img src="${m.image_url || 'https://placehold.co/40x40'}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
+                                ${m.name}
+                            </div>
+                        </td>
+                        <td style="padding: 1rem; color: var(--text-secondary); font-size: 0.9rem;">${m.title || '—'}</td>
+                        <td style="padding: 1rem;"><span class="badge">${m.role_category || '—'}</span></td>
+                        <td style="padding: 1rem; display: flex; gap: 0.5rem;">
+                            <button class="btn btn-ghost btn-sm" onclick="window.editAdminMember('${m.id}')">Edit</button>
+                            <button class="btn btn-ghost btn-sm" style="color:#ef4444;" onclick="window.deleteAdminMember('${m.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                document.getElementById('admin-member-tbody').innerHTML = '<tr><td colspan="4" style="padding: 1rem;">Error loading members.</td></tr>';
+            }
+        }
+
+        window.showMemberEditor = function () {
+            document.getElementById('admin-member-list').classList.add('hidden');
+            document.getElementById('admin-member-editor').classList.remove('hidden');
+            document.getElementById('edit-member-id').value = '';
+            document.getElementById('member-name').value = '';
+            document.getElementById('member-title').value = '';
+            document.getElementById('member-role').value = '';
+            document.getElementById('member-affiliation').value = '';
+            document.getElementById('member-linkedin').value = '';
+            document.getElementById('member-image-file').value = '';
+            document.getElementById('member-editor-heading').innerText = 'Add Member';
+            document.getElementById('member-msg').innerText = '';
+        };
+
+        window.hideMemberEditor = function () {
+            document.getElementById('admin-member-list').classList.remove('hidden');
+            document.getElementById('admin-member-editor').classList.add('hidden');
+        };
+
+        window.editAdminMember = function (id) {
+            const m = window.adminMembers.find(x => x.id === id);
+            if (!m) return;
+            window.showMemberEditor();
+            document.getElementById('member-editor-heading').innerText = 'Edit Member';
+            document.getElementById('edit-member-id').value = m.id;
+            document.getElementById('member-name').value = m.name || '';
+            document.getElementById('member-title').value = m.title || '';
+            document.getElementById('member-role').value = m.role_category || '';
+            document.getElementById('member-affiliation').value = m.affiliation || '';
+            document.getElementById('member-linkedin').value = m.linkedin_url || '';
+        };
+
+        window.saveMember = async function () {
+            const id = document.getElementById('edit-member-id').value;
+            const name = document.getElementById('member-name').value.trim();
+            const role = document.getElementById('member-role').value;
+            const msg = document.getElementById('member-msg');
+            if (!name) { msg.className = 'message error'; msg.innerText = 'Name is required.'; return; }
+            if (!role) { msg.className = 'message error'; msg.innerText = 'Role is required.'; return; }
+            msg.className = 'message'; msg.innerText = 'Saving...';
+
+            let imageUrl = id ? (window.adminMembers.find(m => m.id === id)?.image_url || null) : null;
+            const fileInput = document.getElementById('member-image-file');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileName = `member-${Date.now()}-${file.name}`;
+                const { error: upErr } = await supabase.storage.from('profile-images').upload(fileName, file);
+                if (upErr) { msg.className = 'message error'; msg.innerText = 'Image upload failed.'; return; }
+                const { data: { publicUrl } } = supabase.storage.from('profile-images').getPublicUrl(fileName);
+                imageUrl = publicUrl;
+            }
+
+            const payload = {
+                name,
+                title: document.getElementById('member-title').value.trim() || null,
+                role_category: role,
+                affiliation: document.getElementById('member-affiliation').value.trim() || null,
+                linkedin_url: document.getElementById('member-linkedin').value.trim() || null,
+            };
+            if (imageUrl) payload.image_url = imageUrl;
+
+            try {
+                if (id) {
+                    const { error } = await supabase.from('members').update(payload).eq('id', id);
+                    if (error) throw error;
+                } else {
+                    const { error } = await supabase.from('members').insert([payload]);
+                    if (error) throw error;
+                }
+                msg.className = 'message success'; msg.innerText = '✅ Member saved!';
+                fetchAdminMembers();
+                fetchMembersPublic();
+                setTimeout(() => window.hideMemberEditor(), 1500);
+            } catch (e) {
+                msg.className = 'message error'; msg.innerText = e.message;
+            }
+        };
+
+        window.deleteAdminMember = async function (id) {
+            if (!confirm('Delete this member? This cannot be undone.')) return;
+            const { error } = await supabase.from('members').delete().eq('id', id);
+            if (error) return alert('Delete failed: ' + error.message);
+            fetchAdminMembers();
+            fetchMembersPublic();
+        };
+
+        // ==========================================
+        // ADMIN: NEWS MANAGEMENT
+        // ==========================================
+        window.adminNews = [];
+
+        async function fetchAdminNews() {
+            try {
+                const { data, error } = await supabase.from('news').select('*').order('year', { ascending: false }).order('created_at', { ascending: false });
+                if (error) throw error;
+                window.adminNews = data || [];
+                const tbody = document.getElementById('admin-news-tbody');
+                if (!window.adminNews.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="padding: 1rem;">No news items found.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = window.adminNews.map(n => `
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 1rem; font-weight: 500; max-width: 320px;">${n.title}</td>
+                        <td style="padding: 1rem; color: var(--text-secondary);">${n.month ? n.month + ' ' : ''}${n.year || '—'}</td>
+                        <td style="padding: 1rem;">${n.is_featured ? '<span class="badge" style="background:#fef9c3;color:#854d0e;">⭐ Featured</span>' : '<span style="color:var(--text-muted);font-size:0.85rem;">—</span>'}</td>
+                        <td style="padding: 1rem; display: flex; gap: 0.5rem;">
+                            <button class="btn btn-ghost btn-sm" onclick="window.editAdminNews('${n.id}')">Edit</button>
+                            <button class="btn btn-ghost btn-sm" style="color:#ef4444;" onclick="window.deleteAdminNews('${n.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                document.getElementById('admin-news-tbody').innerHTML = '<tr><td colspan="4" style="padding: 1rem;">Error loading news.</td></tr>';
+            }
+        }
+
+        window.showNewsEditor = function () {
+            document.getElementById('admin-news-list').classList.add('hidden');
+            document.getElementById('admin-news-editor').classList.remove('hidden');
+            document.getElementById('edit-news-id').value = '';
+            document.getElementById('news-title').value = '';
+            document.getElementById('news-description').value = '';
+            document.getElementById('news-month').value = '';
+            document.getElementById('news-year').value = '';
+            document.getElementById('news-tags').value = '';
+            document.getElementById('news-featured').checked = false;
+            document.getElementById('news-editor-heading').innerText = 'Add News Item';
+            document.getElementById('news-msg').innerText = '';
+        };
+
+        window.hideNewsEditor = function () {
+            document.getElementById('admin-news-list').classList.remove('hidden');
+            document.getElementById('admin-news-editor').classList.add('hidden');
+        };
+
+        window.editAdminNews = function (id) {
+            const n = window.adminNews.find(x => x.id === id);
+            if (!n) return;
+            window.showNewsEditor();
+            document.getElementById('news-editor-heading').innerText = 'Edit News Item';
+            document.getElementById('edit-news-id').value = n.id;
+            document.getElementById('news-title').value = n.title || '';
+            document.getElementById('news-description').value = n.description || '';
+            document.getElementById('news-month').value = n.month || '';
+            document.getElementById('news-year').value = n.year || '';
+            document.getElementById('news-tags').value = (n.tags || []).join(', ');
+            document.getElementById('news-featured').checked = !!n.is_featured;
+        };
+
+        window.saveNews = async function () {
+            const id = document.getElementById('edit-news-id').value;
+            const title = document.getElementById('news-title').value.trim();
+            const msg = document.getElementById('news-msg');
+            if (!title) { msg.className = 'message error'; msg.innerText = 'Title is required.'; return; }
+            msg.className = 'message'; msg.innerText = 'Saving...';
+            const tagsRaw = document.getElementById('news-tags').value.trim();
+            const payload = {
+                title,
+                description: document.getElementById('news-description').value.trim() || null,
+                month: document.getElementById('news-month').value.trim() || null,
+                year: parseInt(document.getElementById('news-year').value) || null,
+                tags: tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [],
+                is_featured: document.getElementById('news-featured').checked,
+            };
+            try {
+                if (id) {
+                    const { error } = await supabase.from('news').update(payload).eq('id', id);
+                    if (error) throw error;
+                } else {
+                    const { error } = await supabase.from('news').insert([payload]);
+                    if (error) throw error;
+                }
+                msg.className = 'message success'; msg.innerText = '✅ News item saved!';
+                fetchAdminNews();
+                fetchNewsPublic();
+                setTimeout(() => window.hideNewsEditor(), 1500);
+            } catch (e) {
+                msg.className = 'message error'; msg.innerText = e.message;
+            }
+        };
+
+        window.deleteAdminNews = async function (id) {
+            if (!confirm('Delete this news item? This cannot be undone.')) return;
+            const { error } = await supabase.from('news').delete().eq('id', id);
+            if (error) return alert('Delete failed: ' + error.message);
+            fetchAdminNews();
+            fetchNewsPublic();
         };
 
         // ==========================================
