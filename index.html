@@ -120,7 +120,8 @@
                     <div class="member-filters">
                         <button class="filter-btn active" data-filter="all">All</button>
                         <button class="filter-btn" data-filter="director">Co-Directors</button>
-                        <button class="filter-btn" data-filter="collaborator">Collaborators</button>
+                        <button class="filter-btn" data-filter="collaborator">External Collaborators</button>
+                        <button class="filter-btn" data-filter="industry_collaborator">Industry Collaborators</button>
                         <button class="filter-btn" data-filter="phd">PhD Students</button>
                         <button class="filter-btn" data-filter="ms">MS Students</button>
                         <button class="filter-btn" data-filter="alumni">Alumni</button>
@@ -143,6 +144,15 @@
                         <div class="members-tier-divider"><span><i class="fa-solid fa-handshake"
                                     style="margin-right:0.4rem;"></i>External Collaborators</span></div>
                         <div class="universal-member-grid" id="collaborators-grid">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Tier 2.5: Industry Collaborators -->
+                    <div id="industry-collaborators-wrapper" style="margin-top: 3rem;">
+                        <div class="members-tier-divider"><span><i class="fa-solid fa-briefcase"
+                                    style="margin-right:0.4rem;"></i>Industry Collaborators</span></div>
+                        <div class="universal-member-grid" id="industry-collaborators-grid">
                             <!-- Injected via JS -->
                         </div>
                     </div>

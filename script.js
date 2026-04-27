@@ -420,7 +420,7 @@ async function fetchMembersPublic() {
     members.push({
         id: 'manual-dipayanbanik',
         name: 'Dipayan Banik',
-        role_category: 'collaborator',
+        role_category: 'industry_collaborator',
         title: 'Engineer II',
         affiliation: 'Danovo Energy Solutions',
         image_url: 'assets/dipayanbanik.png',
@@ -432,8 +432,8 @@ async function fetchMembersPublic() {
 
     loadedMembers = members; // Store for jobs to access
 
-    const roleLabel = { director: 'Co-Director', collaborator: 'External Collaborator', phd: 'PhD Student', ms: 'MS Student', alumni: 'Alumni' };
-    const roleCss = { director: 'role-director', collaborator: 'role-collaborator', phd: 'role-phd', ms: 'role-ms', alumni: 'role-alumni' };
+    const roleLabel = { director: 'Co-Director', collaborator: 'External Collaborator', industry_collaborator: 'Industry Collaborator', phd: 'PhD Student', ms: 'MS Student', alumni: 'Alumni' };
+    const roleCss = { director: 'role-director', collaborator: 'role-collaborator', industry_collaborator: 'role-collaborator', phd: 'role-phd', ms: 'role-ms', alumni: 'role-alumni' };
 
     const avatarSrc = (m) => m.image_url
         || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true`;
@@ -505,7 +505,8 @@ async function fetchMembersPublic() {
     };
 
     const collaborators = members.filter(m => m.role_category === 'collaborator');
-    const students = members.filter(m => m.role_category !== 'director' && m.role_category !== 'collaborator');
+    const industryCollaborators = members.filter(m => m.role_category === 'industry_collaborator');
+    const students = members.filter(m => m.role_category !== 'director' && m.role_category !== 'collaborator' && m.role_category !== 'industry_collaborator');
 
     // Render directors row
     const dirGrid = document.getElementById('co-directors-grid');
@@ -525,6 +526,16 @@ async function fetchMembersPublic() {
             document.getElementById('collaborators-wrapper').style.display = '';
         } else {
             document.getElementById('collaborators-wrapper').style.display = 'none';
+        }
+    }
+
+    const indColGrid = document.getElementById('industry-collaborators-grid');
+    if (indColGrid) {
+        if (industryCollaborators.length) {
+            indColGrid.innerHTML = industryCollaborators.map(c => renderCard(c)).join('');
+            document.getElementById('industry-collaborators-wrapper').style.display = '';
+        } else {
+            document.getElementById('industry-collaborators-wrapper').style.display = 'none';
         }
     }
 
