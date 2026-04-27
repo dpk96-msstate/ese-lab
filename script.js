@@ -417,6 +417,19 @@ async function fetchMembersPublic() {
         website_url: ''
     });
 
+    members.push({
+        id: 'manual-dipayanbanik',
+        name: 'Dipayan Banik',
+        role_category: 'collaborator',
+        title: 'Engineer II',
+        affiliation: 'Danovo Energy Solutions',
+        image_url: 'assets/dipayanbanik.png',
+        google_scholar_url: 'https://scholar.google.com/citations?hl=en&user=tGI5rHoAAAAJ',
+        linkedin_url: 'https://www.linkedin.com/in/banik42/',
+        github_url: '',
+        website_url: ''
+    });
+
     loadedMembers = members; // Store for jobs to access
 
     const roleLabel = { director: 'Co-Director', collaborator: 'External Collaborator', phd: 'PhD Student', ms: 'MS Student', alumni: 'Alumni' };
