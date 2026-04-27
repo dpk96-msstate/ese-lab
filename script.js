@@ -404,6 +404,19 @@ async function fetchMembersPublic() {
     ]);
     if (mErr || !members) return;
 
+    members.push({
+        id: 'manual-kmferdous',
+        name: 'K M Ferdous',
+        role_category: 'ms',
+        title: 'MS Student',
+        affiliation: 'Kennesaw State University',
+        image_url: 'assets/kmferdous.png',
+        google_scholar_url: 'https://scholar.google.com/citations?hl=en&user=azMCBGIAAAAJ',
+        linkedin_url: 'https://www.linkedin.com/in/kmferdous/',
+        github_url: '',
+        website_url: ''
+    });
+
     loadedMembers = members; // Store for jobs to access
 
     const roleLabel = { director: 'Co-Director', collaborator: 'External Collaborator', phd: 'PhD Student', ms: 'MS Student', alumni: 'Alumni' };
@@ -432,6 +445,7 @@ async function fetchMembersPublic() {
         if (!memberDirNames[r.member_id]) memberDirNames[r.member_id] = [];
         if (dirMap[r.director_id]) memberDirNames[r.member_id].push(dirMap[r.director_id]);
     });
+    memberDirNames['manual-kmferdous'] = ['Dr. Shazibul Islam Shamim'];
 
     // Universal vertical card renderer
     const renderCard = (m) => {
@@ -514,40 +528,95 @@ async function fetchMembersPublic() {
 }
 
 async function fetchPublicationsPublic() {
-    const { data, error } = await supabase.from('publications').select('*').order('year', { ascending: false });
-    if (error || !data) return;
-    allPublications = data;
+    let supabaseData = [];
+    try {
+        const { data, error } = await supabase.from('publications').select('*').order('year', { ascending: false });
+        if (!error && data) {
+            supabaseData = data;
+        }
+    } catch (e) {
+        console.error(e);
+    }
+
+    const hardcoded2026 = [
+        {
+            title: 'From Industry Claims to Empirical Reality: An Empirical Study of Code Review Agents in Pull Requests',
+            authors: 'Kowshik Chowdhury, Dipayan Banik, K M Ferdous, Shazibul Islam Shamim',
+            venue: '2026 IEEE/ACM International Conference on Mining Software Repositories (MSR)',
+            year: 2026,
+            doi: '10.1145/3793302.3793614',
+            preprint: 'https://arxiv.org/abs/2604.03196',
+            customTag: ''
+        },
+        {
+            title: 'Safer Builders, Risky Maintainers: A Comparative Study of Breaking Changes in Human vs Agentic PRs',
+            authors: 'K M Ferdous, Dipayan Banik, Kowshik Chowdhury, Shazibul Islam Shamim',
+            venue: '2026 IEEE/ACM International Conference on Mining Software Repositories (MSR)',
+            year: 2026,
+            doi: '10.1145/3793302.3793610',
+            preprint: 'https://arxiv.org/abs/2603.27524',
+            customTag: '<span style="background:#2563eb;color:white;font-size:0.75rem;padding:0.2rem 0.5rem;border-radius:4px;margin-left:0.5rem;"><i class="fa-solid fa-award"></i> Distinguished Paper Award</span>'
+        },
+        {
+            title: 'Breaking the Dependency Chaos: A Constraint-Driven Python Dependency Resolution Strategy with Selective LLM Imputation',
+            authors: 'Kowshik Chowdhury, Dipayan Banik, Shazibul Islam Shamim',
+            venue: '2026 ACM International Conference on the Foundations of Software Engineering (FSE)',
+            year: 2026,
+            doi: '',
+            preprint: '',
+            customTag: '<span style="background:#e2e8f0;color:#334155;font-size:0.75rem;padding:0.2rem 0.5rem;border-radius:4px;margin-left:0.5rem;"><i class="fa-solid fa-clock"></i> Pre-print available soon</span>'
+        }
+    ];
+
+    allPublications = [...hardcoded2026, ...supabaseData];
 
     const pubGrid = document.getElementById('publicationsGrid');
     const viewAllWrapper = document.getElementById('pubs-view-all-wrapper');
 
-    if (data.length === 0) {
-        if (pubGrid) pubGrid.innerHTML = '<div style="text-align: center; color: var(--text-muted);">No publications yet.</div>';
-        if (viewAllWrapper) viewAllWrapper.style.display = 'none';
-        return;
-    }
-
     if (pubGrid) {
-        const renderItem = p => `
+        pubGrid.innerHTML = allPublications.slice(0, 4).map(p => `
             <div class="pub-item">
                 <div class="pub-year-badge">${p.year || '—'}</div>
                 <div class="pub-content">
-                    <h4>${p.title}</h4>
-                    <div style="color: var(--text-primary); font-weight: 500;">${p.authors}</div>
+                    <div style="display:flex;align-items:flex-start;gap:0.5rem;flex-wrap:wrap;">
+                        <h4 style="margin:0;">${p.title}</h4>
+                        ${p.customTag || ''}
+                    </div>
+                    <div style="color: var(--text-primary); font-weight: 500; margin-top:0.5rem;">${p.authors}</div>
                     <div class="pub-meta">
                         ${p.venue ? `<span><i class="fa-solid fa-book-open"></i> ${p.venue}</span>` : ''}
                         ${p.doi ? `<span><a href="${p.doi.startsWith('http') ? p.doi : 'https://doi.org/' + p.doi}" target="_blank"><i class="fa-solid fa-link"></i> DOI</a></span>` : ''}
+                        ${p.preprint ? `<span><a href="${p.preprint}" target="_blank"><i class="fa-solid fa-file-pdf"></i> Pre-print</a></span>` : ''}
                     </div>
                 </div>
-            </div>`;
-
-        pubGrid.innerHTML = data.slice(0, 4).map(renderItem).join('');
+            </div>`).join('');
     }
 
     if (viewAllWrapper) {
-        viewAllWrapper.style.display = data.length <= 4 ? 'none' : '';
+        viewAllWrapper.style.display = allPublications.length <= 4 ? 'none' : '';
     }
 }
+
+window.renderAllPublications = function() {
+    const grid = document.getElementById('all-publications-grid');
+    if (!grid) return;
+    grid.innerHTML = allPublications.map(p => `
+            <div class="pub-item">
+                <div class="pub-year-badge">${p.year || '—'}</div>
+                <div class="pub-content">
+                    <div style="display:flex;align-items:flex-start;gap:0.5rem;flex-wrap:wrap;">
+                        <h4 style="margin:0;">${p.title}</h4>
+                        ${p.customTag || ''}
+                    </div>
+                    <div style="color: var(--text-primary); font-weight: 500; margin-top:0.5rem;">${p.authors}</div>
+                    <div class="pub-meta">
+                        ${p.venue ? `<span><i class="fa-solid fa-book-open"></i> ${p.venue}</span>` : ''}
+                        ${p.doi ? `<span><a href="${p.doi.startsWith('http') ? p.doi : 'https://doi.org/' + p.doi}" target="_blank"><i class="fa-solid fa-link"></i> DOI</a></span>` : ''}
+                        ${p.preprint ? `<span><a href="${p.preprint}" target="_blank"><i class="fa-solid fa-file-pdf"></i> Pre-print</a></span>` : ''}
+                    </div>
+                </div>
+            </div>`).join('');
+};
 
 // ==========================================
 // ADMIN DASHBOARD LOGIC
