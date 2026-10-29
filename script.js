@@ -1,4 +1,5 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/+esm';
+import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.4.16/+esm';
 
 // ==========================================
 // SUPABASE CONFIGURATION
@@ -18,6 +19,67 @@ let allJobs = [];
 let loadedMembers = [];
 const TAG_COLORS = ['#eff6ff', '#f0fdf4', '#fef9c3', '#fdf2f8', '#fff7ed'];
 const TAG_TEXT = ['#1d4ed8', '#15803d', '#854d0e', '#9d174d', '#c2410c'];
+const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+
+// ==========================================
+// SAFE RENDERING HELPERS
+// ==========================================
+// Everything from the database is escaped or sanitized before it goes into innerHTML.
+function esc(value) {
+    return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// Rich text from the Quill editors (blog content, news/job descriptions)
+function safeHtml(html) {
+    return DOMPurify.sanitize(html || '', { ADD_ATTR: ['target'] });
+}
+
+// Only allow http(s) links; anything else (javascript:, data:, ...) is dropped
+function safeUrl(url) {
+    if (!url) return '';
+    try {
+        const u = new URL(url, window.location.href);
+        return u.protocol === 'http:' || u.protocol === 'https:' ? u.href : '';
+    } catch {
+        return '';
+    }
+}
+
+// Plain text of an HTML string (DOMParser does not run scripts or load images)
+function htmlToText(html) {
+    return new DOMParser().parseFromString(html || '', 'text/html').body.textContent || '';
+}
+
+function excerptOf(html, length) {
+    const text = htmlToText(html).trim();
+    return text.length > length ? text.substring(0, length) + '…' : text;
+}
+
+function readTimeOf(html) {
+    const words = htmlToText(html).split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.ceil(words / 200));
+}
+
+function avatarFallback(name, size = 200) {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Lab')}&size=${size}&background=dbeafe&color=1d4ed8&bold=true`;
+}
+
+// Uploads an image to the public bucket and returns its public URL
+async function uploadImage(prefix, file) {
+    if (!IMAGE_TYPES.includes(file.type)) throw new Error('Image must be JPEG, PNG, WebP or GIF.');
+    if (file.size > MAX_IMAGE_BYTES) throw new Error('Image must be 5 MB or smaller.');
+    const ext = file.name.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g, '') || 'img';
+    const fileName = `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error } = await supabase.storage.from('profile-images').upload(fileName, file, { contentType: file.type });
+    if (error) throw new Error('Image upload failed: ' + error.message);
+    return supabase.storage.from('profile-images').getPublicUrl(fileName).data.publicUrl;
+}
+
+// RLS silently skips rows a user may not change, so check that something was actually written
+function assertChanged(data) {
+    if (!data || data.length === 0) throw new Error('Nothing was changed. Your account may not have editor access.');
+}
 
 // ==========================================
 // INITIALIZATION
@@ -84,6 +146,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.currentUser = session.user;
         updateNavbarLoginState(true);
     }
+
+    // Keep UI in sync when the session expires or is ended in another tab
+    supabase.auth.onAuthStateChange((event, session) => {
+        window.currentUser = session?.user || null;
+        updateNavbarLoginState(!!session);
+        if (event === 'SIGNED_OUT') window.closeAdmin();
+    });
+
+    // Submit the login form with Enter
+    ['admin-email', 'admin-password'].forEach(id => {
+        document.getElementById(id)?.addEventListener('keydown', e => {
+            if (e.key === 'Enter') window.handleLogin();
+        });
+    });
 
     // Init Admin Editors
     quillEditor = new Quill('#quill-editor', {
@@ -172,27 +248,27 @@ window.copyUrl = function () {
 // RENDERERS & DATA FETCHING
 // ==========================================
 function renderBlogCard(post) {
-    const wordCount = post.content.replace(/<[^>]+>/g, '').split(/\s+/).length;
-    const readTime = Math.max(1, Math.ceil(wordCount / 200));
+    const readTime = readTimeOf(post.content);
     const dateStr = new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    const excerpt = post.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...';
+    const excerpt = excerptOf(post.content, 150);
+    const cover = safeUrl(post.image_url);
 
     return `
-    <article class="blog-card" onclick="window.openBlogReader('${post.id}')">
-        ${post.image_url ? `<div class="blog-image"><img src="${post.image_url}" alt="Cover"></div>` : '<div class="blog-image"><div style="color:var(--accent);opacity:0.4;font-size:3rem;"><i class="fa-solid fa-pen-nib"></i></div></div>'}
+    <article class="blog-card" onclick="window.openBlogReader('${esc(post.id)}')">
+        ${cover ? `<div class="blog-image"><img src="${esc(cover)}" alt="Cover" loading="lazy"></div>` : '<div class="blog-image"><div style="color:var(--accent);opacity:0.4;font-size:3rem;"><i class="fa-solid fa-pen-nib"></i></div></div>'}
         <div class="blog-content">
             <div class="blog-meta">
-                <span>${post.category || 'Research'}</span>
+                <span>${esc(post.category || 'Research')}</span>
                 <span>${readTime} min read</span>
             </div>
-            <h3 class="blog-title">${post.title}</h3>
-            <p class="blog-excerpt">${excerpt}</p>
+            <h3 class="blog-title">${esc(post.title)}</h3>
+            <p class="blog-excerpt">${esc(excerpt)}</p>
             <div class="blog-footer">
                 <div class="blog-author-avatar">
-                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(post.author_name || 'Lab')}&background=f8fafc&color=0f172a">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(post.author_name || 'Lab')}&background=f8fafc&color=0f172a" alt="">
                 </div>
                 <div class="blog-author-info">
-                    <div class="blog-author-name">${post.author_name || 'Lab Member'}</div>
+                    <div class="blog-author-name">${esc(post.author_name || 'Lab Member')}</div>
                     <div style="color: var(--text-muted); font-size: 0.75rem;">${dateStr}</div>
                 </div>
             </div>
@@ -235,15 +311,15 @@ window.openBlogReader = function (id) {
 
     document.getElementById('reader-title').innerText = post.title;
     document.getElementById('reader-category').innerText = post.category || 'Article';
-    document.getElementById('reader-content').innerHTML = post.content;
+    document.getElementById('reader-content').innerHTML = safeHtml(post.content);
     const d = new Date(post.created_at);
     document.getElementById('reader-date').innerText = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    const wordCount = post.content.replace(/<[^>]+>/g, '').split(/\s+/).length;
-    document.getElementById('reader-read-time').innerHTML = `<i class="fa-regular fa-clock"></i> ${Math.max(1, Math.ceil(wordCount / 200))} min read`;
+    document.getElementById('reader-read-time').innerHTML = `<i class="fa-regular fa-clock"></i> ${readTimeOf(post.content)} min read`;
 
     const coverEl = document.getElementById('reader-cover');
-    if (post.image_url) { coverEl.src = post.image_url; coverEl.classList.remove('hidden'); }
+    const cover = safeUrl(post.image_url);
+    if (cover) { coverEl.src = cover; coverEl.classList.remove('hidden'); }
     else { coverEl.classList.add('hidden'); }
 
     document.getElementById('reader-author-name').innerText = post.author_name || 'Lab Member';
@@ -252,26 +328,27 @@ window.openBlogReader = function (id) {
 };
 
 function renderTagsHtml(tags) {
-    return (tags || []).map((t, i) => `<span class="news-tag" style="background:${TAG_COLORS[i % TAG_COLORS.length]};color:${TAG_TEXT[i % TAG_TEXT.length]};">${t}</span>`).join('');
+    return (tags || []).map((t, i) => `<span class="news-tag" style="background:${TAG_COLORS[i % TAG_COLORS.length]};color:${TAG_TEXT[i % TAG_TEXT.length]};">${esc(t)}</span>`).join('');
 }
 
 function renderNewsCard(n) {
     const dateStr = [n.month, n.year].filter(Boolean).join(' ') || '';
-    const excerpt = n.description ? n.description.replace(/<[^>]+>/g, '').substring(0, 120) + (n.description.length > 120 ? '…' : '') : '';
+    const excerpt = excerptOf(n.description, 120);
     const featuredBadge = n.is_featured ? '<div style="position:absolute;top:0;right:1rem;background:var(--accent);color:white;font-size:0.7rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:0 0 6px 6px;letter-spacing:0.05em;z-index:2;">FEATURED</div>' : '';
-    const imagePart = n.image_url ? `<div class="news-card-image"><img src="${n.image_url}" alt="" loading="lazy"></div>` : `<div class="news-card-image"><div class="news-card-image-placeholder"><i class="fa-regular fa-newspaper"></i></div></div>`;
+    const image = safeUrl(n.image_url);
+    const imagePart = image ? `<div class="news-card-image"><img src="${esc(image)}" alt="" loading="lazy"></div>` : `<div class="news-card-image"><div class="news-card-image-placeholder"><i class="fa-regular fa-newspaper"></i></div></div>`;
 
     return `
-    <div class="news-card${n.is_featured ? ' featured-card' : ''}" onclick="window.openModal('news', '${n.id}')">
+    <div class="news-card${n.is_featured ? ' featured-card' : ''}" onclick="window.openModal('news', '${esc(n.id)}')">
         ${featuredBadge}
         ${imagePart}
         <div class="news-card-body">
-            ${dateStr ? `<div class="news-card-date"><i class="fa-regular fa-calendar"></i>${dateStr}</div>` : ''}
-            <div class="news-card-title">${n.title}</div>
-            ${excerpt ? `<div class="news-card-excerpt">${excerpt}</div>` : ''}
+            ${dateStr ? `<div class="news-card-date"><i class="fa-regular fa-calendar"></i>${esc(dateStr)}</div>` : ''}
+            <div class="news-card-title">${esc(n.title)}</div>
+            ${excerpt ? `<div class="news-card-excerpt">${esc(excerpt)}</div>` : ''}
             <div class="news-card-footer">
                 <div style="display:flex;flex-wrap:wrap;gap:0.35rem;">${renderTagsHtml(n.tags)}</div>
-                <button class="news-read-btn" onclick="event.stopPropagation();window.openModal('news', '${n.id}')">
+                <button class="news-read-btn" onclick="event.stopPropagation();window.openModal('news', '${esc(n.id)}')">
                     Read Story <i class="fa-solid fa-arrow-right" style="font-size:0.75rem;"></i>
                 </button>
             </div>
@@ -324,10 +401,11 @@ window.openModal = function (type, id) {
         titleEl.innerText = n.title;
         tagsEl.innerHTML = renderTagsHtml(n.tags);
 
-        if (n.description) descEl.innerHTML = n.description.trim().startsWith('<') ? n.description : `<p>${n.description}</p>`;
+        if (n.description) descEl.innerHTML = n.description.trim().startsWith('<') ? safeHtml(n.description) : `<p>${esc(n.description)}</p>`;
         else descEl.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">No further details available.</p>';
 
-        if (n.image_url) { imgEl.src = n.image_url; imgEl.classList.remove('hidden'); }
+        const image = safeUrl(n.image_url);
+        if (image) { imgEl.src = image; imgEl.classList.remove('hidden'); }
         else imgEl.classList.add('hidden');
     } else if (type === 'job') {
         const job = allJobs.find(x => x.id === id);
@@ -340,10 +418,10 @@ window.openModal = function (type, id) {
 
         tagsEl.innerHTML = `<span class="news-tag" style="background:#eff6ff;color:#1d4ed8;">Open Position</span>`;
         if (advisor) {
-            tagsEl.innerHTML += `<span class="news-tag" style="background:#f3e8ff;color:#7e22ce;"><i class="fa-solid fa-user-tie" style="margin-right:4px;"></i>${advisor.name}</span>`;
+            tagsEl.innerHTML += `<span class="news-tag" style="background:#f3e8ff;color:#7e22ce;"><i class="fa-solid fa-user-tie" style="margin-right:4px;"></i>${esc(advisor.name)}</span>`;
         }
 
-        descEl.innerHTML = job.description || '<p>No description provided.</p>';
+        descEl.innerHTML = job.description ? safeHtml(job.description) : '<p>No description provided.</p>';
         imgEl.classList.add('hidden'); // Jobs generally don't have images in this schema
     }
 
@@ -370,21 +448,21 @@ async function fetchJobsPublic() {
         }
 
         grid.innerHTML = allJobs.map(job => {
-            const excerpt = job.description ? job.description.replace(/<[^>]+>/g, '').substring(0, 160) + '...' : '';
+            const excerpt = excerptOf(job.description, 160);
             const advisor = loadedMembers.find(m => m.id === job.advisor_id);
             const advisorName = advisor ? advisor.name : 'SERA Lab';
 
             return `
-            <div class="job-card" onclick="window.openModal('job', '${job.id}')">
+            <div class="job-card" onclick="window.openModal('job', '${esc(job.id)}')">
                 <div class="job-card-header">
                     <div class="job-card-meta">
-                        <i class="fa-solid fa-user-tie"></i> Hiring Advisor: ${advisorName}
+                        <i class="fa-solid fa-user-tie"></i> Hiring Advisor: ${esc(advisorName)}
                     </div>
-                    <h3 class="job-card-title">${job.title}</h3>
+                    <h3 class="job-card-title">${esc(job.title)}</h3>
                 </div>
                 <div class="job-card-body">
-                    <div class="job-card-excerpt">${excerpt}</div>
-                    <button class="job-read-btn" onclick="event.stopPropagation(); window.openModal('job', '${job.id}')">
+                    <div class="job-card-excerpt">${esc(excerpt)}</div>
+                    <button class="job-read-btn" onclick="event.stopPropagation(); window.openModal('job', '${esc(job.id)}')">
                         View Details & Apply <i class="fa-solid fa-arrow-right" style="font-size:0.75rem;"></i>
                     </button>
                 </div>
@@ -402,22 +480,30 @@ async function fetchMembersPublic() {
         supabase.from('members').select('*').order('name'),
         supabase.from('member_directors').select('*')
     ]);
-    if (mErr || !members) return;
+    if (mErr || !members) {
+        const dirGrid = document.getElementById('co-directors-grid');
+        if (dirGrid) dirGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);">Could not load lab members. Please try again later.</div>';
+        return;
+    }
 
     loadedMembers = members; // Store for jobs to access
 
     const roleLabel = { director: 'Co-Director', collaborator: 'External Collaborator', phd: 'PhD Student', ms: 'MS Student', alumni: 'Alumni' };
     const roleCss = { director: 'role-director', collaborator: 'role-collaborator', phd: 'role-phd', ms: 'role-ms', alumni: 'role-alumni' };
 
-    const avatarSrc = (m) => m.image_url
-        || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true`;
+    const avatarSrc = (m) => safeUrl(m.image_url) || avatarFallback(m.name);
 
     const socialLinks = (m) => {
-        const links = [];
-        if (m.website_url) links.push(`<a href="${m.website_url}" target="_blank" rel="noopener" title="Personal Website" class="member-social-link" style="--icon-color:#0ea5e9;"><i class="fa-solid fa-globe"></i></a>`);
-        if (m.linkedin_url) links.push(`<a href="${m.linkedin_url}" target="_blank" rel="noopener" title="LinkedIn" class="member-social-link" style="--icon-color:#0077b5;"><i class="fa-brands fa-linkedin-in"></i></a>`);
-        if (m.google_scholar_url) links.push(`<a href="${m.google_scholar_url}" target="_blank" rel="noopener" title="Google Scholar" class="member-social-link" style="--icon-color:#4285f4;"><i class="fa-brands fa-google"></i></a>`);
-        if (m.github_url) links.push(`<a href="${m.github_url}" target="_blank" rel="noopener" title="GitHub" class="member-social-link" style="--icon-color:#24292f;"><i class="fa-brands fa-github"></i></a>`);
+        const link = (url, title, color, icon) => {
+            const href = safeUrl(url);
+            return href ? `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer" title="${title}" class="member-social-link" style="--icon-color:${color};"><i class="${icon}"></i></a>` : '';
+        };
+        const links = [
+            link(m.website_url, 'Personal Website', '#0ea5e9', 'fa-solid fa-globe'),
+            link(m.linkedin_url, 'LinkedIn', '#0077b5', 'fa-brands fa-linkedin-in'),
+            link(m.google_scholar_url, 'Google Scholar', '#4285f4', 'fa-brands fa-google'),
+            link(m.github_url, 'GitHub', '#24292f', 'fa-brands fa-github'),
+        ].filter(Boolean);
         if (!links.length) return '';
         return `<div class="member-social-links-v">${links.join('')}</div>`;
     };
@@ -443,15 +529,15 @@ async function fetchMembersPublic() {
         if (m.role_category !== 'director' && m.role_category !== 'collaborator') {
             const supervisors = memberDirNames[m.id];
             if (supervisors && supervisors.length) {
-                advisorHtml = `<div class="member-affiliation-v"><i class="fa-solid fa-user-tie" style="font-size:0.7rem;margin-right:4px;opacity:0.6;"></i>Advised by ${supervisors.join(', ')}</div>`;
+                advisorHtml = `<div class="member-affiliation-v"><i class="fa-solid fa-user-tie" style="font-size:0.7rem;margin-right:4px;opacity:0.6;"></i>Advised by ${esc(supervisors.join(', '))}</div>`;
             }
         }
 
         let contactHtml = '';
         if (m.email || m.contact_number) {
             contactHtml += `<div class="member-contact-info">`;
-            if (m.email) contactHtml += `<a href="mailto:${m.email}" class="member-contact-link"><i class="fa-solid fa-envelope" style="margin-right:4px;opacity:0.7;"></i>${m.email}</a>`;
-            if (m.contact_number) contactHtml += `<a href="tel:${m.contact_number}" class="member-contact-link"><i class="fa-solid fa-phone" style="margin-right:4px;opacity:0.7;"></i>${m.contact_number}</a>`;
+            if (m.email) contactHtml += `<a href="mailto:${esc(encodeURI(m.email))}" class="member-contact-link"><i class="fa-solid fa-envelope" style="margin-right:4px;opacity:0.7;"></i>${esc(m.email)}</a>`;
+            if (m.contact_number) contactHtml += `<a href="tel:${esc(m.contact_number.replace(/[^\d+]/g, ''))}" class="member-contact-link"><i class="fa-solid fa-phone" style="margin-right:4px;opacity:0.7;"></i>${esc(m.contact_number)}</a>`;
             contactHtml += `</div>`;
         }
 
@@ -460,16 +546,16 @@ async function fetchMembersPublic() {
         if (m.role_category === 'collaborator') borderClass = 'border-collaborator';
 
         return `
-        <div class="member-card-v ${borderClass}" data-role="${m.role_category || ''}">
+        <div class="member-card-v ${borderClass}" data-role="${esc(m.role_category)}">
             <div class="member-avatar-v">
-                <img src="${avatarSrc(m)}" alt="${m.name}"
-                     onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=200&background=dbeafe&color=1d4ed8&bold=true'">
+                <img src="${esc(avatarSrc(m))}" alt="${esc(m.name)}" loading="lazy"
+                     data-fallback="${esc(avatarFallback(m.name))}" onerror="this.onerror=null;this.src=this.dataset.fallback">
             </div>
             <div class="member-info-v">
-                <span class="member-role-badge ${css}">${label}</span>
-                <div class="member-name-v">${m.name}</div>
-                <div class="member-title-v">${displayTitle}</div>
-                ${m.affiliation ? `<div class="member-affiliation-v"><i class="fa-solid fa-building-columns" style="font-size:0.7rem;margin-right:4px;opacity:0.6;"></i>${m.affiliation}</div>` : ''}
+                <span class="member-role-badge ${css}">${esc(label)}</span>
+                <div class="member-name-v">${esc(m.name)}</div>
+                <div class="member-title-v">${esc(displayTitle)}</div>
+                ${m.affiliation ? `<div class="member-affiliation-v"><i class="fa-solid fa-building-columns" style="font-size:0.7rem;margin-right:4px;opacity:0.6;"></i>${esc(m.affiliation)}</div>` : ''}
                 ${advisorHtml}
                 ${contactHtml}
                 ${socialLinks(m)}
@@ -513,13 +599,40 @@ async function fetchMembersPublic() {
     }
 }
 
-async function fetchPublicationsPublic() {
-    const { data, error } = await supabase.from('publications').select('*').order('year', { ascending: false });
-    if (error || !data) return;
-    allPublications = data;
+function renderPubItem(p) {
+    const doiHref = p.doi ? safeUrl(p.doi.startsWith('http') ? p.doi : 'https://doi.org/' + p.doi) : '';
+    return `
+        <div class="pub-item">
+            <div class="pub-year-badge">${esc(p.year || '—')}</div>
+            <div class="pub-content">
+                <h4>${esc(p.title)}</h4>
+                <div style="color: var(--text-primary); font-weight: 500;">${esc(p.authors)}</div>
+                <div class="pub-meta">
+                    ${p.venue ? `<span><i class="fa-solid fa-book-open"></i> ${esc(p.venue)}</span>` : ''}
+                    ${doiHref ? `<span><a href="${esc(doiHref)}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-link"></i> DOI</a></span>` : ''}
+                </div>
+            </div>
+        </div>`;
+}
 
+function renderAllPublications() {
+    const grid = document.getElementById('all-publications-grid');
+    if (!grid) return;
+    grid.innerHTML = allPublications.length
+        ? allPublications.map(renderPubItem).join('')
+        : '<div style="text-align:center;color:var(--text-muted);">No publications yet.</div>';
+}
+
+async function fetchPublicationsPublic() {
     const pubGrid = document.getElementById('publicationsGrid');
     const viewAllWrapper = document.getElementById('pubs-view-all-wrapper');
+
+    const { data, error } = await supabase.from('publications').select('*').order('year', { ascending: false });
+    if (error || !data) {
+        if (pubGrid) pubGrid.innerHTML = '<div style="text-align: center; color: var(--text-muted);">Could not load publications.</div>';
+        return;
+    }
+    allPublications = data;
 
     if (data.length === 0) {
         if (pubGrid) pubGrid.innerHTML = '<div style="text-align: center; color: var(--text-muted);">No publications yet.</div>';
@@ -527,22 +640,7 @@ async function fetchPublicationsPublic() {
         return;
     }
 
-    if (pubGrid) {
-        const renderItem = p => `
-            <div class="pub-item">
-                <div class="pub-year-badge">${p.year || '—'}</div>
-                <div class="pub-content">
-                    <h4>${p.title}</h4>
-                    <div style="color: var(--text-primary); font-weight: 500;">${p.authors}</div>
-                    <div class="pub-meta">
-                        ${p.venue ? `<span><i class="fa-solid fa-book-open"></i> ${p.venue}</span>` : ''}
-                        ${p.doi ? `<span><a href="${p.doi.startsWith('http') ? p.doi : 'https://doi.org/' + p.doi}" target="_blank"><i class="fa-solid fa-link"></i> DOI</a></span>` : ''}
-                    </div>
-                </div>
-            </div>`;
-
-        pubGrid.innerHTML = data.slice(0, 4).map(renderItem).join('');
-    }
+    if (pubGrid) pubGrid.innerHTML = data.slice(0, 4).map(renderPubItem).join('');
 
     if (viewAllWrapper) {
         viewAllWrapper.style.display = data.length <= 4 ? 'none' : '';
@@ -575,10 +673,14 @@ window.handleLogin = async function () {
     const msg = document.getElementById('admin-msg');
     msg.innerText = "Authenticating...";
 
+    if (!email || !password) { msg.innerText = 'Enter your email and password.'; return; }
+
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
         msg.innerText = error.message;
     } else {
+        msg.innerText = '';
+        document.getElementById('admin-password').value = '';
         window.currentUser = data.user;
         updateNavbarLoginState(true);
         document.getElementById('admin-login-screen').classList.add('hidden');
@@ -631,8 +733,8 @@ async function fetchAdminBlogs() {
 
         tbody.innerHTML = data.map(b => `
         <tr style="border-bottom: 1px solid var(--border);">
-            <td style="padding: 1rem; font-weight: 500;">${b.title}</td>
-            <td style="padding: 1rem;"><span class="badge" style="background: ${b.status === 'published' ? '#dcfce7' : '#f1f5f9'}; color: ${b.status === 'published' ? '#166534' : '#475569'};">${b.status}</span></td>
+            <td style="padding: 1rem; font-weight: 500;">${esc(b.title)}</td>
+            <td style="padding: 1rem;"><span class="badge" style="background: ${b.status === 'published' ? '#dcfce7' : '#f1f5f9'}; color: ${b.status === 'published' ? '#166534' : '#475569'};">${esc(b.status)}</span></td>
             <td style="padding: 1rem; color: var(--text-muted);">${new Date(b.created_at).toLocaleDateString()}</td>
             <td style="padding: 1rem; display: flex; gap: 0.5rem;">
                 <button class="btn btn-ghost btn-sm" onclick="window.editAdminBlog('${b.id}')">Edit</button>
@@ -655,6 +757,7 @@ window.showBlogEditor = function () {
     document.getElementById('post-title').value = '';
     document.getElementById('post-category').value = '';
     document.getElementById('post-tags').value = '';
+    document.getElementById('post-cover').value = '';
     quillEditor.root.innerHTML = '';
     document.getElementById('editor-title-heading').innerText = 'Create New Post';
     document.getElementById('post-msg').innerText = '';
@@ -675,7 +778,7 @@ window.editAdminBlog = function (id) {
     document.getElementById('post-title').value = post.title;
     document.getElementById('post-category').value = post.category || '';
     document.getElementById('post-tags').value = (post.tags || []).join(', ');
-    quillEditor.root.innerHTML = post.content || '';
+    quillEditor.root.innerHTML = safeHtml(post.content);
 };
 
 window.savePost = async function (status) {
@@ -692,33 +795,25 @@ window.savePost = async function (status) {
 
     msg.className = "message"; msg.innerText = "Saving post...";
 
-    let imageUrl = null;
-    if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const fileName = `blog-${Date.now()}-${file.name}`;
-        const { error: upErr } = await supabase.storage.from('profile-images').upload(fileName, file);
-        if (upErr) return msg.className = "message error", msg.innerText = "Image upload failed.";
-        const { data: { publicUrl } } = supabase.storage.from('profile-images').getPublicUrl(fileName);
-        imageUrl = publicUrl;
-    }
-
     const payload = {
         title,
         content,
         category,
         status,
-        tags: tagsRaw ? tagsRaw.split(',').map(t => t.trim()) : [],
-        author_id: window.currentUser.id,
-        author_name: window.currentUser.email.split('@')[0]
+        tags: tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [],
     };
 
-    if (imageUrl) payload.image_url = imageUrl;
-
     try {
+        if (fileInput.files.length > 0) payload.image_url = await uploadImage('blog', fileInput.files[0]);
+
         if (id) {
-            const { error } = await supabase.from('blogs').update(payload).eq('id', id);
+            // Editing keeps the original author
+            const { data, error } = await supabase.from('blogs').update(payload).eq('id', id).select('id');
             if (error) throw error;
+            assertChanged(data);
         } else {
+            payload.author_id = window.currentUser.id;
+            payload.author_name = window.currentUser.email.split('@')[0];
             const { error } = await supabase.from('blogs').insert([payload]);
             if (error) throw error;
         }
@@ -734,8 +829,9 @@ window.savePost = async function (status) {
 
 window.deleteAdminBlog = async function (id) {
     if (!confirm('Delete this blog post? This cannot be undone.')) return;
-    const { error } = await supabase.from('blogs').delete().eq('id', id);
+    const { data, error } = await supabase.from('blogs').delete().eq('id', id).select('id');
     if (error) return alert('Delete failed: ' + error.message);
+    if (!data?.length) return alert('Delete failed: your account may not have editor access.');
     fetchAdminBlogs();
     fetchBlogsPublic();
 };
@@ -755,9 +851,9 @@ async function fetchAdminPubs() {
         }
         tbody.innerHTML = window.adminPubs.map(p => `
             <tr style="border-bottom: 1px solid var(--border);">
-                <td style="padding: 1rem; font-weight: 500; max-width: 300px;">${p.title}</td>
-                <td style="padding: 1rem; color: var(--text-secondary); font-size: 0.9rem;">${p.authors || '—'}</td>
-                <td style="padding: 1rem;"><span class="badge">${p.year || '—'}</span></td>
+                <td style="padding: 1rem; font-weight: 500; max-width: 300px;">${esc(p.title)}</td>
+                <td style="padding: 1rem; color: var(--text-secondary); font-size: 0.9rem;">${esc(p.authors || '—')}</td>
+                <td style="padding: 1rem;"><span class="badge">${esc(p.year || '—')}</span></td>
                 <td style="padding: 1rem; display: flex; gap: 0.5rem;">
                     <button class="btn btn-ghost btn-sm" onclick="window.editAdminPub('${p.id}')">Edit</button>
                     <button class="btn btn-ghost btn-sm" style="color:#ef4444;" onclick="window.deleteAdminPub('${p.id}')">Delete</button>
@@ -823,8 +919,9 @@ window.savePub = async function () {
     };
     try {
         if (id) {
-            const { error } = await supabase.from('publications').update(payload).eq('id', id);
+            const { data, error } = await supabase.from('publications').update(payload).eq('id', id).select('id');
             if (error) throw error;
+            assertChanged(data);
         } else {
             const { error } = await supabase.from('publications').insert([payload]);
             if (error) throw error;
@@ -840,8 +937,9 @@ window.savePub = async function () {
 
 window.deleteAdminPub = async function (id) {
     if (!confirm('Delete this publication? This cannot be undone.')) return;
-    const { error } = await supabase.from('publications').delete().eq('id', id);
+    const { data, error } = await supabase.from('publications').delete().eq('id', id).select('id');
     if (error) return alert('Delete failed: ' + error.message);
+    if (!data?.length) return alert('Delete failed: your account may not have editor access.');
     fetchAdminPubs();
     fetchPublicationsPublic();
 };
@@ -876,18 +974,18 @@ async function fetchAdminMembers() {
         tbody.innerHTML = window.adminMembers.map(m => {
             const supervisors = memberDirNames[m.id];
             const supCell = supervisors?.length
-                ? supervisors.map(n => `<span style="background:#eff6ff;color:#1d4ed8;padding:0.15rem 0.5rem;border-radius:99px;font-size:0.75rem;font-weight:600;">${n}</span>`).join(' ')
+                ? supervisors.map(n => `<span style="background:#eff6ff;color:#1d4ed8;padding:0.15rem 0.5rem;border-radius:99px;font-size:0.75rem;font-weight:600;">${esc(n)}</span>`).join(' ')
                 : '<span style="color:var(--text-muted);font-size:0.85rem;">—</span>';
             return `
             <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:1rem;font-weight:500;">
                     <div style="display:flex;align-items:center;gap:0.75rem;">
-                        <img src="${m.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&size=80&background=dbeafe&color=1d4ed8&bold=true`}"
+                        <img src="${esc(safeUrl(m.image_url) || avatarFallback(m.name, 80))}" alt=""
                              style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
-                        ${m.name}
+                        ${esc(m.name)}
                     </div>
                 </td>
-                <td style="padding:1rem;"><span class="badge">${roleLabel[m.role_category] || m.role_category || '—'}</span></td>
+                <td style="padding:1rem;"><span class="badge">${esc(roleLabel[m.role_category] || m.role_category || '—')}</span></td>
                 <td style="padding:1rem;">${m.role_category === 'director' ? '<span style="color:var(--text-muted);font-size:0.85rem;">—</span>' : supCell}</td>
                 <td style="padding:1rem;display:flex;gap:0.5rem;">
                     <button class="btn btn-ghost btn-sm" onclick="window.editAdminMember('${m.id}')">Edit</button>
@@ -910,13 +1008,13 @@ function renderSupervisorCheckboxes(selectedIds = []) {
     }
     container.innerHTML = directors.map(d => {
         const checked = selectedIds.includes(d.id) ? 'checked' : '';
-        const avatar = d.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.name)}&size=80&background=dbeafe&color=1d4ed8&bold=true`;
+        const avatar = safeUrl(d.image_url) || avatarFallback(d.name, 80);
         return `
         <label style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 0.75rem;border-radius:99px;border:1px solid var(--border);cursor:pointer;background:white;transition:all 0.15s;"
                onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--border)'">
-            <input type="checkbox" name="supervisor" value="${d.id}" ${checked} style="accent-color:var(--accent);width:15px;height:15px;">
-            <img src="${avatar}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;">
-            <span style="font-size:0.875rem;font-weight:500;">${d.name}</span>
+            <input type="checkbox" name="supervisor" value="${esc(d.id)}" ${checked} style="accent-color:var(--accent);width:15px;height:15px;">
+            <img src="${esc(avatar)}" alt="" style="width:22px;height:22px;border-radius:50%;object-fit:cover;">
+            <span style="font-size:0.875rem;font-weight:500;">${esc(d.name)}</span>
         </label>`;
     }).join('');
 }
@@ -990,17 +1088,7 @@ window.saveMember = async function () {
     if (!role) { msg.className = 'message error'; msg.innerText = 'Role is required.'; return; }
     msg.className = 'message'; msg.innerText = 'Saving...';
 
-    let imageUrl = id ? (window.adminMembers.find(m => m.id === id)?.image_url || null) : null;
     const fileInput = document.getElementById('member-image-file');
-    if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const fileName = `member-${Date.now()}-${file.name}`;
-        const { error: upErr } = await supabase.storage.from('profile-images').upload(fileName, file);
-        if (upErr) { msg.className = 'message error'; msg.innerText = 'Image upload failed.'; return; }
-        const { data: { publicUrl } } = supabase.storage.from('profile-images').getPublicUrl(fileName);
-        imageUrl = publicUrl;
-    }
-
     const payload = {
         name,
         title: document.getElementById('member-title').value.trim() || null,
@@ -1013,13 +1101,15 @@ window.saveMember = async function () {
         google_scholar_url: document.getElementById('member-google-scholar').value.trim() || null,
         github_url: document.getElementById('member-github').value.trim() || null,
     };
-    if (imageUrl) payload.image_url = imageUrl;
 
     try {
+        if (fileInput.files.length > 0) payload.image_url = await uploadImage('member', fileInput.files[0]);
+
         let memberId = id;
         if (id) {
-            const { error } = await supabase.from('members').update(payload).eq('id', id);
+            const { data, error } = await supabase.from('members').update(payload).eq('id', id).select('id');
             if (error) throw error;
+            assertChanged(data);
         } else {
             const { data: inserted, error } = await supabase.from('members').insert([payload]).select().single();
             if (error) throw error;
@@ -1033,15 +1123,18 @@ window.saveMember = async function () {
             ).map(cb => cb.value);
 
             // Delete existing then re-insert
-            await supabase.from('member_directors').delete().eq('member_id', memberId);
+            const { error: delErr } = await supabase.from('member_directors').delete().eq('member_id', memberId);
+            if (delErr) throw delErr;
             if (checked.length) {
-                await supabase.from('member_directors').insert(
+                const { error: insErr } = await supabase.from('member_directors').insert(
                     checked.map(dirId => ({ member_id: memberId, director_id: dirId }))
                 );
+                if (insErr) throw insErr;
             }
         } else {
             // Directors and collaborators have no supervisors — clean up any stale rows
-            await supabase.from('member_directors').delete().eq('member_id', memberId);
+            const { error: delErr } = await supabase.from('member_directors').delete().eq('member_id', memberId);
+            if (delErr) throw delErr;
         }
 
         msg.className = 'message success'; msg.innerText = '✅ Saved!';
@@ -1055,8 +1148,9 @@ window.saveMember = async function () {
 
 window.deleteAdminMember = async function (id) {
     if (!confirm('Delete this person? This cannot be undone.')) return;
-    const { error } = await supabase.from('members').delete().eq('id', id);
+    const { data, error } = await supabase.from('members').delete().eq('id', id).select('id');
     if (error) return alert('Delete failed: ' + error.message);
+    if (!data?.length) return alert('Delete failed: your account may not have editor access.');
     fetchAdminMembers();
     fetchMembersPublic();
 };
@@ -1089,8 +1183,8 @@ async function fetchAdminJobs() {
             const advisorName = window.adminMembers.find(m => m.id === j.advisor_id)?.name || 'General';
             return `
             <tr style="border-bottom: 1px solid var(--border);">
-                <td style="padding: 1rem; font-weight: 500; max-width: 320px;">${j.title}</td>
-                <td style="padding: 1rem; color: var(--text-secondary);">${advisorName}</td>
+                <td style="padding: 1rem; font-weight: 500; max-width: 320px;">${esc(j.title)}</td>
+                <td style="padding: 1rem; color: var(--text-secondary);">${esc(advisorName)}</td>
                 <td style="padding: 1rem;">${j.is_active ? '<span class="badge" style="background:#dcfce7;color:#166534;">Active</span>' : '<span class="badge" style="background:#f1f5f9;color:#475569;">Hidden</span>'}</td>
                 <td style="padding: 1rem; display: flex; gap: 0.5rem;">
                     <button class="btn btn-ghost btn-sm" onclick="window.editAdminJob('${j.id}')">Edit</button>
@@ -1107,7 +1201,7 @@ function populateJobAdvisors(selectedId = '') {
     const select = document.getElementById('job-advisor');
     const directors = window.adminMembers.filter(m => m.role_category === 'director');
     select.innerHTML = '<option value="">Select an advisor...</option>' +
-        directors.map(d => `<option value="${d.id}" ${d.id === selectedId ? 'selected' : ''}>${d.name}</option>`).join('');
+        directors.map(d => `<option value="${esc(d.id)}" ${d.id === selectedId ? 'selected' : ''}>${esc(d.name)}</option>`).join('');
 }
 
 window.showJobEditor = function () {
@@ -1140,7 +1234,7 @@ window.editAdminJob = function (id) {
     populateJobAdvisors(job.advisor_id);
 
     if (window.jobQuillEditor) {
-        window.jobQuillEditor.root.innerHTML = job.description || '';
+        window.jobQuillEditor.root.innerHTML = safeHtml(job.description);
     }
 };
 
@@ -1167,8 +1261,9 @@ window.saveJob = async function () {
 
     try {
         if (id) {
-            const { error } = await supabase.from('job_openings').update(payload).eq('id', id);
+            const { data, error } = await supabase.from('job_openings').update(payload).eq('id', id).select('id');
             if (error) throw error;
+            assertChanged(data);
         } else {
             const { error } = await supabase.from('job_openings').insert([payload]);
             if (error) throw error;
@@ -1184,8 +1279,9 @@ window.saveJob = async function () {
 
 window.deleteAdminJob = async function (id) {
     if (!confirm('Delete this job opening? This cannot be undone.')) return;
-    const { error } = await supabase.from('job_openings').delete().eq('id', id);
+    const { data, error } = await supabase.from('job_openings').delete().eq('id', id).select('id');
     if (error) return alert('Delete failed: ' + error.message);
+    if (!data?.length) return alert('Delete failed: your account may not have editor access.');
     fetchAdminJobs();
     fetchJobsPublic();
 };
@@ -1206,8 +1302,8 @@ async function fetchAdminNews() {
         }
         tbody.innerHTML = window.adminNews.map(n => `
             <tr style="border-bottom: 1px solid var(--border);">
-                <td style="padding: 1rem; font-weight: 500; max-width: 320px;">${n.title}</td>
-                <td style="padding: 1rem; color: var(--text-secondary);">${n.month ? n.month + ' ' : ''}${n.year || '—'}</td>
+                <td style="padding: 1rem; font-weight: 500; max-width: 320px;">${esc(n.title)}</td>
+                <td style="padding: 1rem; color: var(--text-secondary);">${esc((n.month ? n.month + ' ' : '') + (n.year || '—'))}</td>
                 <td style="padding: 1rem;">${n.is_featured ? '<span class="badge" style="background:#fef9c3;color:#854d0e;">⭐ Featured</span>' : '<span style="color:var(--text-muted);font-size:0.85rem;">—</span>'}</td>
                 <td style="padding: 1rem; display: flex; gap: 0.5rem;">
                     <button class="btn btn-ghost btn-sm" onclick="window.editAdminNews('${n.id}')">Edit</button>
@@ -1268,13 +1364,13 @@ window.editAdminNews = function (id) {
 
     if (window.newsQuillEditor) {
         const desc = n.description || '';
-        window.newsQuillEditor.root.innerHTML = desc.trim().startsWith('<') ? desc : (desc ? `<p>${desc}</p>` : '');
+        window.newsQuillEditor.root.innerHTML = desc.trim().startsWith('<') ? safeHtml(desc) : (desc ? `<p>${esc(desc)}</p>` : '');
     }
 
-    if (n.image_url) {
+    if (safeUrl(n.image_url)) {
         const prev = document.getElementById('news-image-preview');
         const prevImg = document.getElementById('news-image-preview-img');
-        prevImg.src = n.image_url;
+        prevImg.src = safeUrl(n.image_url);
         prev.style.display = 'block';
     }
 };
@@ -1291,17 +1387,7 @@ window.saveNews = async function () {
     const descriptionHtml = window.newsQuillEditor ? window.newsQuillEditor.root.innerHTML.trim() : '';
     const descriptionValue = descriptionHtml === '<p><br></p>' ? null : (descriptionHtml || null);
 
-    let imageUrl = id ? (window.adminNews.find(n => n.id === id)?.image_url || null) : null;
     const fileInput = document.getElementById('news-image-file');
-    if (fileInput && fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const fileName = `news-${Date.now()}-${file.name}`;
-        const { error: upErr } = await supabase.storage.from('profile-images').upload(fileName, file);
-        if (upErr) { msg.className = 'message error'; msg.innerText = 'Image upload failed.'; return; }
-        const { data: { publicUrl } } = supabase.storage.from('profile-images').getPublicUrl(fileName);
-        imageUrl = publicUrl;
-    }
-
     const payload = {
         title,
         description: descriptionValue,
@@ -1310,12 +1396,14 @@ window.saveNews = async function () {
         tags: tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [],
         is_featured: document.getElementById('news-featured').checked,
     };
-    if (imageUrl !== undefined) payload.image_url = imageUrl;
 
     try {
+        if (fileInput && fileInput.files.length > 0) payload.image_url = await uploadImage('news', fileInput.files[0]);
+
         if (id) {
-            const { error } = await supabase.from('news').update(payload).eq('id', id);
+            const { data, error } = await supabase.from('news').update(payload).eq('id', id).select('id');
             if (error) throw error;
+            assertChanged(data);
         } else {
             const { error } = await supabase.from('news').insert([payload]);
             if (error) throw error;
@@ -1331,8 +1419,9 @@ window.saveNews = async function () {
 
 window.deleteAdminNews = async function (id) {
     if (!confirm('Delete this news item? This cannot be undone.')) return;
-    const { error } = await supabase.from('news').delete().eq('id', id);
+    const { data, error } = await supabase.from('news').delete().eq('id', id).select('id');
     if (error) return alert('Delete failed: ' + error.message);
+    if (!data?.length) return alert('Delete failed: your account may not have editor access.');
     fetchAdminNews();
     fetchNewsPublic();
 };

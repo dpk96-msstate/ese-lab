@@ -100,122 +100,88 @@ alter table public.job_openings enable row level security;
 alter table public.member_directors enable row level security;
 
 -- ==========================================
--- 3. RLS POLICIES (Public Read, Auth Write)
+-- 3. EDITOR ALLOWLIST
 -- ==========================================
+-- Only accounts listed here can change content. Signing in alone grants nothing.
+-- RLS is on with no policies, so the table is invisible to the public API.
 
--- BLOGS POLICIES
-create policy "Allow public read access for blogs" on public.blogs for
-select using (true);
+create table public.editors (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  created_at timestamp with time zone not null default timezone ('utc'::text, now())
+);
 
-create policy "Allow authenticated insert for blogs" on public.blogs for
-insert
-    to authenticated
-with
-    check (true);
+alter table public.editors enable row level security;
 
-create policy "Allow authenticated update for blogs" on public.blogs for
-update to authenticated using (true);
+create or replace function public.is_editor()
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (select 1 from public.editors where user_id = (select auth.uid()));
+$$;
 
-create policy "Allow authenticated delete for blogs" on public.blogs for delete to authenticated using (true);
-
--- MEMBERS POLICIES
-create policy "Allow public read access for members" on public.members for
-select using (true);
-
-create policy "Allow authenticated insert for members" on public.members for
-insert
-    to authenticated
-with
-    check (true);
-
-create policy "Allow authenticated update for members" on public.members for
-update to authenticated using (true);
-
-create policy "Allow authenticated delete for members" on public.members for delete to authenticated using (true);
-
--- NEWS POLICIES
-create policy "Allow public read access for news" on public.news for
-select using (true);
-
-create policy "Allow authenticated insert for news" on public.news for
-insert
-    to authenticated
-with
-    check (true);
-
-create policy "Allow authenticated update for news" on public.news for
-update to authenticated using (true);
-
-create policy "Allow authenticated delete for news" on public.news for delete to authenticated using (true);
-
--- PUBLICATIONS POLICIES
-create policy "Allow public read access for publications" on public.publications for
-select using (true);
-
-create policy "Allow authenticated insert for publications" on public.publications for
-insert
-    to authenticated
-with
-    check (true);
-
-create policy "Allow authenticated update for publications" on public.publications for
-update to authenticated using (true);
-
-create policy "Allow authenticated delete for publications" on public.publications for delete to authenticated using (true);
-
--- JOB OPENINGS POLICIES
-create policy "Allow public read access for job_openings" on public.job_openings for
-select using (true);
-
-create policy "Allow authenticated insert for job_openings" on public.job_openings for
-insert
-    to authenticated
-with
-    check (true);
-
-create policy "Allow authenticated update for job_openings" on public.job_openings for
-update to authenticated using (true);
-
-create policy "Allow authenticated delete for job_openings" on public.job_openings for delete to authenticated using (true);
-
--- MEMBER DIRECTORS POLICIES
-create policy "Allow public read access for member_directors" on public.member_directors for
-select using (true);
-
-create policy "Allow authenticated insert for member_directors" on public.member_directors for
-insert
-    to authenticated
-with
-    check (true);
-
-create policy "Allow authenticated update for member_directors" on public.member_directors for
-update to authenticated using (true);
-
-create policy "Allow authenticated delete for member_directors" on public.member_directors for delete to authenticated using (true);
+revoke execute on function public.is_editor() from public, anon;
+grant execute on function public.is_editor() to authenticated;
 
 -- ==========================================
--- 4. STORAGE SETUP (Profile Images)
+-- 4. RLS POLICIES (Public Read, Editor Write)
 -- ==========================================
--- Creates the bucket and sets up public read / authenticated upload policies
+
+-- BLOGS: public sees published posts only, editors also see drafts
+create policy "Public can read published blogs" on public.blogs for
+select using (status = 'published');
+
+create policy "Editors can read all blogs" on public.blogs for
+select to authenticated using ((select public.is_editor()));
+
+-- Everything else is fully public to read
+do $$
+declare
+  t text;
+begin
+  foreach t in array array['members', 'news', 'publications', 'job_openings', 'member_directors'] loop
+    execute format('create policy "Public can read %s" on public.%I for select using (true)', t, t);
+  end loop;
+
+  foreach t in array array['blogs', 'members', 'news', 'publications', 'job_openings', 'member_directors'] loop
+    execute format('create policy "Editors can insert %s" on public.%I for insert to authenticated with check ((select public.is_editor()))', t, t);
+    execute format('create policy "Editors can update %s" on public.%I for update to authenticated using ((select public.is_editor())) with check ((select public.is_editor()))', t, t);
+    execute format('create policy "Editors can delete %s" on public.%I for delete to authenticated using ((select public.is_editor()))', t, t);
+  end loop;
+end $$;
+
+-- ==========================================
+-- 5. STORAGE SETUP (Images)
+-- ==========================================
+-- Public bucket: files are served by URL without a select policy, so the public cannot list the bucket.
+-- Editors only, images only, 5 MB max.
 
 insert into
-    storage.buckets (id, name, public)
+    storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values (
         'profile-images',
         'profile-images',
-        true
+        true,
+        5242880,
+        array['image/jpeg', 'image/png', 'image/webp', 'image/gif']
     ) on conflict (id) do nothing;
 
-create policy "Allow public read access for profile images" on storage.objects for
-select using (bucket_id = 'profile-images');
+create policy "Editors can read profile images" on storage.objects for
+select to authenticated using (bucket_id = 'profile-images' and (select public.is_editor()));
 
-create policy "Allow authenticated uploads for profile images" on storage.objects for
-insert
-    to authenticated
-with
-    check (bucket_id = 'profile-images');
+create policy "Editors can upload profile images" on storage.objects for
+insert to authenticated with check (bucket_id = 'profile-images' and (select public.is_editor()));
 
-create policy "Allow authenticated updates for profile images" on storage.objects for
-update to authenticated using (bucket_id = 'profile-images');
+create policy "Editors can update profile images" on storage.objects for
+update to authenticated using (bucket_id = 'profile-images' and (select public.is_editor()));
 
-create policy "Allow authenticated deletes for profile images" on storage.objects for delete to authenticated using (bucket_id = 'profile-images');
+create policy "Editors can delete profile images" on storage.objects for
+delete to authenticated using (bucket_id = 'profile-images' and (select public.is_editor()));
+
+-- ==========================================
+-- 6. GRANT EDITOR ACCESS
+-- ==========================================
+-- Create the user under Authentication -> Users first, then:
+--   insert into public.editors (user_id) select id from auth.users where email = 'someone@example.edu';
