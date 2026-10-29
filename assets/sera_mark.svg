@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 1024 1024">
+<title>SERA Lab</title>
+<defs><linearGradient id="sera-frame" gradientUnits="userSpaceOnUse" x1="800" y1="40" x2="90" y2="900">
+<stop offset="0" stop-color="#1B8AA2"/><stop offset="1" stop-color="#014776"/></linearGradient>
+<mask id="sera-knock-all" maskUnits="userSpaceOnUse" x="-100" y="-100" width="1200" height="1200">
+<rect x="-100" y="-100" width="1200" height="1200" fill="#fff"/><path d="M391.2 398.7L546 548L882.6 167.5" stroke="#000" stroke-width="130" fill="none"/><path d="M683 357.2L884 413.3L884 590C884 696.6 803.2 780.9 683 818.1C562.8 780.9 482 696.6 482 590L482 413.3Z"/></mask>
+<mask id="sera-knock-shield" maskUnits="userSpaceOnUse" x="-100" y="-100" width="1200" height="1200">
+<rect x="-100" y="-100" width="1200" height="1200" fill="#fff"/><path d="M391.2 398.7L546 548L882.6 167.5" stroke="#000" stroke-width="130" fill="none"/><path d="M436.8 383L543.5 485.9L835.8 155.5Z"/></mask>
+<clipPath id="sera-left"><rect x="0" y="0" width="683" height="1000"/></clipPath></defs>
+<g transform="translate(53.9 41.9)">
+<g mask="url(#sera-knock-all)">
+<g fill="url(#sera-frame)" stroke="url(#sera-frame)">
+<path d="M435 60L790.1 265M790.1 265L790.1 675M790.1 675L435 880M435 880L268.7 784M246.2 771L79.9 675M79.9 265L246.2 169M268.7 156L435 60M79.9 265L79.9 388M79.9 552L79.9 675" stroke-width="76" fill="none"/><path d="M79.9 265L242.7 359M79.9 675L242.7 581" stroke-width="46" fill="none"/><circle cx="435" cy="60" r="64"/><circle cx="79.9" cy="265" r="64"/><circle cx="79.9" cy="470" r="64"/><circle cx="79.9" cy="675" r="64"/><circle cx="435" cy="880" r="64"/></g>
+<path d="M242.7 581A222 222 0 0 1 404.1 250.2" stroke="#014776" stroke-width="80" fill="none"/>
+<path d="M411.8 323.8L388.7 177.6L496.2 256.6Z" fill="#014776"/>
+<path d="M518.2 264.2A222 222 0 0 1 627.3 359" stroke="#46BDA9" stroke-width="80" fill="none"/>
+<path d="M605.1 612.7A222 222 0 0 1 462.1 690.3" stroke="#46BDA9" stroke-width="80" fill="none"/>
+<path d="M455.6 616.6L476.2 763.1L373.8 683.4Z" fill="#46BDA9"/>
+<path d="M351.8 675.8A222 222 0 0 1 264.9 612.7" stroke="#46BDA9" stroke-width="80" fill="none"/>
+<circle cx="242.7" cy="359" r="62" fill="#014776"/><circle cx="242.7" cy="359" r="27" fill="#46BDA9"/><circle cx="242.7" cy="581" r="62" fill="#014776"/><circle cx="242.7" cy="581" r="27" fill="#46BDA9"/>
+</g>
+<g mask="url(#sera-knock-shield)">
+<path d="M683 404.9L838 448.2L838 590C838 682.8 775.6 737.2 683 769.8C590.4 737.2 528 682.8 528 590L528 448.2Z" stroke="#014776" stroke-width="48" fill="none"/>
+<path d="M683 448.5L796 480.1L796 590C796 670.2 750.4 697.3 683 725.7C615.6 697.3 570 670.2 570 590L570 480.1Z" fill="#46BDA9"/>
+<path d="M683 448.5L796 480.1L796 590C796 670.2 750.4 697.3 683 725.7C615.6 697.3 570 670.2 570 590L570 480.1Z" fill="#1B8AA2" clip-path="url(#sera-left)"/>
+</g>
+<path d="M436.8 383L543.5 485.9L835.8 155.5L868 184L546 548L407 414Z" fill="#46BDA9"/>
+<path d="M407 414L546 548L868 184L900.2 212.5L548.5 610.1L377.2 445Z" fill="#1B8AA2"/>
+</g>
+</svg>

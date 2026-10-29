@@ -4,461 +4,526 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <title>HOME | Software Engineering Research and Analysis Lab</title>
-    <link rel="icon" type="image/svg+xml" href="assets/sera_favicon.png">
-    <!-- Modern Fonts -->
+    <title>SERA Lab · Software Engineering Research and Analysis Lab | Kennesaw State University</title>
+    <meta name="description"
+        content="The Software Engineering Research and Analysis (SERA) Lab at Kennesaw State University researches requirements engineering, creativity in requirements, and AI.">
+    <meta name="theme-color" content="#012a47">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="SERA Lab · Kennesaw State University">
+    <meta property="og:description"
+        content="Software Engineering Research and Analysis Lab: requirements engineering, creativity in requirements, and AI.">
+    <link rel="icon" type="image/svg+xml" href="assets/sera_mark.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/sera_favicon.png">
+
+    <!-- Fonts: Source Serif 4 for headings and articles, Inter for interface text -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..600&display=swap"
         rel="stylesheet">
 
-    <!-- Quill.js for Rich Text Blog Editor -->
+    <!-- Quill.js for the rich text editors in the member workspace -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <link href="https://cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
 
     <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <!-- Site Styles -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
 
     <!-- MAIN PUBLIC APP VIEW -->
     <div id="app-view">
         <!-- Header -->
         <header class="header">
-            <div class="header-container">
-                <div class="site-logo-container">
-                    <a href="#" onclick="window.showView('home')">
-                        <img src="assets/sera_logo.svg" alt="SERA Lab" class="main-logo"
-                            onerror="this.src='https://placehold.co/200x50?text=SERA+Lab'">
-                    </a>
-                </div>
-                <nav class="navigation">
+            <div class="container header-inner">
+                <a href="#home" class="brand" aria-label="SERA Lab home">
+                    <img src="assets/sera_logo.svg" alt="Software Engineering Research and Analysis Lab (SERA)"
+                        class="brand-logo" width="466" height="100">
+                </a>
+                <button class="mobile-menu-toggle" type="button" onclick="window.toggleMobileMenu()"
+                    aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+                <nav class="navigation" id="primary-nav" aria-label="Main">
                     <ul class="nav-list">
-                        <li><a href="#home" class="nav-link">Home</a></li>
-                        <li><a href="#research" class="nav-link">Research</a></li>
-                        <li><a href="#members" class="nav-link">Members</a></li>
-                        <li><a href="#hiring" class="nav-link">Join Us</a></li>
-                        <li><a href="#blog" class="nav-link">Blog</a></li>
-                        <li><a href="#news" class="nav-link">News</a></li>
-                        <li><a href="#publications" class="nav-link">Publications</a></li>
+                        <li><a href="#research" class="nav-link" data-section="research">Research</a></li>
+                        <li><a href="#members" class="nav-link" data-section="members">People</a></li>
+                        <li><a href="#publications" class="nav-link" data-section="publications">Publications</a>
+                        </li>
+                        <li><a href="#news" class="nav-link" data-section="news">News</a></li>
+                        <li><a href="#blog" class="nav-link" data-section="blog">Blog</a></li>
+                        <li><a href="#hiring" class="nav-link nav-cta" data-section="hiring">Join us</a></li>
+                        <!-- Shown once a member signs in -->
+                        <li class="nav-account hidden" id="nav-workspace">
+                            <a href="#" class="nav-link nav-workspace" onclick="window.openAdminLogin(event)">
+                                <i class="fa-solid fa-circle-user" aria-hidden="true"></i> Workspace
+                            </a>
+                        </li>
                     </ul>
                 </nav>
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <a href="#" onclick="window.openAdminLogin(event)" class="login-icon-btn" id="navbar-login-btn"
-                        title="Member Login">
-                        <i class="fa-solid fa-user"></i>
-                    </a>
-                    <div class="ksu-branding">
-                        <div class="ksu-wrapper">
-                            <img src="assets/ksu.png" alt="KSU" class="ksu-icon"
-                                onerror="this.src='https://placehold.co/40x40?text=KSU'">
-                            <div class="ksu-text">Kennesaw State University</div>
-                        </div>
-                    </div>
-                    <button class="mobile-menu-toggle" onclick="window.toggleMobileMenu()"
-                        aria-label="Toggle Navigation">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-                </div>
             </div>
         </header>
 
-        <!-- Homepage Content -->
-        <div id="home-view">
-            <!-- Hero Section -->
-            <section id="home" class="hero-section">
-                <div class="hero-content">
-                    <div class="badge" style="margin-bottom: 1.5rem;">Evidence-Based Approach</div>
-                    <h1 class="hero-title">Software Engineering Research & Analysis</h1>
-                    <p class="subtitle-highlights">Requirements Engineering • Creativity in Requirements • AI</p>
-                    <div class="hero-actions">
-                        <a href="#research" class="btn btn-primary">Explore Research</a>
-                        <a href="#members" class="btn btn-outline">Meet Our Team</a>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Intro/Vision -->
-            <section id="research" class="intro-section">
-                <div class="container">
-                    <div class="section-header">
-                        <h2>Our Vision & Mission</h2>
-                        <p>A future where software systems are built on secure requirements systematically validated
-                            through tight integration with testing.</p>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                        <div class="card">
-                            <h3>Our Vision</h3>
-                            <p>A future in which software systems are built on well-understood, creative, and secure
-                                requirements that are systematically validated through empirical evidence.</p>
-                        </div>
-                        <div class="card">
-                            <h3>Our Mission</h3>
-                            <p>SERA Lab is developing empirically grounded methods and tools that support creative
-                                requirements engineering and strengthen connections between requirements, testing, and
-                                security.</p>
+        <main id="main" tabindex="-1">
+            <!-- Homepage Content -->
+            <div id="home-view">
+                <!-- Hero -->
+                <section id="home" class="hero">
+                    <div class="container hero-inner">
+                        <p class="hero-eyebrow">SERA Lab <span aria-hidden="true">·</span> Kennesaw State University</p>
+                        <h1 class="hero-title">Software Engineering Research &amp; Analysis</h1>
+                        <p class="hero-lede">A future where software systems are built on secure requirements
+                            systematically validated through tight integration with testing.</p>
+                        <div class="hero-actions">
+                            <a href="#research" class="btn btn-light btn-lg">Explore our research</a>
+                            <a href="#members" class="btn btn-outline-light btn-lg">Meet the team</a>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Our People -->
-            <section id="members" style="background: var(--bg-main);">
-                <div class="container">
-                    <div class="section-header">
-                        <h2>Our People</h2>
-                        <p>Meet the directors, collaborators, and students driving our research forward.</p>
-                    </div>
+                <!-- Research -->
+                <section id="research" class="section">
+                    <div class="container">
+                        <header class="section-head">
+                            <div class="section-head-main">
+                                <p class="eyebrow">Evidence-based approach</p>
+                                <h2 class="section-title">Our research</h2>
+                            </div>
+                        </header>
 
-                    <!-- Filter bar -->
-                    <div class="member-filters">
-                        <button class="filter-btn active" data-filter="all">All</button>
-                        <button class="filter-btn" data-filter="director">Co-Directors</button>
-                        <button class="filter-btn" data-filter="collaborator">Collaborators</button>
-                        <button class="filter-btn" data-filter="phd">PhD Students</button>
-                        <button class="filter-btn" data-filter="ms">MS Students</button>
-                        <button class="filter-btn" data-filter="alumni">Alumni</button>
-                    </div>
-
-                    <!-- Tier 1: Co-Directors -->
-                    <div id="directors-wrapper">
-                        <div class="people-section-label" id="directors-label">
-                            <i class="fa-solid fa-chalkboard-user"></i> Co-Directors
+                        <div class="statements">
+                            <article class="statement">
+                                <h3 class="statement-label">Vision</h3>
+                                <p class="statement-text">A future in which software systems are built on
+                                    well-understood, creative, and secure requirements that are systematically
+                                    validated through empirical evidence.</p>
+                            </article>
+                            <article class="statement">
+                                <h3 class="statement-label">Mission</h3>
+                                <p class="statement-text">SERA Lab is developing empirically grounded methods and
+                                    tools that support creative requirements engineering and strengthen connections
+                                    between requirements, testing, and security.</p>
+                            </article>
                         </div>
-                        <div class="universal-member-grid" id="co-directors-grid">
-                            <div style="text-align:center;grid-column:1/-1;color:var(--text-muted);">
-                                <i class="fa-solid fa-spinner fa-spin"></i> Loading...
+
+                        <div class="focus">
+                            <h3 class="focus-heading">Focus areas</h3>
+                            <ul class="focus-list">
+                                <li class="focus-item">
+                                    <span class="focus-icon" aria-hidden="true"><i
+                                            class="fa-solid fa-list-check"></i></span>
+                                    <span>Requirements Engineering</span>
+                                </li>
+                                <li class="focus-item">
+                                    <span class="focus-icon" aria-hidden="true"><i
+                                            class="fa-regular fa-lightbulb"></i></span>
+                                    <span>Creativity in Requirements</span>
+                                </li>
+                                <li class="focus-item">
+                                    <span class="focus-icon" aria-hidden="true"><i
+                                            class="fa-solid fa-microchip"></i></span>
+                                    <span>Artificial Intelligence</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- People -->
+                <section id="members" class="section section-alt">
+                    <div class="container">
+                        <header class="section-head">
+                            <div class="section-head-main">
+                                <p class="eyebrow">Team</p>
+                                <h2 class="section-title">People</h2>
+                                <p class="section-lede">Meet the directors, collaborators, and students driving our
+                                    research forward.</p>
+                            </div>
+                        </header>
+
+                        <p class="state-message" id="members-status"><i class="fa-solid fa-spinner fa-spin"
+                                aria-hidden="true"></i> Loading people…</p>
+
+                        <div class="member-filters hidden" role="group" aria-label="Filter people">
+                            <button class="filter-btn active" type="button" data-filter="all" aria-pressed="true">All
+                                <span class="filter-count"></span></button>
+                            <button class="filter-btn" type="button" data-filter="director"
+                                aria-pressed="false">Co-Directors <span class="filter-count"></span></button>
+                            <button class="filter-btn" type="button" data-filter="collaborator"
+                                aria-pressed="false">Collaborators <span class="filter-count"></span></button>
+                            <button class="filter-btn" type="button" data-filter="phd" aria-pressed="false">PhD
+                                Students <span class="filter-count"></span></button>
+                            <button class="filter-btn" type="button" data-filter="ms" aria-pressed="false">MS
+                                Students <span class="filter-count"></span></button>
+                            <button class="filter-btn" type="button" data-filter="alumni"
+                                aria-pressed="false">Alumni <span class="filter-count"></span></button>
+                        </div>
+
+                        <div id="directors-wrapper" class="people-group hidden">
+                            <h3 class="people-group-title">Co-Directors</h3>
+                            <div class="member-grid member-grid--featured" id="co-directors-grid"></div>
+                        </div>
+
+                        <div id="collaborators-wrapper" class="people-group hidden">
+                            <h3 class="people-group-title">External Collaborators</h3>
+                            <div class="member-grid" id="collaborators-grid"></div>
+                        </div>
+
+                        <div id="students-wrapper" class="people-group hidden">
+                            <h3 class="people-group-title">Students &amp; Alumni</h3>
+                            <div class="member-grid" id="students-grid"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Publications -->
+                <section id="publications" class="section">
+                    <div class="container">
+                        <header class="section-head">
+                            <div class="section-head-main">
+                                <p class="eyebrow">Research output</p>
+                                <h2 class="section-title">Recent publications</h2>
+                                <p class="section-lede">Peer-reviewed contributions advancing software engineering.</p>
+                            </div>
+                        </header>
+                        <div class="pub-list" id="publicationsGrid">
+                            <p class="state-message"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                                Loading publications…</p>
+                        </div>
+                        <div class="section-foot hidden" id="pubs-view-all-wrapper">
+                            <a href="#/publications" class="btn btn-secondary">View all publications <i
+                                    class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- News -->
+                <section id="news" class="section section-alt">
+                    <div class="container">
+                        <header class="section-head">
+                            <div class="section-head-main">
+                                <p class="eyebrow">Updates</p>
+                                <h2 class="section-title">Lab news</h2>
+                                <p class="section-lede">Stay up to date with the latest achievements, awards, and
+                                    announcements from SERA Lab.</p>
+                            </div>
+                        </header>
+                        <div class="entry-list" id="public-news-grid">
+                            <p class="state-message"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                                Loading news…</p>
+                        </div>
+                        <div class="section-foot hidden" id="news-view-all-wrapper">
+                            <a href="#/news" class="btn btn-secondary">View all news <i class="fa-solid fa-arrow-right"
+                                    aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Blog -->
+                <section id="blog" class="section">
+                    <div class="container">
+                        <header class="section-head">
+                            <div class="section-head-main">
+                                <p class="eyebrow">Latest insights</p>
+                                <h2 class="section-title">Research blog</h2>
+                                <p class="section-lede">Case studies, research thoughts, and engineering methodologies
+                                    published directly by our lab members.</p>
+                            </div>
+                        </header>
+                        <div class="entry-list" id="public-blog-grid">
+                            <p class="state-message"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                                Loading articles…</p>
+                        </div>
+                        <div class="section-foot hidden" id="blog-view-all-wrapper">
+                            <a href="#/blog" class="btn btn-secondary">View all articles <i class="fa-solid fa-arrow-right"
+                                    aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Join us -->
+                <section id="hiring" class="section section-dark">
+                    <div class="container">
+                        <header class="section-head">
+                            <div class="section-head-main">
+                                <p class="eyebrow">Opportunities</p>
+                                <h2 class="section-title">Join our lab</h2>
+                                <p class="section-lede">We are actively seeking motivated students and researchers to
+                                    collaborate on cutting-edge software engineering challenges.</p>
+                            </div>
+                        </header>
+                        <div class="jobs-grid" id="public-jobs-grid">
+                            <p class="state-message"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                                Loading openings…</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Article view: blog posts and news items -->
+            <article id="reader-view" class="reader hidden">
+                <div class="reader-inner">
+                    <a href="#/blog" class="back-link" id="reader-back"><i class="fa-solid fa-arrow-left"
+                            aria-hidden="true"></i> <span id="reader-back-label">All articles</span></a>
+
+                    <header class="reader-header">
+                        <p class="eyebrow" id="reader-category">Research</p>
+                        <h1 class="reader-title" id="reader-title"></h1>
+                        <div class="reader-meta">
+                            <img id="reader-author-img" class="reader-avatar" alt="" width="46" height="46">
+                            <div>
+                                <div class="reader-author" id="reader-author-name"></div>
+                                <div class="reader-sub" id="reader-sub"></div>
                             </div>
                         </div>
-                    </div>
+                    </header>
 
-                    <!-- Tier 2: Collaborators -->
-                    <div id="collaborators-wrapper" style="margin-top: 3rem;">
-                        <div class="members-tier-divider"><span><i class="fa-solid fa-handshake"
-                                    style="margin-right:0.4rem;"></i>External Collaborators</span></div>
-                        <div class="universal-member-grid" id="collaborators-grid">
-                            <!-- Injected via JS -->
+                    <img id="reader-cover" class="reader-cover hidden" alt="">
+
+                    <div class="prose" id="reader-content"></div>
+
+                    <div class="tag-list reader-tags hidden" id="reader-tags"></div>
+
+                    <footer class="share-bar">
+                        <span class="share-label">Share this article</span>
+                        <div class="share-actions">
+                            <button class="share-btn" type="button" onclick="window.copyUrl()"
+                                aria-label="Copy link"><i class="fa-solid fa-link" aria-hidden="true"></i></button>
+                            <a class="share-btn" id="share-linkedin" href="#" target="_blank"
+                                rel="noopener noreferrer" aria-label="Share on LinkedIn"><i
+                                    class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
+                            <a class="share-btn" id="share-x" href="#" target="_blank" rel="noopener noreferrer"
+                                aria-label="Share on X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+                            <a class="share-btn" id="share-email" href="#" aria-label="Share by email"><i
+                                    class="fa-regular fa-envelope" aria-hidden="true"></i></a>
                         </div>
-                    </div>
-
-                    <!-- Tier 3: Students and Alumni -->
-                    <div id="students-wrapper" style="margin-top: 3rem;">
-                        <div class="members-tier-divider"><span><i class="fa-solid fa-user-graduate"
-                                    style="margin-right:0.4rem;"></i>Research Students & Alumni</span></div>
-                        <div class="universal-member-grid" id="students-grid">
-                            <!-- Injected via JS -->
-                        </div>
-                    </div>
+                    </footer>
                 </div>
-            </section>
+            </article>
 
-            <!-- Hiring Section -->
-            <section id="hiring" style="background: var(--bg-alt);">
+            <!-- All articles -->
+            <div id="all-blogs-view" class="page hidden">
                 <div class="container">
-                    <div class="section-header">
-                        <div class="badge" style="margin-bottom: 1rem;">Opportunities</div>
-                        <h2>Join Our Lab</h2>
-                        <p>We are actively seeking motivated students and researchers to collaborate on cutting-edge
-                            software engineering challenges.</p>
-                    </div>
-                    <div class="jobs-grid" id="public-jobs-grid">
-                        <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);"><i
-                                class="fa-solid fa-spinner fa-spin"></i> Loading openings...</div>
-                    </div>
+                    <a href="#blog" class="back-link"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                        Home</a>
+                    <header class="page-head">
+                        <p class="eyebrow">Research &amp; insights</p>
+                        <h1 class="page-title">Blog</h1>
+                        <p class="section-lede">Complete archive of case studies, research thoughts, and engineering
+                            methodologies.</p>
+                    </header>
+                    <div id="all-blogs-grid" class="entry-list"></div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Blog Section -->
-            <section id="blog">
+            <!-- All news -->
+            <div id="all-news-view" class="page hidden">
                 <div class="container">
-                    <div class="section-header">
-                        <div class="badge" style="margin-bottom: 1rem;">Latest Insights</div>
-                        <h2>Research Blog & Articles</h2>
-                        <p>Discover our latest case studies, research thoughts, and engineering methodologies published
-                            directly by our lab members.</p>
-                    </div>
-
-                    <div class="blog-grid" id="public-blog-grid">
-                        <div style="text-align: center; grid-column: 1/-1; color: #94a3b8;"><i
-                                class="fa-solid fa-spinner fa-spin"></i> Loading articles...</div>
-                    </div>
-
-                    <div style="text-align: center; margin-top: 3rem; display: none;" id="blog-view-all-wrapper">
-                        <button class="view-all-btn outline" onclick="window.showView('all-blogs')">
-                            <i class="fa-solid fa-pen-nib"></i> View All Articles
-                        </button>
-                    </div>
+                    <a href="#news" class="back-link"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                        Home</a>
+                    <header class="page-head">
+                        <p class="eyebrow">Updates</p>
+                        <h1 class="page-title">News</h1>
+                        <p class="section-lede">Every achievement, award, and announcement from SERA Lab.</p>
+                    </header>
+                    <div id="all-news-grid" class="entry-list"></div>
                 </div>
-            </section>
+            </div>
 
-            <!-- News Section -->
-            <section id="news" style="background: var(--bg-main);">
+            <!-- All publications -->
+            <div id="all-publications-view" class="page hidden">
                 <div class="container">
-                    <div class="section-header">
-                        <div class="badge" style="margin-bottom: 1rem;">Updates</div>
-                        <h2>Lab News & Highlights</h2>
-                        <p>Stay up to date with the latest achievements, awards, and announcements from SERA Lab.</p>
-                    </div>
-                    <div class="news-grid" id="public-news-grid">
-                        <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);"><i
-                                class="fa-solid fa-spinner fa-spin"></i> Loading news...</div>
-                    </div>
-                    <div style="text-align: center; margin-top: 2.5rem; display: none;" id="news-view-all-wrapper">
-                        <button class="view-all-btn outline" onclick="window.showView('all-news')">
-                            <i class="fa-solid fa-newspaper"></i> View All News
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Publications -->
-            <section id="publications" style="background: var(--bg-alt);">
-                <div class="container">
-                    <div class="section-header">
-                        <h2>Recent Publications</h2>
-                        <p>Peer-reviewed contributions advancing Software Engineering.</p>
-                    </div>
-                    <div class="pub-grid" id="publicationsGrid" style="max-width: 900px; margin: 0 auto;">
-                        <!-- Injected via JS -->
-                    </div>
-                    <div style="text-align: center; margin-top: 2.5rem; display: none;" id="pubs-view-all-wrapper">
-                        <button class="view-all-btn outline" onclick="window.showView('all-publications')">
-                            <i class="fa-solid fa-book-open"></i> View All Publications
-                        </button>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Individual Blog Reader View (Hidden by default) -->
-        <div id="blog-reader-view" class="blog-reader hidden">
-            <button class="btn btn-ghost" style="margin-bottom: 2rem;" onclick="window.showView('home')">
-                <i class="fa-solid fa-arrow-left"></i> &nbsp; Back to Home
-            </button>
-
-            <header class="blog-reader-header">
-                <div class="badge" id="reader-category">Research</div>
-                <h1 class="blog-reader-title" id="reader-title">Loading Article...</h1>
-
-                <div class="blog-reader-meta">
-                    <div class="blog-reader-author">
-                        <img id="reader-author-img" src="https://placehold.co/100x100" alt="Author">
-                        <div style="text-align: left;">
-                            <div style="font-weight: 600; color: var(--text-primary);" id="reader-author-name">Author
-                                Name</div>
-                            <div style="font-size: 0.8rem;" id="reader-date">Date</div>
-                        </div>
-                    </div>
-                    <div>•</div>
-                    <div id="reader-read-time"><i class="fa-regular fa-clock"></i> 5 min read</div>
-                </div>
-            </header>
-
-            <img id="reader-cover" src="" class="blog-reader-cover hidden" alt="Cover Image">
-
-            <div class="prose" id="reader-content">
-                <!-- Quill HTML Content injected here -->
-            </div>
-
-            <div class="share-bar">
-                <span style="font-weight: 600; color: var(--text-primary);">Share this article:</span>
-                <button class="share-btn" onclick="window.copyUrl()"><i class="fa-solid fa-link"></i></button>
-                <button class="share-btn"
-                    onclick="window.open(`https://twitter.com/intent/tweet?url=${window.location.href}`)"><i
-                        class="fa-brands fa-twitter"></i></button>
-                <button class="share-btn"
-                    onclick="window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${window.location.href}`)"><i
-                        class="fa-brands fa-linkedin-in"></i></button>
-            </div>
-        </div>
-
-        <!-- ==========================================
-             ALL BLOGS PAGE VIEW
-             ========================================== -->
-        <div id="all-blogs-view" class="view-all-page hidden">
-            <div class="container">
-                <button class="btn btn-ghost" style="margin-bottom: 2rem;"
-                    onclick="window.showView('home'); setTimeout(()=>{document.querySelector('#blog').scrollIntoView({behavior:'smooth',block:'start'})},50)">
-                    <i class="fa-solid fa-arrow-left"></i> &nbsp; Back to Home
-                </button>
-                <div class="section-header" style="text-align:left; margin-bottom: 2.5rem; max-width: none;">
-                    <div class="badge" style="margin-bottom: 0.75rem;">Research & Insights</div>
-                    <h2 style="margin-bottom: 0.5rem;">All Blog Articles</h2>
-                    <p>Complete archive of case studies, research thoughts, and engineering methodologies.</p>
-                </div>
-                <div id="all-blogs-grid" class="blog-grid">
-                    <div style="grid-column:1/-1;text-align:center;color:var(--text-muted);"><i
-                            class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
+                    <a href="#publications" class="back-link"><i class="fa-solid fa-arrow-left"
+                            aria-hidden="true"></i> Home</a>
+                    <header class="page-head">
+                        <p class="eyebrow">Research output</p>
+                        <h1 class="page-title">Publications</h1>
+                        <p class="section-lede">Complete list of peer-reviewed contributions advancing software
+                            engineering.</p>
+                    </header>
+                    <div id="all-publications-grid"></div>
                 </div>
             </div>
-        </div>
+        </main>
 
-        <!-- ==========================================
-             ALL NEWS PAGE VIEW
-             ========================================== -->
-        <div id="all-news-view" class="view-all-page hidden">
-            <div class="container">
-                <button class="btn btn-ghost" style="margin-bottom: 2rem;"
-                    onclick="window.showView('home'); setTimeout(()=>{document.querySelector('#news').scrollIntoView({behavior:'smooth',block:'start'})},50)">
-                    <i class="fa-solid fa-arrow-left"></i> &nbsp; Back to Home
-                </button>
-                <div class="section-header" style="text-align:left; margin-bottom: 2.5rem; max-width: none;">
-                    <div class="badge" style="margin-bottom: 0.75rem;">Updates</div>
-                    <h2 style="margin-bottom: 0.5rem;">All Lab News &amp; Highlights</h2>
-                    <p>Every achievement, award, and announcement from SERA Lab.</p>
-                </div>
-                <div id="all-news-grid" class="news-grid">
-                    <div style="grid-column:1/-1;text-align:center;color:var(--text-muted);"><i
-                            class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==========================================
-             ALL PUBLICATIONS PAGE VIEW
-             ========================================== -->
-        <div id="all-publications-view" class="view-all-page hidden">
-            <div class="container">
-                <button class="btn btn-ghost" style="margin-bottom: 2rem;"
-                    onclick="window.showView('home'); setTimeout(()=>{document.querySelector('#publications').scrollIntoView({behavior:'smooth',block:'start'})},50)">
-                    <i class="fa-solid fa-arrow-left"></i> &nbsp; Back to Home
-                </button>
-                <div class="section-header" style="text-align:left; margin-bottom: 2.5rem; max-width: none;">
-                    <h2 style="margin-bottom: 0.5rem;">All Publications</h2>
-                    <p>Complete list of peer-reviewed contributions advancing Software Engineering.</p>
-                </div>
-                <div class="pub-grid" id="all-publications-grid" style="max-width: 900px;">
-                    <div style="text-align:center;color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i>
-                        Loading...</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==========================================
-             NEWS & JOBS MODAL
-             ========================================== -->
+        <!-- Job details -->
         <div id="modal-overlay" class="modal-overlay hidden" onclick="if(event.target===this)window.closeModal()">
-            <div class="content-modal" id="content-modal">
-                <button class="modal-close" onclick="window.closeModal()"><i class="fa-solid fa-times"></i></button>
-                <img id="modal-img" src="" alt="" class="modal-image hidden">
+            <div class="content-modal" id="content-modal" role="dialog" aria-modal="true"
+                aria-labelledby="modal-title">
+                <button class="modal-close" type="button" onclick="window.closeModal()" aria-label="Close"><i
+                        class="fa-solid fa-xmark" aria-hidden="true"></i></button>
                 <div class="modal-body">
-                    <div class="modal-meta" id="modal-meta">
-                        <i class="fa-regular fa-calendar"></i>
+                    <div class="modal-meta">
+                        <i class="fa-regular fa-clock" aria-hidden="true"></i>
                         <span id="modal-meta-text"></span>
                     </div>
                     <h2 class="modal-title" id="modal-title"></h2>
                     <div class="modal-tags" id="modal-tags"></div>
-                    <div class="modal-description prose" id="modal-description"></div>
+                    <div class="modal-description prose prose-sans" id="modal-description"></div>
                 </div>
             </div>
         </div>
 
         <!-- Footer -->
         <footer class="footer">
-            <div class="container">
-                <img src="assets/sera_logo.svg" alt="SERA"
-                    style="height: 100px; margin: 0 auto 1.5rem auto; filter: grayscale(1) brightness(2);"
-                    onerror="this.style.display='none'">
-                <p>© 2026 Software Engineering Research and Analysis Lab. All Rights Reserved.</p>
-                <a href="#" onclick="window.openAdminLogin(event)" class="footer-admin-link"><i
-                        class="fa-solid fa-lock"></i> Member Login</a>
+            <div class="container footer-grid">
+                <div class="footer-brand">
+                    <img src="assets/sera_logo.svg" alt="SERA Lab" class="footer-logo" width="466" height="100"
+                        loading="lazy">
+                    <p>The Software Engineering Research and Analysis Lab at Kennesaw State University.</p>
+                </div>
+                <nav class="footer-nav" aria-label="Footer">
+                    <h2 class="footer-heading">Explore</h2>
+                    <ul>
+                        <li><a href="#research">Research</a></li>
+                        <li><a href="#members">People</a></li>
+                        <li><a href="#/publications">Publications</a></li>
+                        <li><a href="#/news">News</a></li>
+                        <li><a href="#/blog">Blog</a></li>
+                        <li><a href="#hiring">Join us</a></li>
+                    </ul>
+                </nav>
+                <div class="footer-affiliation">
+                    <h2 class="footer-heading">Affiliation</h2>
+                    <a href="https://www.kennesaw.edu/" target="_blank" rel="noopener noreferrer"
+                        class="footer-ksu">
+                        <img src="assets/ksu.png" alt="" width="512" height="503" loading="lazy">
+                        <span>Kennesaw State University</span>
+                    </a>
+                </div>
+            </div>
+            <div class="container footer-bottom">
+                <p>© <span id="footer-year">2026</span> Software Engineering Research and Analysis Lab. All rights
+                    reserved.</p>
+                <a href="#" onclick="window.openAdminLogin(event)" class="footer-login" id="footer-login-btn"><i
+                        class="fa-solid fa-lock" aria-hidden="true"></i> <span id="footer-login-label">Member login</span></a>
             </div>
         </footer>
+
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </div>
 
     <!-- ==========================================
-         ADMIN / MEMBER DASHBOARD OVERLAY
+         MEMBER WORKSPACE (login + dashboard)
          ========================================== -->
     <div id="admin-dashboard" class="admin-overlay hidden">
         <!-- Login Screen -->
-        <div id="admin-login-screen"
-            style="display: flex; height: 100vh; align-items: center; justify-content: center; background: #f8fafc;">
-            <div class="card" style="width: 100%; max-width: 400px; text-align: center;">
-                <h2 style="margin-bottom: 2rem;">Member Login</h2>
-                <input type="email" id="admin-email" class="form-control" placeholder="Email Address">
-                <input type="password" id="admin-password" class="form-control" placeholder="Password">
-                <button class="btn btn-primary" style="width: 100%;" onclick="window.handleLogin()">Sign In</button>
-                <button class="btn btn-ghost" style="width: 100%; margin-top: 1rem;"
-                    onclick="window.closeAdmin()">Cancel</button>
-                <p id="admin-msg" class="message error"></p>
+        <div id="admin-login-screen" class="login-screen">
+            <aside class="login-aside" aria-hidden="true">
+                <div class="login-aside-inner">
+                    <p class="login-aside-eyebrow">Kennesaw State University</p>
+                    <p class="login-aside-title">Software Engineering Research &amp; Analysis Lab</p>
+                    <p class="login-aside-text">Member workspace for publishing news, publications, people, open
+                        positions, and blog posts.</p>
+                </div>
+            </aside>
+
+            <div class="login-main">
+                <button type="button" class="back-link" onclick="window.closeAdmin()"><i
+                        class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to website</button>
+
+                <form class="login-form" onsubmit="event.preventDefault(); window.handleLogin();" novalidate>
+                    <img src="assets/sera_logo.svg" alt="SERA Lab" class="login-logo" width="466" height="100">
+                    <h1 class="login-title">Member sign in</h1>
+                    <p class="login-subtitle">For SERA Lab members who maintain this website.</p>
+
+                    <div class="form-group">
+                        <label class="form-label" for="admin-email">Email</label>
+                        <input type="email" id="admin-email" class="form-control" autocomplete="username"
+                            placeholder="name@kennesaw.edu" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="admin-password">Password</label>
+                        <div class="password-field">
+                            <input type="password" id="admin-password" class="form-control"
+                                autocomplete="current-password" required>
+                            <button type="button" class="password-toggle" onclick="window.togglePassword(this)"
+                                aria-label="Show password"><i class="fa-regular fa-eye" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" id="login-submit">Sign in</button>
+                    <p id="admin-msg" class="form-message" role="alert"></p>
+                    <p class="login-help">Need access? Ask a lab editor to create an account for you.</p>
+                </form>
             </div>
         </div>
 
         <!-- Dashboard App -->
         <div id="admin-app-screen" class="admin-layout hidden">
             <aside class="admin-sidebar">
-                <h3 style="margin-bottom: 2rem;">SERA Workspace</h3>
-                <div class="admin-nav-item active" onclick="window.switchAdminTab('blogs', this)"><i
-                        class="fa-solid fa-pen-nib"></i> &nbsp; Blog Posts</div>
-                <div class="admin-nav-item" onclick="window.switchAdminTab('pubs', this)"><i
-                        class="fa-solid fa-book"></i> &nbsp; Publications</div>
-                <div class="admin-nav-item" onclick="window.switchAdminTab('members', this)"><i
-                        class="fa-solid fa-users"></i> &nbsp; Members</div>
-                <div class="admin-nav-item" onclick="window.switchAdminTab('jobs', this)"><i
-                        class="fa-solid fa-briefcase"></i> &nbsp; Job Openings</div>
-                <div class="admin-nav-item" onclick="window.switchAdminTab('news', this)"><i
-                        class="fa-solid fa-newspaper"></i> &nbsp; News</div>
+                <div class="admin-brand">
+                    <img src="assets/sera_logo.svg" alt="SERA Lab" class="admin-logo" width="466" height="100">
+                    <span class="admin-brand-label">Workspace</span>
+                </div>
+                <nav class="admin-nav" aria-label="Workspace">
+                    <button type="button" class="admin-nav-item active" onclick="window.switchAdminTab('blogs', this)"><i
+                            class="fa-solid fa-pen-nib" aria-hidden="true"></i><span>Blog posts</span></button>
+                    <button type="button" class="admin-nav-item" onclick="window.switchAdminTab('pubs', this)"><i
+                            class="fa-solid fa-book" aria-hidden="true"></i><span>Publications</span></button>
+                    <button type="button" class="admin-nav-item" onclick="window.switchAdminTab('members', this)"><i
+                            class="fa-solid fa-users" aria-hidden="true"></i><span>People</span></button>
+                    <button type="button" class="admin-nav-item" onclick="window.switchAdminTab('jobs', this)"><i
+                            class="fa-solid fa-briefcase" aria-hidden="true"></i><span>Open positions</span></button>
+                    <button type="button" class="admin-nav-item" onclick="window.switchAdminTab('news', this)"><i
+                            class="fa-regular fa-newspaper" aria-hidden="true"></i><span>News</span></button>
+                </nav>
 
-                <div style="margin-top: auto;">
-                    <button class="btn btn-outline" style="width: 100%;" onclick="window.handleLogout()"><i
-                            class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
-                    <button class="btn btn-ghost" style="width: 100%; margin-top: 10px;"
-                        onclick="window.closeAdmin()">Exit Dashboard</button>
+                <div class="admin-sidebar-footer">
+                    <p class="admin-user"><i class="fa-regular fa-circle-user" aria-hidden="true"></i><span
+                            id="admin-user-email"></span></p>
+                    <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.closeAdmin()"><i
+                            class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to website</button>
+                    <button type="button" class="btn btn-ghost btn-sm btn-block" onclick="window.handleLogout()"><i
+                            class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i> Sign out</button>
                 </div>
             </aside>
 
             <main class="admin-main">
                 <!-- BLOG MANAGER TAB -->
                 <div id="admin-tab-blogs">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h2>Manage Blog Posts</h2>
-                        <button class="btn btn-primary" onclick="window.showBlogEditor()"><i
-                                class="fa-solid fa-plus"></i> New Post</button>
+                    <div class="admin-page-head">
+                        <h1 class="admin-title">Blog posts</h1>
+                        <button class="btn btn-primary" type="button" onclick="window.showBlogEditor()"><i
+                                class="fa-solid fa-plus" aria-hidden="true"></i> New post</button>
                     </div>
 
-                    <!-- Blog List -->
-                    <div id="admin-blog-list">
-                        <table style="width: 100%; border-collapse: collapse;">
+                    <div id="admin-blog-list" class="admin-table-wrap">
+                        <table class="admin-table">
                             <thead>
-                                <tr style="border-bottom: 2px solid var(--border); text-align: left;">
-                                    <th style="padding: 1rem;">Title</th>
-                                    <th style="padding: 1rem;">Status</th>
-                                    <th style="padding: 1rem;">Date</th>
-                                    <th style="padding: 1rem;">Actions</th>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-blog-tbody">
                                 <tr>
-                                    <td colspan="4" style="padding: 1rem;">Loading...</td>
+                                    <td colspan="4">Loading…</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- Rich Text Blog Editor (Hidden initially) -->
-                    <div id="admin-blog-editor" class="card hidden" style="margin-top: 1rem; max-width: none;">
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                            <h3 id="editor-title-heading">Create New Post</h3>
-                            <button class="btn btn-ghost" onclick="window.hideBlogEditor()"><i
-                                    class="fa-solid fa-times"></i> Close</button>
+                    <div id="admin-blog-editor" class="admin-editor hidden">
+                        <div class="admin-editor-head">
+                            <h2 class="admin-editor-title" id="editor-title-heading">Create New Post</h2>
+                            <button class="btn btn-ghost btn-sm" type="button" onclick="window.hideBlogEditor()"><i
+                                    class="fa-solid fa-xmark" aria-hidden="true"></i> Close</button>
                         </div>
 
                         <input type="hidden" id="edit-post-id">
 
                         <div class="form-group">
-                            <label class="form-label" for="post-title">Post Title <span
+                            <label class="form-label" for="post-title">Post title <span
                                     class="required">*</span></label>
-                            <input type="text" id="post-title" class="form-control"
-                                placeholder="e.g. Advances in Requirements Engineering"
-                                style="font-size: 1.25rem; font-weight: 600;">
+                            <input type="text" id="post-title" class="form-control form-control-lg"
+                                placeholder="e.g. Advances in Requirements Engineering">
                         </div>
 
                         <div class="form-row">
@@ -477,23 +542,31 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="post-cover">Cover Image <span
+                            <label class="form-label" for="post-author">Author <span class="required">*</span></label>
+                            <select id="post-author" class="form-control"></select>
+                            <p class="form-hint">Publishing for someone else? Pick them here. Authors come from the
+                                People list.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="post-cover">Cover image <span
                                     class="optional">(optional)</span></label>
                             <input type="file" id="post-cover" class="form-control" accept="image/*">
                             <p class="form-hint">Recommended: 1200 × 630 px, JPG or PNG</p>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Article Content <span class="required">*</span></label>
-                            <!-- Quill Editor Container -->
-                            <div style="background: white; border-radius: 8px;">
+                            <label class="form-label">Article content <span class="required">*</span></label>
+                            <div class="editor-shell">
                                 <div id="quill-editor"></div>
                             </div>
                         </div>
 
-                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                            <button class="btn btn-outline" onclick="window.savePost('draft')">Save as Draft</button>
-                            <button class="btn btn-primary" onclick="window.savePost('published')">Publish Post</button>
+                        <div class="admin-editor-actions">
+                            <button class="btn btn-secondary" type="button" onclick="window.savePost('draft')">Save as
+                                draft</button>
+                            <button class="btn btn-primary" type="button"
+                                onclick="window.savePost('published')">Publish</button>
                         </div>
                         <p id="post-msg" class="message"></p>
                     </div>
@@ -501,42 +574,40 @@
 
                 <!-- PUBLICATIONS TAB -->
                 <div id="admin-tab-pubs" class="hidden">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h2>Manage Publications</h2>
-                        <button class="btn btn-primary" onclick="window.showPubEditor()"><i
-                                class="fa-solid fa-plus"></i> New Publication</button>
+                    <div class="admin-page-head">
+                        <h1 class="admin-title">Publications</h1>
+                        <button class="btn btn-primary" type="button" onclick="window.showPubEditor()"><i
+                                class="fa-solid fa-plus" aria-hidden="true"></i> New publication</button>
                     </div>
 
-                    <div id="admin-pub-list">
-                        <table style="width: 100%; border-collapse: collapse;">
+                    <div id="admin-pub-list" class="admin-table-wrap">
+                        <table class="admin-table">
                             <thead>
-                                <tr style="border-bottom: 2px solid var(--border); text-align: left;">
-                                    <th style="padding: 1rem;">Title</th>
-                                    <th style="padding: 1rem;">Authors</th>
-                                    <th style="padding: 1rem;">Year</th>
-                                    <th style="padding: 1rem;">Actions</th>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Authors</th>
+                                    <th>Year</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-pub-tbody">
                                 <tr>
-                                    <td colspan="4" style="padding: 1rem;">Loading...</td>
+                                    <td colspan="4">Loading…</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <div id="admin-pub-editor" class="card hidden" style="margin-top: 1rem; max-width: none;">
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                            <h3 id="pub-editor-heading">Add Publication</h3>
-                            <button class="btn btn-ghost" onclick="window.hidePubEditor()"><i
-                                    class="fa-solid fa-times"></i> Close</button>
+                    <div id="admin-pub-editor" class="admin-editor hidden">
+                        <div class="admin-editor-head">
+                            <h2 class="admin-editor-title" id="pub-editor-heading">Add Publication</h2>
+                            <button class="btn btn-ghost btn-sm" type="button" onclick="window.hidePubEditor()"><i
+                                    class="fa-solid fa-xmark" aria-hidden="true"></i> Close</button>
                         </div>
                         <input type="hidden" id="edit-pub-id">
 
                         <div class="form-group">
-                            <label class="form-label" for="pub-title">Publication Title <span
+                            <label class="form-label" for="pub-title">Publication title <span
                                     class="required">*</span></label>
                             <input type="text" id="pub-title" class="form-control"
                                 placeholder="e.g. Towards Automated Requirements Traceability">
@@ -550,17 +621,17 @@
                         </div>
 
                         <div class="form-row">
-                            <div class="form-group" style="flex: 2;">
-                                <label class="form-label" for="pub-venue">Venue / Journal / Conference <span
+                            <div class="form-group form-group-wide">
+                                <label class="form-label" for="pub-venue">Venue / journal / conference <span
                                         class="optional">(optional)</span></label>
                                 <input type="text" id="pub-venue" class="form-control"
                                     placeholder="e.g. IEEE ICSE 2024, ACM TOSEM">
                             </div>
-                            <div class="form-group" style="flex: 0 0 110px;">
+                            <div class="form-group form-group-narrow">
                                 <label class="form-label" for="pub-year">Year</label>
                                 <input type="number" id="pub-year" class="form-control" placeholder="2024">
                             </div>
-                            <div class="form-group" style="flex: 0 0 120px;">
+                            <div class="form-group form-group-narrow">
                                 <label class="form-label" for="pub-citations">Citations</label>
                                 <input type="number" id="pub-citations" class="form-control" placeholder="0" min="0">
                             </div>
@@ -574,14 +645,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="pub-bibtex">BibTeX Entry <span
+                            <label class="form-label" for="pub-bibtex">BibTeX entry <span
                                     class="optional">(optional)</span></label>
-                            <textarea id="pub-bibtex" class="form-control" placeholder="@inproceedings{...}" rows="5"
-                                style="resize: vertical; font-family: monospace; font-size: 0.85rem;"></textarea>
+                            <textarea id="pub-bibtex" class="form-control form-control-mono"
+                                placeholder="@inproceedings{...}" rows="5"></textarea>
+                            <p class="form-hint">Shown to visitors as a "BibTeX" button they can copy from.</p>
                         </div>
-                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                            <button class="btn btn-outline" onclick="window.hidePubEditor()">Cancel</button>
-                            <button class="btn btn-primary" onclick="window.savePub()">Save Publication</button>
+                        <div class="admin-editor-actions">
+                            <button class="btn btn-secondary" type="button" onclick="window.hidePubEditor()">Cancel</button>
+                            <button class="btn btn-primary" type="button" onclick="window.savePub()">Save
+                                publication</button>
                         </div>
                         <p id="pub-msg" class="message"></p>
                     </div>
@@ -589,48 +662,46 @@
 
                 <!-- MEMBERS TAB -->
                 <div id="admin-tab-members" class="hidden">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h2>Manage People</h2>
-                        <button class="btn btn-primary" onclick="window.showMemberEditor()"><i
-                                class="fa-solid fa-plus"></i> New Person</button>
+                    <div class="admin-page-head">
+                        <h1 class="admin-title">People</h1>
+                        <button class="btn btn-primary" type="button" onclick="window.showMemberEditor()"><i
+                                class="fa-solid fa-plus" aria-hidden="true"></i> New person</button>
                     </div>
 
-                    <div id="admin-member-list">
-                        <table style="width: 100%; border-collapse: collapse;">
+                    <div id="admin-member-list" class="admin-table-wrap">
+                        <table class="admin-table">
                             <thead>
-                                <tr style="border-bottom: 2px solid var(--border); text-align: left;">
-                                    <th style="padding: 1rem;">Name</th>
-                                    <th style="padding: 1rem;">Role</th>
-                                    <th style="padding: 1rem;">Supervised By</th>
-                                    <th style="padding: 1rem;">Actions</th>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Supervised by</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-member-tbody">
                                 <tr>
-                                    <td colspan="4" style="padding: 1rem;">Loading...</td>
+                                    <td colspan="4">Loading…</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <div id="admin-member-editor" class="card hidden" style="margin-top: 1rem; max-width: none;">
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                            <h3 id="member-editor-heading">Add Person</h3>
-                            <button class="btn btn-ghost" onclick="window.hideMemberEditor()"><i
-                                    class="fa-solid fa-times"></i> Close</button>
+                    <div id="admin-member-editor" class="admin-editor hidden">
+                        <div class="admin-editor-head">
+                            <h2 class="admin-editor-title" id="member-editor-heading">Add Person</h2>
+                            <button class="btn btn-ghost btn-sm" type="button" onclick="window.hideMemberEditor()"><i
+                                    class="fa-solid fa-xmark" aria-hidden="true"></i> Close</button>
                         </div>
                         <input type="hidden" id="edit-member-id">
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" for="member-name">Full Name <span
+                                <label class="form-label" for="member-name">Full name <span
                                         class="required">*</span></label>
                                 <input type="text" id="member-name" class="form-control" placeholder="e.g. Jane Smith">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="member-title">Title / Degree Program <span
+                                <label class="form-label" for="member-title">Title / degree program <span
                                         class="optional">(optional)</span></label>
                                 <input type="text" id="member-title" class="form-control"
                                     placeholder="e.g. Ph.D. Candidate, Assistant Professor">
@@ -639,7 +710,7 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" for="member-role">Role Category <span
+                                <label class="form-label" for="member-role">Role <span
                                         class="required">*</span></label>
                                 <select id="member-role" class="form-control"
                                     onchange="window.onRoleChange(this.value)">
@@ -659,76 +730,72 @@
                             </div>
                         </div>
 
-                        <!-- Supervised By — hidden for directors & collaborators, shown for students/alumni -->
+                        <!-- Supervised By: hidden for directors & collaborators, shown for students/alumni -->
                         <div class="form-group" id="supervisor-group" style="display:none;">
-                            <label class="form-label">Supervised By <span class="optional">(select one or
+                            <label class="form-label">Supervised by <span class="optional">(select one or
                                     more)</span></label>
-                            <div id="supervisor-checkboxes"
-                                style="display:flex;flex-wrap:wrap;gap:0.6rem;padding:0.75rem;border:1px solid var(--border);border-radius:8px;min-height:48px;background:var(--bg-alt);">
-                                <span style="color:var(--text-muted);font-size:0.875rem;">Loading directors…</span>
+                            <div id="supervisor-checkboxes" class="checkbox-panel">
+                                <span class="form-hint">Loading directors…</span>
                             </div>
                             <p class="form-hint">Leave blank if not assigned to a specific director.</p>
                         </div>
 
-                        <div class="form-row" style="margin-top: 1rem;">
+                        <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" for="member-email"><i class="fa-solid fa-envelope"
-                                        style="color:var(--text-secondary);margin-right:5px;"></i> Email Address <span
-                                        class="optional">(optional)</span></label>
+                                <label class="form-label" for="member-email">Email address <span
+                                        class="optional">(optional, shown publicly)</span></label>
                                 <input type="email" id="member-email" class="form-control"
-                                    placeholder="e.g. email@ksu.edu">
+                                    placeholder="e.g. email@kennesaw.edu">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="member-contact"><i class="fa-solid fa-phone"
-                                        style="color:var(--text-secondary);margin-right:5px;"></i> Contact Number <span
-                                        class="optional">(optional)</span></label>
+                                <label class="form-label" for="member-contact">Phone <span
+                                        class="optional">(optional, shown publicly)</span></label>
                                 <input type="text" id="member-contact" class="form-control"
                                     placeholder="e.g. +1 555-1234">
                             </div>
                         </div>
 
-                        <p
-                            style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;">
-                            Social &amp; Web Links <span
-                                style="font-weight:400;text-transform:none;letter-spacing:0;">(all optional)</span></p>
+                        <h3 class="form-section-title">Links <span class="optional">(all optional)</span></h3>
 
-                        <div class="form-group">
-                            <label class="form-label" for="member-website"><i class="fa-solid fa-globe"
-                                    style="color:#0ea5e9;margin-right:5px;"></i> Personal Website</label>
-                            <input type="url" id="member-website" class="form-control"
-                                placeholder="https://mywebsite.com">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="member-website"><i class="fa-solid fa-globe"
+                                        aria-hidden="true"></i> Personal website</label>
+                                <input type="url" id="member-website" class="form-control"
+                                    placeholder="https://mywebsite.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="member-google-scholar"><i
+                                        class="fa-brands fa-google-scholar" aria-hidden="true"></i> Google Scholar</label>
+                                <input type="url" id="member-google-scholar" class="form-control"
+                                    placeholder="https://scholar.google.com/citations?user=…">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="member-linkedin"><i class="fa-brands fa-linkedin-in"
+                                        aria-hidden="true"></i> LinkedIn</label>
+                                <input type="url" id="member-linkedin" class="form-control"
+                                    placeholder="https://linkedin.com/in/username">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="member-github"><i class="fa-brands fa-github"
+                                        aria-hidden="true"></i> GitHub</label>
+                                <input type="url" id="member-github" class="form-control"
+                                    placeholder="https://github.com/username">
+                            </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="member-linkedin"><i class="fa-brands fa-linkedin-in"
-                                    style="color:#0077b5;margin-right:5px;"></i> LinkedIn Profile URL</label>
-                            <input type="url" id="member-linkedin" class="form-control"
-                                placeholder="https://linkedin.com/in/username">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="member-google-scholar"><i class="fa-brands fa-google"
-                                    style="color:#4285f4;margin-right:5px;"></i> Google Scholar Profile URL</label>
-                            <input type="url" id="member-google-scholar" class="form-control"
-                                placeholder="https://scholar.google.com/citations?user=…">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="member-github"><i class="fa-brands fa-github"
-                                    style="color:#24292f;margin-right:5px;"></i> GitHub Profile URL</label>
-                            <input type="url" id="member-github" class="form-control"
-                                placeholder="https://github.com/username">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="member-image-file">Profile Photo <span
+                            <label class="form-label" for="member-image-file">Profile photo <span
                                     class="optional">(optional)</span></label>
                             <input type="file" id="member-image-file" class="form-control" accept="image/*">
                             <p class="form-hint">Recommended: square image, at least 400 × 400 px</p>
                         </div>
-                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                            <button class="btn btn-outline" onclick="window.hideMemberEditor()">Cancel</button>
-                            <button class="btn btn-primary" onclick="window.saveMember()">Save</button>
+                        <div class="admin-editor-actions">
+                            <button class="btn btn-secondary" type="button" onclick="window.hideMemberEditor()">Cancel</button>
+                            <button class="btn btn-primary" type="button" onclick="window.saveMember()">Save</button>
                         </div>
                         <p id="member-msg" class="message"></p>
                     </div>
@@ -736,78 +803,73 @@
 
                 <!-- JOB OPENINGS TAB -->
                 <div id="admin-tab-jobs" class="hidden">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h2>Manage Job Openings</h2>
-                        <button class="btn btn-primary" onclick="window.showJobEditor()"><i
-                                class="fa-solid fa-plus"></i> New Opening</button>
+                    <div class="admin-page-head">
+                        <h1 class="admin-title">Open positions</h1>
+                        <button class="btn btn-primary" type="button" onclick="window.showJobEditor()"><i
+                                class="fa-solid fa-plus" aria-hidden="true"></i> New position</button>
                     </div>
 
-                    <div id="admin-job-list">
-                        <table style="width: 100%; border-collapse: collapse;">
+                    <div id="admin-job-list" class="admin-table-wrap">
+                        <table class="admin-table">
                             <thead>
-                                <tr style="border-bottom: 2px solid var(--border); text-align: left;">
-                                    <th style="padding: 1rem;">Title</th>
-                                    <th style="padding: 1rem;">Advisor</th>
-                                    <th style="padding: 1rem;">Status</th>
-                                    <th style="padding: 1rem;">Actions</th>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Advisor</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-job-tbody">
                                 <tr>
-                                    <td colspan="4" style="padding: 1rem;">Loading...</td>
+                                    <td colspan="4">Loading…</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <div id="admin-job-editor" class="card hidden" style="margin-top: 1rem; max-width: none;">
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                            <h3 id="job-editor-heading">Add Job Opening</h3>
-                            <button class="btn btn-ghost" onclick="window.hideJobEditor()"><i
-                                    class="fa-solid fa-times"></i> Close</button>
+                    <div id="admin-job-editor" class="admin-editor hidden">
+                        <div class="admin-editor-head">
+                            <h2 class="admin-editor-title" id="job-editor-heading">Add Job Opening</h2>
+                            <button class="btn btn-ghost btn-sm" type="button" onclick="window.hideJobEditor()"><i
+                                    class="fa-solid fa-xmark" aria-hidden="true"></i> Close</button>
                         </div>
                         <input type="hidden" id="edit-job-id">
 
                         <div class="form-group">
-                            <label class="form-label" for="job-title">Job Title <span class="required">*</span></label>
+                            <label class="form-label" for="job-title">Position title <span
+                                    class="required">*</span></label>
                             <input type="text" id="job-title" class="form-control"
                                 placeholder="e.g. Ph.D. Position in Requirements Engineering">
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="job-advisor">Hiring Advisor <span
+                            <label class="form-label" for="job-advisor">Hiring advisor <span
                                     class="optional">(optional)</span></label>
                             <select id="job-advisor" class="form-control">
                                 <option value="">Select an advisor...</option>
-                                <!-- Injected dynamically -->
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="job-description">Description & Requirements <span
+                            <label class="form-label">Description &amp; requirements <span
                                     class="required">*</span></label>
-                            <!-- Quill Job Editor -->
-                            <div style="background: white; border-radius: 8px; border: 1px solid var(--border);">
-                                <div id="quill-job-editor" style="min-height: 200px;"></div>
+                            <div class="editor-shell editor-shell-sm">
+                                <div id="quill-job-editor"></div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label"
-                                style="display:flex;align-items:center;gap:0.5rem;text-transform:none;letter-spacing:0;font-size:0.875rem;">
-                                <input type="checkbox" id="job-active" checked
-                                    style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent);flex-shrink:0;">
-                                <span>Active Listing &mdash; <span
-                                        style="font-weight:400;color:var(--text-muted);">Uncheck to hide this opening
-                                        from the public site</span></span>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="job-active" checked>
+                                <span><strong>Active listing</strong> <span class="checkbox-hint">— uncheck to hide this
+                                        position from the public site</span></span>
                             </label>
                         </div>
 
-                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                            <button class="btn btn-outline" onclick="window.hideJobEditor()">Cancel</button>
-                            <button class="btn btn-primary" onclick="window.saveJob()">Save Opening</button>
+                        <div class="admin-editor-actions">
+                            <button class="btn btn-secondary" type="button" onclick="window.hideJobEditor()">Cancel</button>
+                            <button class="btn btn-primary" type="button" onclick="window.saveJob()">Save
+                                position</button>
                         </div>
                         <p id="job-msg" class="message"></p>
                     </div>
@@ -815,55 +877,50 @@
 
                 <!-- NEWS TAB -->
                 <div id="admin-tab-news" class="hidden">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h2>Manage News</h2>
-                        <button class="btn btn-primary" onclick="window.showNewsEditor()"><i
-                                class="fa-solid fa-plus"></i> New Item</button>
+                    <div class="admin-page-head">
+                        <h1 class="admin-title">News</h1>
+                        <button class="btn btn-primary" type="button" onclick="window.showNewsEditor()"><i
+                                class="fa-solid fa-plus" aria-hidden="true"></i> New item</button>
                     </div>
 
-                    <div id="admin-news-list">
-                        <table style="width: 100%; border-collapse: collapse;">
+                    <div id="admin-news-list" class="admin-table-wrap">
+                        <table class="admin-table">
                             <thead>
-                                <tr style="border-bottom: 2px solid var(--border); text-align: left;">
-                                    <th style="padding: 1rem;">Title</th>
-                                    <th style="padding: 1rem;">Date</th>
-                                    <th style="padding: 1rem;">Featured</th>
-                                    <th style="padding: 1rem;">Actions</th>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Date</th>
+                                    <th>Featured</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-news-tbody">
                                 <tr>
-                                    <td colspan="4" style="padding: 1rem;">Loading...</td>
+                                    <td colspan="4">Loading…</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <div id="admin-news-editor" class="card hidden" style="margin-top: 1rem; max-width: none;">
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                            <h3 id="news-editor-heading">Add News Item</h3>
-                            <button class="btn btn-ghost" onclick="window.hideNewsEditor()"><i
-                                    class="fa-solid fa-times"></i> Close</button>
+                    <div id="admin-news-editor" class="admin-editor hidden">
+                        <div class="admin-editor-head">
+                            <h2 class="admin-editor-title" id="news-editor-heading">Add News Item</h2>
+                            <button class="btn btn-ghost btn-sm" type="button" onclick="window.hideNewsEditor()"><i
+                                    class="fa-solid fa-xmark" aria-hidden="true"></i> Close</button>
                         </div>
                         <input type="hidden" id="edit-news-id">
 
                         <div class="form-group">
-                            <label class="form-label" for="news-title">Headline / Title <span
+                            <label class="form-label" for="news-title">Headline <span
                                     class="required">*</span></label>
                             <input type="text" id="news-title" class="form-control"
                                 placeholder="e.g. Lab receives NSF grant for AI research">
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="news-description">Description <span
-                                    class="optional">(optional)</span></label>
-                            <!-- Quill News Editor -->
-                            <div style="background: white; border-radius: 8px; border: 1px solid var(--border);">
-                                <div id="quill-news-editor" style="min-height: 180px;"></div>
+                            <label class="form-label">Description <span class="optional">(optional)</span></label>
+                            <div class="editor-shell editor-shell-sm">
+                                <div id="quill-news-editor"></div>
                             </div>
-                            <!-- Hidden field to store HTML content -->
                             <input type="hidden" id="news-description">
                         </div>
 
@@ -873,9 +930,8 @@
                             <input type="file" id="news-image-file" class="form-control" accept="image/*"
                                 onchange="window.previewNewsImage(this)">
                             <p class="form-hint">Recommended: 1200 × 630 px, JPG or PNG</p>
-                            <div id="news-image-preview" style="display:none;margin-top:0.5rem;">
-                                <img id="news-image-preview-img"
-                                    style="max-height:120px;border-radius:8px;border:1px solid var(--border);">
+                            <div id="news-image-preview" class="image-preview" style="display:none;">
+                                <img id="news-image-preview-img" alt="Selected image preview">
                             </div>
                         </div>
 
@@ -885,7 +941,7 @@
                                         class="optional">(optional)</span></label>
                                 <input type="text" id="news-month" class="form-control" placeholder="e.g. January">
                             </div>
-                            <div class="form-group" style="flex: 0 0 130px;">
+                            <div class="form-group form-group-narrow">
                                 <label class="form-label" for="news-year">Year <span
                                         class="optional">(optional)</span></label>
                                 <input type="number" id="news-year" class="form-control" placeholder="2024">
@@ -900,18 +956,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label"
-                                style="display:flex;align-items:center;gap:0.5rem;text-transform:none;letter-spacing:0;font-size:0.875rem;">
-                                <input type="checkbox" id="news-featured"
-                                    style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent);flex-shrink:0;">
-                                <span>Pin as Featured &mdash; <span
-                                        style="font-weight:400;color:var(--text-muted);">Featured items appear
-                                        highlighted at the top</span></span>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="news-featured">
+                                <span><strong>Pin as featured</strong> <span class="checkbox-hint">— featured items are
+                                        listed first</span></span>
                             </label>
                         </div>
-                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                            <button class="btn btn-outline" onclick="window.hideNewsEditor()">Cancel</button>
-                            <button class="btn btn-primary" onclick="window.saveNews()">Save News Item</button>
+                        <div class="admin-editor-actions">
+                            <button class="btn btn-secondary" type="button" onclick="window.hideNewsEditor()">Cancel</button>
+                            <button class="btn btn-primary" type="button" onclick="window.saveNews()">Save news
+                                item</button>
                         </div>
                         <p id="news-msg" class="message"></p>
                     </div>
