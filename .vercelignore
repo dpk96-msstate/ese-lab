@@ -1,0 +1,6 @@
+# Deploy only the website; the SQL setup files stay in the repo
+/*
+!index.html
+!script.js
+!style.css
+!assets
